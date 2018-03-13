@@ -8,6 +8,7 @@ typedef struct tile {
     element right;
     element down;
     element left;
+    bool shield;
     bool temple;
 };
 
