@@ -1,8 +1,6 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <stdbool.h>
-
 typedef enum { CASTLE, ROAD, FIELD } element;
 
 typedef struct {
@@ -10,8 +8,7 @@ typedef struct {
     element right;
     element down;
     element left;
-    bool shield;
-    bool temple;
+    enum { SHIELD, TEMPLE } modifier;
 } tile;
 
 // rotate clockwise tile supplied by pointer,
