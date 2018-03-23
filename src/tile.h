@@ -11,8 +11,8 @@ typedef struct {
     enum { SHIELD, TEMPLE } modifier;
 } tile;
 
-// rotate clockwise tile supplied by pointer,
-// return pointer for checking validity or chaining commands
+// rotate counterclockwise tile supplied by pointer,
+// return pointer for checking validity or chaining function calls
 // if pointer is null only return it
 tile* rotate_tile(tile* t);
 
