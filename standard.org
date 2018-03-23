@@ -1,0 +1,31 @@
+* commandline arguments:
+** arguments should be names of files in current directory
+** if two are given the first one should be a name of file containing list of given tiles, the second should be a name of file representing the playing board
+** if one is given it should be a name of a file containing given tiles
+** if none are given the program should generate or use predefined list of tiles, program can store the list in a file
+** if more than two arguments are given they ought to be ignored
+
+* files format:
+** tile representation:
+*** a tile is represented by 5 letters
+*** type of each area of a tile is given by letter on a position corresponding to the area such that the top area is specified by first letter, right by second, bottom by third, left by forth and the middle by fifth. letters denoting types are:
+- c - city
+- r - road
+- f - field
+- t - temple
+- * - shield
+- _ - no temple or shield
+
+eg.
+111[[file:road-city-road.png]] [[file:temple-road.png]]
+1. rcrf_
+2. ffrft
+
+** board representation:
+*** each line in a file represents one row of a board
+*** tiles should be divided by spaces
+*** additional spaces should be ignored
+*** empty space (no tile) should be represented by the tab character
+
+** tile pile representation:
+*** a file with aviable tiles should be a collection of tile representations separated by any whitespace
