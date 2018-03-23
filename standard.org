@@ -17,6 +17,7 @@
     + _ - no temple or shield
 
 eg.
+
 [[file:road-city-road.png]] [[file:temple-road.png]]
 1. rcrf_
 2. ffrft
