@@ -14,6 +14,9 @@ typedef struct {
     bool temple;
 } tile;
 
-void rotate_tile(tile* t);
+// rotate clockwise tile supplied by pointer,
+// return pointer for checking validity or chaining commands
+// if pointer is null only return it
+tile* rotate_tile(tile* t);
 
 #endif
