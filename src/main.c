@@ -1,13 +1,6 @@
-#include <stdio.h>
+#include "misc.h"
+
 #include <stdlib.h>
-
-typedef enum { INTERACTIVE, AUTO } gamemode;
-
-void greeting(void) {
-    printf("hello player!\n"
-           "welcome to carcassonne game!\n"
-           "something something\n");
-}
 
 int main(int argc, char* argv[]) {
     gamemode mode = AUTO;
