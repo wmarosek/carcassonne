@@ -57,10 +57,10 @@ tile* rotate_tile(tile* t) {
             r = t->right,
             d = t->down,
             l = t->left;
-        t->up = r;
-        t->right = d;
-        t->down = l;
-        t->left = u;
+        t->up = l;
+        t->right = u;
+        t->down = r;
+        t->left = d;
     }
     return t;
 }

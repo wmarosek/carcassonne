@@ -34,7 +34,7 @@ bool write_tile_list();
 int rate_tile(const tile*);                 // return a tile rating
 tile choose_best_tile();                // choose best tile from the list based on rating
 
-// rotate counterclockwise tile supplied by pointer,
+// rotate clockwise tile supplied by pointer,
 // return pointer for checking validity or chaining function calls
 // if pointer is null only return it
 tile* rotate_tile(tile*);
