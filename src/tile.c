@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-tile g_tile_list[TILE_LIST_LEN];
+tile* g_tile_list[TILE_LIST_LEN];
 
 char element_to_char(element e) {
     switch (e) {
     case CASTLE: return 'c';
     case ROAD: return 'r';
     case FIELD: return 'f';
-    default: return 0;
+    default: return '\0';
     }
 }
 
@@ -22,7 +22,7 @@ char modifier_to_char(modifier m) {
     }
 }
 
-char* tile_to_str(tile* t, char* buff) {
+char* tile_to_str(const tile* t, char* buff) {
     if (t && buff) {
         buff[0] = element_to_char(t->up);
         buff[1] = element_to_char(t->right);
@@ -32,19 +32,19 @@ char* tile_to_str(tile* t, char* buff) {
     } else if (buff) {
         buff[0] = '\t';
         for (int i = 1; i < 5; ++i) {
-            buff[i] = '\0';
+            buff[i] = '\0';                     // null all other cells
         }
     }
     return buff;
 }
 
-void print_tile(tile* t) {
+void print_tile(const tile* t) {
     char buff[5];
     printf("%.*s", 5, tile_to_str(t, buff));
 }
 
-void print_tile_list(tile* t, size_t len) {
-    for (uint i = 0; i < len; ++i) {
+void print_tile_list(const tile* t, size_t len) {
+    for (int i = 0; i < len; ++i) {
         print_tile(&t[i]);
         printf("\n");
     }

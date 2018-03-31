@@ -16,21 +16,22 @@ typedef struct {
 } tile;
 
 #define TILE_LIST_LEN 30
-extern tile g_tile_list[TILE_LIST_LEN];     // list of aviable tiles
+extern tile* g_tile_list[TILE_LIST_LEN];     // list of aviable tiles
 
 tile parse_tile();                          // parse single tile
 bool parse_tile_list();                     // populate g_tile_list
 
 char element_to_char(element);
 char modifier_to_char(modifier);
-char* tile_to_str(tile*, char*);
-void print_tile(tile*);
-void print_tile_list(tile*, size_t);
+// probably avoid calling this directly or make sure buff is at least 5 cells long
+char* tile_to_str(const tile*, char*);
+void print_tile(const tile*);
+void print_tile_list(const tile*, size_t);
 
 bool write_tile_list();
 
 // gameplay
-int rate_tile(tile*);                   // return a tile rating
+int rate_tile(const tile*);                 // return a tile rating
 tile choose_best_tile();                // choose best tile from the list based on rating
 
 // rotate counterclockwise tile supplied by pointer,
