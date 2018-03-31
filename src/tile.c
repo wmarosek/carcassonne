@@ -44,7 +44,7 @@ void print_tile(const tile* t) {
 }
 
 void print_tile_list(const tile* t, size_t len) {
-    for (int i = 0; i < len; ++i) {
+    for (unsigned int i = 0; i < len; ++i) {
         print_tile(&t[i]);
         printf("\n");
     }

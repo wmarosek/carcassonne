@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-void greeting(void) {
+void greeting() {
     printf("hello player!\n"
            "welcome to carcassonne game!\n"
            "something something\n");
