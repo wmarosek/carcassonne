@@ -1,0 +1,4 @@
+# ignore object files / executables
+*.o
+carcassonne
+*.exe
