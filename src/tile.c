@@ -1,7 +1,8 @@
 #include "tile.h"
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 tile* g_tile_list[TILE_LIST_LEN];
 
@@ -31,9 +32,7 @@ char* tile_to_str(const tile* t, char* buff) {
         buff[4] = modifier_to_char(t->mod);
     } else if (buff) {
         buff[0] = '\t';
-        for (int i = 1; i < 5; ++i) {
-            buff[i] = '\0';                     // null all other cells
-        }
+        memset(&buff[1], '\0', 4);
     }
     return buff;
 }
