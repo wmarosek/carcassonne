@@ -2,13 +2,19 @@
 #define MISC_H
 
 #include <stdbool.h>
+#include <stdio.h>
 
-typedef enum { INTERACTIVE, AUTO } gamemode;
+typedef enum {
+    INTERACTIVE_NO_TILES,
+    INTERACTIVE,
+    AUTO
+} gamemode;
 
-bool setup();                           // set gamemode, set file pointers, etc.
+gamemode init(int, char**, FILE*, FILE*);       // set gamemode, set file pointers, etc.
 
-void usage();                           // print usage
-void greeting();                        // print greeting
-void run();                             // game loop
+void usage();                                   // print usage
+void greeting();                                // print greeting
+
+void run(gamemode, FILE*, FILE*);               // game loop
 
 #endif

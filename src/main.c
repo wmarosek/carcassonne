@@ -3,11 +3,12 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
-    gamemode mode = AUTO;
-    if (argc < 2) {
-        mode = INTERACTIVE;
-        greeting();
-    }
+    FILE* list = 0;
+    FILE* board = 0;
 
-    return EXIT_SUCCESS;
+    gamemode mode = init(argc, argv, list, board);
+
+    run(mode, list, board);
+
+    exit(EXIT_SUCCESS);
 }
