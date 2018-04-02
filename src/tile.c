@@ -38,6 +38,10 @@ char* tile_to_str(const tile* t, char* buff) {
     return buff;
 }
 
+char* tile_to_str_malloc(const tile* t) {
+    return tile_to_str(t, malloc(sizeof(char) * 5));
+}
+
 void print_tile(const tile* t) {
     char buff[5];
     printf("%.*s", 5, tile_to_str(t, buff));

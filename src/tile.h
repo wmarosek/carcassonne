@@ -25,6 +25,7 @@ char element_to_char(element);
 char modifier_to_char(modifier);
 // probably avoid calling this directly or make sure buff is at least 5 cells long
 char* tile_to_str(const tile*, char*);
+char* tile_to_str_malloc(const tile*);
 void print_tile(const tile*);
 void print_tile_list(const tile*, size_t);
 
