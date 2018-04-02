@@ -24,13 +24,13 @@ char modifier_to_char(modifier m) {
 }
 
 char* tile_to_str(const tile* t, char* buff) {
-    if (t && buff) {
+    if (t && buff) {    // check if pointers are not null
         buff[0] = element_to_char(t->up);
         buff[1] = element_to_char(t->right);
         buff[2] = element_to_char(t->down);
         buff[3] = element_to_char(t->left);
         buff[4] = modifier_to_char(t->mod);
-    } else if (buff) {
+    } else if (buff) {  // null tile pointer should mean empty board cell
         buff[0] = '\t';
         memset(&buff[1], '\0', 4);
     }
