@@ -50,9 +50,9 @@ bool parse_tile(tile* t, FILE* file) {
     return false;
 }
 
-bool parse_tile_list(tile* list, size_t size, FILE* file) {
+bool parse_tile_list(tile* list, size_t len, FILE* file) {
     if (list && file) {
-        for (size_t i = 0; i < size; ++i) {
+        for (size_t i = 0; i < len; ++i) {
             // if any tile parsing fails return false
             if (!parse_tile(&list[i], file)) {
                 return false;
