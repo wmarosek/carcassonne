@@ -23,7 +23,7 @@ modifier char_to_modifier(char ch) {
     }
 }
 
-tile* str_to_tile(tile* t, char str[static 5]) {
+tile* str_to_tile(const char str[static 5], tile* t) {
     if (t) {
         t->up = char_to_element(str[0]);
         t->right = char_to_element(str[1]);
@@ -34,7 +34,7 @@ tile* str_to_tile(tile* t, char str[static 5]) {
     return t;
 }
 
-bool parse_tile(tile* t, FILE* file) {
+bool parse_tile(FILE* file, tile* t) {
     char ch, str[5];
     size_t i = 0;
     while ((ch = getc(file)) != EOF) {
@@ -43,18 +43,18 @@ bool parse_tile(tile* t, FILE* file) {
         }
         str[i++] = ch;
         if (i == 5) {
-            str_to_tile(t, str);
+            str_to_tile(str, t);
             return true;
         }
     }
     return false;
 }
 
-bool parse_tile_list(tile* list, size_t len, FILE* file) {
+bool parse_tile_list(FILE* file, tile* list, size_t len) {
     if (list && file) {
         for (size_t i = 0; i < len; ++i) {
             // if any tile parsing fails return false
-            if (!parse_tile(&list[i], file)) {
+            if (!parse_tile(file, &list[i])) {
                 return false;
             }
         }
