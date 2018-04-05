@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 
 // define type representing single tile
 typedef enum { CASTLE, ROAD, FIELD } element;
@@ -15,16 +16,18 @@ typedef struct {
     modifier mod;
 } tile;
 
-#define TILE_LIST_LEN 30
-extern tile* g_tile_list[TILE_LIST_LEN];    // list of aviable tiles
-
-tile parse_tile();                          // parse single tile
-bool parse_tile_list();                     // populate g_tile_list
+element char_to_element(char);
+modifier char_to_modifier(char);
+tile* str_to_tile(tile*, char[static 5]);
+bool parse_tile(tile*, FILE*);
+bool parse_tile_list(tile*, size_t, FILE*); // populate g_tile_list
 
 char element_to_char(element);
 char modifier_to_char(modifier);
+
 // probably avoid calling this directly or make sure buff is at least 5 cells long
-char* tile_to_str(const tile*, char*);
+char* tile_to_str(const tile*, char[static 5]);
+// remember to free() result
 char* tile_to_str_malloc(const tile*);
 void print_tile(const tile*);
 void print_tile_list(const tile*, size_t);
