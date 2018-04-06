@@ -1,4 +1,8 @@
-# ignore object files / executables
+# object files / executables
 *.o
 carcassonne
 *.exe
+
+# doxygen documentation
+doc/html
+doc/latex

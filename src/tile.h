@@ -6,7 +6,10 @@
 #include <stddef.h>
 #include <stdio.h>
 
-// define type representing single tile
+/** @addtogroup Tile
+ * enumerators and struct used to represent a tile
+ * @{
+ */
 typedef enum { CASTLE, ROAD, FIELD } element;
 typedef enum { NONE, SHIELD, TEMPLE } modifier;
 typedef struct {
@@ -16,6 +19,7 @@ typedef struct {
     element left;
     modifier mod;
 } tile;
+/** @} */
 
 element char_to_element(char);
 modifier char_to_modifier(char);
@@ -24,29 +28,29 @@ modifier char_to_modifier(char);
  * set tile values based on supplied string.
  * str must be at least 5 cells long
  * if tile pointer is NULL only return it
- * @param t tile pointer being assigned to
  * @param str string length 5 specifing tile
+ * @param t tile pointer being assigned to
  * @return returns tile pointer
  */
-tile* str_to_tile(tile*, char[static 5]);
+tile* str_to_tile(const char[static 5], tile*);
 
 /**
  * parse next tile in specified file stream.
  * ignores whitespace inside tile specification
- * @param t tile pointer being assigned to
  * @param file file stream pointer
+ * @param t tile pointer being assigned to
  * @return success of operation, returns false if reaches EOF before parsing full tile
  */
-bool parse_tile(tile*, FILE*);
+bool parse_tile(FILE*, tile*);
 
 /**
- * assign to tile values to tile array based on specified file.
+ * assign tile values to tile array based on specified file.
+ * @param file tile list file stream
  * @param list tile array
  * @param len length of array
- * @param file tile list file stream
  * @return success of operation, return false if parse tile fails, list / tile is NULL
  */
-bool parse_tile_list(tile*, size_t, FILE*);
+bool parse_tile_list(FILE*, tile*, size_t);
 
 char element_to_char(element);
 char modifier_to_char(modifier);
