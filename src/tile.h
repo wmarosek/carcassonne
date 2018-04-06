@@ -44,7 +44,7 @@ tile* str_to_tile(const char[static 5], tile*);
 bool parse_tile(FILE*, tile*);
 
 /**
- * assign to tile values to tile array based on specified file.
+ * assign tile values to tile array based on specified file.
  * @param file tile list file stream
  * @param list tile array
  * @param len length of array
