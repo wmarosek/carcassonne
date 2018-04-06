@@ -1,5 +1,6 @@
 #ifndef MISC_H
 #define MISC_H
+/** @file misc.h */
 
 #include <stdbool.h>
 #include <stdio.h>
@@ -10,11 +11,31 @@ typedef enum {
     AUTO
 } gamemode;
 
-gamemode init(int, char**, FILE*, FILE*);       // set gamemode, set file pointers, etc.
+/**
+ * initializes file streams for tile list and gameboard returns gamemode.
+ * @param argc count of args to main
+ * @param argv array of args to main
+ * @param list file stream for tile list
+ * @param board file stream for gameboard
+ */
+gamemode init(int, char**, FILE*, FILE*);
 
-void usage();                                   // print usage
-void greeting();                                // print greeting
+/**
+ * print usage.
+ */
+void usage();
 
-void run(gamemode, FILE*, FILE*);               // game loop
+/**
+ * print greeting.
+ */
+void greeting();
+
+/**
+ * main game loop.
+ * @param mode gamemode in which game should be played
+ * @param list file stream for tile list if applicable
+ * @param board file stream for gameboard if applicable
+ */
+void run(gamemode, FILE*, FILE*);
 
 #endif
