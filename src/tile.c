@@ -35,13 +35,14 @@ tile* str_to_tile(const char str[static 5], tile* t) {
 }
 
 bool parse_tile(FILE* file, tile* t) {
-    char ch, str[5];
+    int ch;
+    char str[5];
     size_t i = 0;
     while ((ch = getc(file)) != EOF) {
         if (isspace(ch)) {
             continue;
         }
-        str[i++] = ch;
+        str[i++] = (char)ch;
         if (i == 5) {
             str_to_tile(str, t);
             return true;
