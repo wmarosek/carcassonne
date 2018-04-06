@@ -46,7 +46,7 @@ void free_board(size_t, tile* [*][*]);
  * @param width
  * @return if can place tile
  */
-bool can_place_tile(size_t, tile*[*][*],
+bool can_place_tile(size_t, tile* [*][*],
                     tile*, size_t, size_t);
 
 /**
