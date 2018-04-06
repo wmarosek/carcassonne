@@ -10,8 +10,11 @@ void greeting() {
 }
 
 void usage() {
-    printf("carcassonne [tiles-list-file] [board-file]\n"
-           "auto mode run if both aruments specified, otherwise interactieve\n");
+    printf("usage: carcassonne [tiles-list-file] [board-file]\n"
+           "tiles-list-file and board-file should be flies in current directory\n"
+           "if both tiles-list-file and board-file specified run in auto mode\n"
+           "if only tiles-list given use list specified in interactive mode\n"
+           "if none file specified use default tile list for interactive mode\n");
 }
 
 gamemode init(int argc, char* argv[], FILE* list, FILE* board) {
