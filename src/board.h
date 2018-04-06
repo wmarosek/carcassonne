@@ -1,18 +1,47 @@
 #ifndef BOARD_H
 #define BOARD_H
+/** @file board.h */
 
 #include "tile.h"
 
 #include <stdbool.h>
 #include <stddef.h>
 
-#define BOARD_SIZE 60
-extern tile* g_board[BOARD_SIZE][BOARD_SIZE];
+/**
+ * check if specified tile can be placed in specified place on board.
+ * @param size board size
+ * @param board tile pointer array
+ * @param t tile pointer
+ * @param height
+ * @param width
+ * @return if can place tile
+ */
+bool can_place_tile(size_t, tile*[*][*],
+                    tile*, size_t, size_t);
 
-bool can_place_tile(size_t, size_t, tile*);     // check if can place tile
-void place_tile(tile**, tile*);                 // place tile in specified space
+/**
+ * place tile in specified location.
+ * @param place
+ * @param t tile to place
+ */
+void place_tile(tile**, tile*);
 
-bool parse_board();                             // read board file, populate board array
-bool write_board();                             // write board file
+/**
+ * assign tile pointers to board array based on specified file
+ * @param file board file stream
+ * @param board 2 dimensional array of tile pointers
+ * @param height board height
+ * @param width board width
+ * @return success of operation
+ */
+bool parse_board(FILE*, tile**, size_t, size_t);
+
+/**
+ * write board to file.
+ * @param file board file stream
+ * @param board tile pointer array portraying board
+ * @return success of operation
+ */
+bool write_board(FILE*, const tile**);
 
 #endif
