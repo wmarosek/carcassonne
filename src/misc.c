@@ -4,13 +4,13 @@
 #include <string.h>
 
 void greeting() {
-    printf("hello player!\n"
+    puts("hello player!\n"
            "welcome to a simple carcassonne based game!\n"
            "for usage run: carcassonne help\n");
 }
 
 void usage() {
-    printf("usage: carcassonne [tiles-list-file] [board-file]\n"
+    puts("usage: carcassonne [tiles-list-file] [board-file]\n"
            "tiles-list-file and board-file should be flies in current directory\n"
            "if both tiles-list-file and board-file specified run in auto mode\n"
            "if only tiles-list given use list specified in interactive mode\n"
@@ -18,7 +18,6 @@ void usage() {
 }
 
 gamemode init(int argc, char* argv[], FILE* list, FILE* board) {
-
     if (argc > 1 && strcmp(argv[1], "help") == 0) {
         usage();
         exit(EXIT_SUCCESS);
