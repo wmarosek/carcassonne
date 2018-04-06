@@ -36,7 +36,7 @@ gamemode init(int argc, char* argv[], FILE** list, FILE** board) {
         *list = fopen(argv[1], "r");
         if (*list == 0) {
             fputs("error opening tiles-list-file\n", stderr);
-            exit(1);
+            exit(EXIT_FAILURE);
         }
     }
 
@@ -44,7 +44,7 @@ gamemode init(int argc, char* argv[], FILE** list, FILE** board) {
         *board = fopen(argv[2], "r");
         if (*board == 0) {
             fputs("error opening board-flie\n", stderr);
-            exit(1);
+            exit(EXIT_FAILURE);
         }
     }
 
