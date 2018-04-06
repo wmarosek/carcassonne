@@ -5,8 +5,8 @@
 
 void greeting() {
     printf("hello player!\n"
-           "welcome to carcassonne game!\n"
-           "something something\n");
+           "welcome to a simple carcassonne based game!\n"
+           "for usage run: carcassonne help\n");
 }
 
 void usage() {
