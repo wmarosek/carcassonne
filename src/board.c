@@ -1,5 +1,38 @@
 #include "board.h"
 
+#include <stdlib.h>
+
+size_t get_board_size() {
+    fputs("input board size: ", stdout);
+    size_t ret;
+    scanf("%zu", &ret);
+    return ret;
+}
+
+void initialize_board_malloc(size_t size, tile** board[size][size]) {
+    for (size_t i = 0; i < size; ++i) {
+        for (size_t j = 0; j < size; ++j) {
+            *board[i][j] = make_tile(board[i][j]);
+        }
+    }
+}
+
+tile* make_tile(tile** ptr) {
+    return *ptr = malloc(sizeof(tile*));
+}
+
+tile* make_tile_from_str(const char str[static 5], tile** ptr) {
+    return str_to_tile(str, make_tile(ptr));
+}
+
+void free_board(size_t size, tile* board[size][size]) {
+    for (size_t i = 0; i < size; ++i) {
+        for (size_t j = 0; j < size; ++j) {
+            free(board[i][j]);
+        }
+    }
+}
+
 bool can_place_tile(size_t size, tile* board[size][size],
                     tile* t, size_t height, size_t width) {
     // if out of bounds return false
