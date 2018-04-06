@@ -18,7 +18,7 @@ typedef enum {
  * @param list file stream for tile list
  * @param board file stream for gameboard
  */
-gamemode init(int, char**, FILE*, FILE*);
+gamemode init(int, char**, FILE**, FILE**);
 
 /**
  * print usage.

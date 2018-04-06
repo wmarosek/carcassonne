@@ -17,16 +17,37 @@ void usage() {
            "if none file specified use default tile list for interactive mode\n");
 }
 
-gamemode init(int argc, char* argv[], FILE* list, FILE* board) {
+gamemode init(int argc, char* argv[], FILE** list, FILE** board) {
+    *list = 0;
+    *board = 0;
+
     if (argc > 1 && strcmp(argv[1], "help") == 0) {
         usage();
         exit(EXIT_SUCCESS);
     }
 
-    // HACK: 0 args - set INTERACTIVE_NO_TILES, 1 - INTERACTIVE, 2 - AUTO
+    // argc is always at least 1 since program name is always first argument,
+    // if zero additional arguments set mode to INTERACTIVE_NO_TILES,
+    // if one set mode to INTERACTIVE,
+    // else set to AUTO
     gamemode mode = argc - 1;
 
-    // TODO: open files and set file ptrs here
+    if (mode == INTERACTIVE || mode == AUTO) {
+        *list = fopen(argv[1], "r");
+        if (*list == 0) {
+            fputs("error opening tiles-list-file\n", stderr);
+            exit(1);
+        }
+    }
+
+    if (mode == AUTO) {
+        *board = fopen(argv[2], "r");
+        if (*board == 0) {
+            fputs("error opening board-flie\n", stderr);
+            exit(1);
+        }
+    }
+
     return mode;
 }
 
