@@ -52,12 +52,13 @@ bool parse_tile(FILE* file, tile* t) {
 }
 
 bool parse_tile_list(FILE* file, tile* list, size_t len) {
-    if (list && file) {
-        for (size_t i = 0; i < len; ++i) {
-            // if any tile parsing fails return false
-            if (!parse_tile(file, &list[i])) {
-                return false;
-            }
+    if (!list || !file) {
+        return false;
+    }
+    for (size_t i = 0; i < len; ++i) {
+        // if any tile parsing fails return false
+        if (!parse_tile(file, &list[i])) {
+            return false;
         }
     }
     return true;
