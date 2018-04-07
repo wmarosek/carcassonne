@@ -14,7 +14,7 @@
 size_t get_board_size();
 
 /**
- * set tile pointer to vaild memory.
+ * set tile pointer to valid memory.
  * remember to free this
  * @param ptr pointer to tile pointer
  * @return valid tile pointer
@@ -24,7 +24,7 @@ tile* make_tile(tile**);
 /**
  * set tile pointer to valid memory and initialize according to string.
  * remember to free this
- * @param string 5 cell long string specifing tile
+ * @param string 5 cell long string specifying tile
  * @param ptr pointer to tile pointer
  * @return pointer to initialized tile
  */

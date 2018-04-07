@@ -45,7 +45,7 @@ bool can_place_tile(size_t size, tile* board[size][size],
     }
     // count amount of surrounding tiles
     int count = 0;
-    // check if placement is on the edge and if neighbour tile is not null
+    // check if placement is on the edge and if neighbor tile is not null
     if (height != 0 && board[height - 1][width]) {
         // increase amount of surrounding tiles count
         ++count;

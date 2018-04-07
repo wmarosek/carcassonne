@@ -28,7 +28,7 @@ modifier char_to_modifier(char);
  * set tile values based on supplied string.
  * str must be at least 5 cells long
  * if tile pointer is NULL only return it
- * @param str string length 5 specifing tile
+ * @param str string length 5 specifying tile
  * @param t tile pointer being assigned to
  * @return returns tile pointer
  */
@@ -66,7 +66,7 @@ char modifier_to_char(modifier);
  * set string based on supplied tile.
  * string must be at least 5 cells long, string is not null terminated,
  * if string pointer is NULL only return it
- * @param t tile pointer specifing string
+ * @param t tile pointer specifying string
  * @param buff string at least length 5, being assigned to
  * @return string representing tile, buff
  */
@@ -101,11 +101,11 @@ int rate_tile(const tile*);                 // return a tile rating
 tile choose_best_tile(const tile*, size_t); // choose best tile from the list based on rating
 
 /**
- * roatate tile clockwise.
+ * rotate tile clockwise.
  * if tile pointer is NULL only return it
  * pointer returned for validity checks and function chaining
  * @param t tile to rotate
- * @return roatated tile
+ * @return rotated tile
  */
 tile* rotate_tile(tile*);
 
