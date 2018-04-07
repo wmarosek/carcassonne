@@ -29,8 +29,8 @@ void free_board(size_t, tile* [*][*]);
  * @param width
  * @return if can place tile
  */
-bool can_place_tile(size_t, tile* [*][*],
-                    tile*, size_t, size_t);
+bool can_place_tile(size_t, const tile* [*][*],
+                    const tile*, size_t, size_t);
 
 /**
  * place tile in specified location.
@@ -46,7 +46,7 @@ void place_tile(tile**, tile*);
  * @param board 2 dimensional array of tile pointers
  * @return success of operation
  */
-bool parse_board(char*, size_t, tile* [*][*]);
+bool parse_board(const char*, size_t, tile* [*][*]);
 
 /**
  * write board to file.
@@ -55,6 +55,6 @@ bool parse_board(char*, size_t, tile* [*][*]);
  * @param size size of tile list array
  * @return success of operation
  */
-bool write_board(char*, const tile**, size_t);
+bool write_board(const char*, const tile**, size_t);
 
 #endif
