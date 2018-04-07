@@ -17,14 +17,6 @@ void initialize_board_malloc(size_t size, tile** board[size][size]) {
     }
 }
 
-tile* make_tile(tile** ptr) {
-    return *ptr = malloc(sizeof(tile*));
-}
-
-tile* make_tile_from_str(const char str[static 5], tile** ptr) {
-    return str_to_tile(str, make_tile(ptr));
-}
-
 void free_board(size_t size, tile* board[size][size]) {
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < size; ++j) {
@@ -45,7 +37,7 @@ bool can_place_tile(size_t size, tile* board[size][size],
     }
     // count amount of surrounding tiles
     int count = 0;
-    // check if placement is on the edge and if neighbour tile is not null
+    // check if placement is on the edge and if neighbor tile is not null
     if (height != 0 && board[height - 1][width]) {
         // increase amount of surrounding tiles count
         ++count;

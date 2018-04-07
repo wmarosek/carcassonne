@@ -1,34 +1,61 @@
 #include "misc.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 void greeting() {
-    printf("hello player!\n"
-           "welcome to carcassonne game!\n"
-           "something something\n");
+    puts("hello player!\n"
+         "welcome to a simple carcassonne based game!\n"
+         "for usage run: carcassonne help\n");
 }
 
 void usage() {
-    printf("carcassonne [tiles-list-file] [board-file]\n"
-           "auto mode run if both aruments specified, otherwise interactieve\n");
+    puts("usage: carcassonne [tiles-list-file] [board-file]\n"
+         "tiles-list-file and board-file should be flies in current directory\n"
+         "if both tiles-list-file and board-file specified run in auto mode\n"
+         "if only tiles-list given use list specified in interactive mode\n"
+         "if none file specified use default tile list for interactive mode\n");
 }
 
-gamemode init(int argc, char* argv[], FILE* list, FILE* board) {
-
+gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     if (argc > 1 && strcmp(argv[1], "help") == 0) {
         usage();
         exit(EXIT_SUCCESS);
     }
 
-    // HACK: 0 args - set INTERACTIVE_NO_TILES, 1 - INTERACTIVE, 2 - AUTO
+    // argc is always at least 1 since program name is always first argument,
+    // if zero additional arguments set mode to INTERACTIVE_NO_TILES,
+    // if one set mode to INTERACTIVE,
+    // else set to AUTO
     gamemode mode = argc - 1;
 
-    // TODO: open files and set file ptrs here
+    if (mode == INTERACTIVE || mode == AUTO) {
+        *list_file = argv[1];
+        FILE* temp;
+        // check if can open list file in rw mode
+        if ((temp = fopen(*list_file, "rw")) == 0) {
+            fputs("error opening tiles-list-file\n", stderr);
+            exit(EXIT_FAILURE);
+        }
+        fclose(temp);
+    }
+
+    if (mode == AUTO) {
+        *board_file = argv[2];
+        FILE* temp;
+        // check if can open board file in rw mode
+        if ((temp = fopen(*board_file, "rw")) == 0) {
+            fputs("error opening board-flie\n", stderr);
+            exit(EXIT_FAILURE);
+        }
+        fclose(temp);
+    }
+
     return mode;
 }
 
-void run(gamemode mode, FILE* list, FILE* board) {
+void run(gamemode mode, char* list, char* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
         greeting();
     }

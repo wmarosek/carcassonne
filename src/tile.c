@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+tile* make_tile(tile** ptr) {
+    return *ptr = malloc(sizeof(tile*));
+}
+
 element char_to_element(char ch) {
     assert(ch == 'c' || ch == 'r' || ch == 'f');
     switch(tolower(ch)) {
@@ -34,14 +38,19 @@ tile* str_to_tile(const char str[static 5], tile* t) {
     return t;
 }
 
+tile* make_tile_from_str(const char str[static 5], tile** ptr) {
+    return str_to_tile(str, make_tile(ptr));
+}
+
 bool parse_tile(FILE* file, tile* t) {
-    char ch, str[5];
+    int ch;
+    char str[5];
     size_t i = 0;
     while ((ch = getc(file)) != EOF) {
         if (isspace(ch)) {
             continue;
         }
-        str[i++] = ch;
+        str[i++] = (char)ch;
         if (i == 5) {
             str_to_tile(str, t);
             return true;
@@ -50,16 +59,44 @@ bool parse_tile(FILE* file, tile* t) {
     return false;
 }
 
-bool parse_tile_list(FILE* file, tile* list, size_t len) {
-    if (list && file) {
-        for (size_t i = 0; i < len; ++i) {
-            // if any tile parsing fails return false
-            if (!parse_tile(file, &list[i])) {
-                return false;
-            }
+bool parse_tile_list(char* filename, tile* list, size_t len) {
+    if (!list) {
+        return false;
+    }
+    FILE* file;
+    if ((file = fopen(filename, "r")) == 0) {
+        return false;
+    }
+    for (size_t i = 0; i < len; ++i) {
+        // if any tile parsing fails return false
+        if (!parse_tile(file, &list[i])) {
+            fclose(file);
+            return false;
         }
     }
+    fclose(file);
     return true;
+}
+
+size_t find_tile_list_len(char* filename) {
+    FILE* list = fopen(filename, "r");
+    size_t count = 0;
+    if (list) {
+        int ch;
+        while ((ch = getc(list)) != EOF) {
+            while ((ch = getc(list)) != EOF && isspace(ch)) {
+                continue;
+            }
+            if (ch != EOF && !isspace(ch)) {
+                ++count;
+            }
+            while ((ch = getc(list)) != EOF && !isspace(ch)) {
+                continue;
+            }
+        }
+        fclose(list);
+    }
+    return count;
 }
 
 char element_to_char(element e) {
