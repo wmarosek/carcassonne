@@ -99,6 +99,16 @@ size_t find_tile_list_len(char* filename) {
     return count;
 }
 
+size_t initialize_tile_list(char* filename, tile** list) {
+    size_t len = find_tile_list_len(filename);
+    *list = malloc(sizeof(tile) * len);
+    if (!parse_tile_list(filename, *list, len)) {
+        fputs("error parsing tile list\n", stderr);
+        exit(EXIT_FAILURE);
+    }
+    return len;
+}
+
 char element_to_char(element e) {
     switch (e) {
     case CASTLE: return 'c';

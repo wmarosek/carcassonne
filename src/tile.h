@@ -76,6 +76,15 @@ bool parse_tile_list(char*, tile*, size_t);
  */
 size_t find_tile_list_len(char*);
 
+/**
+ * allocates and initializes tile list based on tile list file.
+ * remeber to free this, if filename is bad program will exit
+ * @param filename name of the tile list file
+ * @param list pointer to pointer to allocate tile list array
+ * @return length of initialized tile list
+ */
+size_t initialize_tile_list(char*, tile**);
+
 char element_to_char(element);
 char modifier_to_char(modifier);
 
