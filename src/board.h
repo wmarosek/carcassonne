@@ -55,6 +55,6 @@ bool parse_board(const char*, size_t, tile* [*][*]);
  * @param size size of tile list array
  * @return success of operation
  */
-bool write_board(const char*, const tile**, size_t);
+bool write_board(const char*, size_t, const tile* [*][*]);
 
 #endif
