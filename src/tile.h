@@ -21,6 +21,14 @@ typedef struct {
 } tile;
 /** @} */
 
+/**
+ * set tile pointer to valid memory.
+ * remember to free this
+ * @param ptr pointer to tile pointer
+ * @return valid tile pointer
+ */
+tile* make_tile(tile**);
+
 element char_to_element(char);
 modifier char_to_modifier(char);
 
@@ -33,6 +41,15 @@ modifier char_to_modifier(char);
  * @return returns tile pointer
  */
 tile* str_to_tile(const char[static 5], tile*);
+
+/**
+ * set tile pointer to valid memory and initialize according to string.
+ * remember to free this
+ * @param string 5 cell long string specifying tile
+ * @param ptr pointer to tile pointer
+ * @return pointer to initialized tile
+ */
+tile* make_tile_from_str(const char[static 5], tile**);
 
 /**
  * parse next tile in specified file stream.

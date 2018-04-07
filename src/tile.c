@@ -5,6 +5,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+tile* make_tile(tile** ptr) {
+    return *ptr = malloc(sizeof(tile*));
+}
+
 element char_to_element(char ch) {
     assert(ch == 'c' || ch == 'r' || ch == 'f');
     switch(tolower(ch)) {
@@ -32,6 +36,10 @@ tile* str_to_tile(const char str[static 5], tile* t) {
         t->mod = char_to_modifier(str[4]);
     }
     return t;
+}
+
+tile* make_tile_from_str(const char str[static 5], tile** ptr) {
+    return str_to_tile(str, make_tile(ptr));
 }
 
 bool parse_tile(FILE* file, tile* t) {

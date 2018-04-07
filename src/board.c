@@ -17,14 +17,6 @@ void initialize_board_malloc(size_t size, tile** board[size][size]) {
     }
 }
 
-tile* make_tile(tile** ptr) {
-    return *ptr = malloc(sizeof(tile*));
-}
-
-tile* make_tile_from_str(const char str[static 5], tile** ptr) {
-    return str_to_tile(str, make_tile(ptr));
-}
-
 void free_board(size_t size, tile* board[size][size]) {
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < size; ++j) {
