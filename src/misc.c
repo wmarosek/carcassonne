@@ -32,6 +32,10 @@ gamemode init(int argc, char* argv[], FILE** list, FILE** board) {
     // else set to AUTO
     gamemode mode = argc - 1;
 
+    // should we open file in rw since functions like write_board
+    // will need write permisions or only set file names to char**
+    // and other functions will have to handle that themselves,
+    // additionally check here if flies are valid
     if (mode == INTERACTIVE || mode == AUTO) {
         *list = fopen(argv[1], "r");
         if (*list == 0) {
