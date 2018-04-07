@@ -1,5 +1,6 @@
 #include "misc.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -17,10 +18,7 @@ void usage() {
          "if none file specified use default tile list for interactive mode\n");
 }
 
-gamemode init(int argc, char* argv[], FILE** list, FILE** board) {
-    *list = 0;
-    *board = 0;
-
+gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     if (argc > 1 && strcmp(argv[1], "help") == 0) {
         usage();
         exit(EXIT_SUCCESS);
@@ -32,30 +30,32 @@ gamemode init(int argc, char* argv[], FILE** list, FILE** board) {
     // else set to AUTO
     gamemode mode = argc - 1;
 
-    // should we open file in rw since functions like write_board
-    // will need write permisions or only set file names to char**
-    // and other functions will have to handle that themselves,
-    // additionally check here if flies are valid
     if (mode == INTERACTIVE || mode == AUTO) {
-        *list = fopen(argv[1], "r");
-        if (*list == 0) {
+        *list_file = argv[1];
+        FILE* temp;
+        // check if can open list file in rw mode
+        if ((temp = fopen(*list_file, "rw")) == 0) {
             fputs("error opening tiles-list-file\n", stderr);
             exit(EXIT_FAILURE);
         }
+        fclose(temp);
     }
 
     if (mode == AUTO) {
-        *board = fopen(argv[2], "r");
-        if (*board == 0) {
+        *board_file = argv[2];
+        FILE* temp;
+        // check if can open board file in rw mode
+        if ((temp = fopen(*board_file, "rw")) == 0) {
             fputs("error opening board-flie\n", stderr);
             exit(EXIT_FAILURE);
         }
+        fclose(temp);
     }
 
     return mode;
 }
 
-void run(gamemode mode, FILE* list, FILE* board) {
+void run(gamemode mode, char* list, char* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
         greeting();
     }

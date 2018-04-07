@@ -41,20 +41,20 @@ void place_tile(tile**, tile*);
 
 /**
  * assign tile pointers to board array based on specified file
- * @param file board file stream
+ * @param filename board file name
  * @param size board size
  * @param board 2 dimensional array of tile pointers
  * @return success of operation
  */
-bool parse_board(FILE*, size_t, tile* [*][*]);
+bool parse_board(char*, size_t, tile* [*][*]);
 
 /**
  * write board to file.
- * @param file board file stream
+ * @param filename board file name
  * @param board tile pointer array portraying board
  * @param size size of tile list array
  * @return success of operation
  */
-bool write_board(FILE*, const tile**, size_t);
+bool write_board(char*, const tile**, size_t);
 
 #endif

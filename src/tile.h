@@ -62,12 +62,12 @@ bool parse_tile(FILE*, tile*);
 
 /**
  * assign tile values to tile array based on specified file.
- * @param file tile list file stream
+ * @param filename tile list file name
  * @param list tile array
  * @param len length of array
  * @return success of operation, return false if parse tile fails, list / tile is NULL
  */
-bool parse_tile_list(FILE*, tile*, size_t);
+bool parse_tile_list(char*, tile*, size_t);
 
 /**
  * reads file to find out how big tile list to allocate.

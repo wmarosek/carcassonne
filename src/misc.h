@@ -2,9 +2,6 @@
 #define MISC_H
 /** @file misc.h */
 
-#include <stdbool.h>
-#include <stdio.h>
-
 typedef enum {
     INTERACTIVE_NO_TILES,
     INTERACTIVE,
@@ -15,10 +12,10 @@ typedef enum {
  * initializes file streams for tile list and gameboard returns gamemode.
  * @param argc count of args to main
  * @param argv array of args to main
- * @param list file stream for tile list
- * @param board file stream for gameboard
+ * @param list_file pointer list file name
+ * @param board_file pointer to board file name
  */
-gamemode init(int, char**, FILE**, FILE**);
+gamemode init(int, char**, char**, char**);
 
 /**
  * print usage.
@@ -33,9 +30,9 @@ void greeting();
 /**
  * main game loop.
  * @param mode gamemode in which game should be played
- * @param list file stream for tile list if applicable
- * @param board file stream for gameboard if applicable
+ * @param list file name for tile list if applicable
+ * @param board file name for gameboard if applicable
  */
-void run(gamemode, FILE*, FILE*);
+void run(gamemode, char*, char*);
 
 #endif

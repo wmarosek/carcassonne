@@ -59,16 +59,22 @@ bool parse_tile(FILE* file, tile* t) {
     return false;
 }
 
-bool parse_tile_list(FILE* file, tile* list, size_t len) {
-    if (!list || !file) {
+bool parse_tile_list(char* filename, tile* list, size_t len) {
+    if (!list) {
+        return false;
+    }
+    FILE* file;
+    if ((file = fopen(filename, "r")) == 0) {
         return false;
     }
     for (size_t i = 0; i < len; ++i) {
         // if any tile parsing fails return false
         if (!parse_tile(file, &list[i])) {
+            fclose(file);
             return false;
         }
     }
+    fclose(file);
     return true;
 }
 
