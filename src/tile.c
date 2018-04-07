@@ -73,7 +73,9 @@ size_t find_tile_list_len(char* filename) {
             while ((ch = getc(list)) != EOF && isspace(ch)) {
                 continue;
             }
-            ++count;
+            if (ch != EOF && !isspace(ch)) {
+                ++count;
+            }
             while ((ch = getc(list)) != EOF && !isspace(ch)) {
                 continue;
             }
