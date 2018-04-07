@@ -64,6 +64,25 @@ bool parse_tile_list(FILE* file, tile* list, size_t len) {
     return true;
 }
 
+size_t find_tile_list_len(char* filename) {
+    FILE* list = fopen(filename, "r");
+    size_t count = 0;
+    if (list) {
+        int ch;
+        while ((ch = getc(list)) != EOF) {
+            while ((ch = getc(list)) != EOF && isspace(ch)) {
+                continue;
+            }
+            ++count;
+            while ((ch = getc(list)) != EOF && !isspace(ch)) {
+                continue;
+            }
+        }
+        fclose(list);
+    }
+    return count;
+}
+
 char element_to_char(element e) {
     switch (e) {
     case CASTLE: return 'c';

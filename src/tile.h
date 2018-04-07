@@ -52,6 +52,13 @@ bool parse_tile(FILE*, tile*);
  */
 bool parse_tile_list(FILE*, tile*, size_t);
 
+/**
+ * reads file to find out how big tile list to allocate.
+ * @param filename name of tile list file
+ * @return length the tile list should be
+ */
+size_t find_tile_list_len(char*);
+
 char element_to_char(element);
 char modifier_to_char(modifier);
 
