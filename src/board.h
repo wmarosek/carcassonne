@@ -9,7 +9,7 @@
 
 /**
  * get size of the game board.
- * @return size_t size of the board
+ * @return size of the board
  */
 size_t get_board_size();
 
