@@ -15,18 +15,18 @@ size_t get_board_size();
 
 /**
  * frees array of tile pointers
- * @param size size of the array
- * @param array of tile pointers
+ * @param [in] size size of the array
+ * @param [in] array of tile pointers
  */
 void free_board(size_t, tile* [*][*]);
 
 /**
  * check if specified tile can be placed in specified place on board.
- * @param size board size
- * @param board tile pointer array
- * @param t tile pointer
- * @param height
- * @param width
+ * @param [in] size board size
+ * @param [in] board tile pointer array
+ * @param [in] t tile pointer
+ * @param [in] height
+ * @param [in] width
  * @return if can place tile
  */
 bool can_place_tile(size_t, const tile* [*][*],
@@ -34,25 +34,25 @@ bool can_place_tile(size_t, const tile* [*][*],
 
 /**
  * place tile in specified location.
- * @param place
- * @param t tile to place
+ * @param [out] place
+ * @param [in] t tile to place
  */
 void place_tile(tile**, tile*);
 
 /**
  * assign tile pointers to board array based on specified file
- * @param filename board file name
- * @param size board size
- * @param board 2 dimensional array of tile pointers
+ * @param [in] filename board file name
+ * @param [in] size board size
+ * @param [in, out] board 2 dimensional array of tile pointers
  * @return success of operation
  */
 bool parse_board(const char*, size_t, tile* [*][*]);
 
 /**
  * write board to file.
- * @param filename board file name
- * @param board tile pointer array portraying board
- * @param size size of tile list array
+ * @param [in] filename board file name
+ * @param [in] size size of tile list array
+ * @param [in] board tile pointer array portraying board
  * @return success of operation
  */
 bool write_board(const char*, size_t, const tile* [*][*]);
