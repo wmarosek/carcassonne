@@ -103,6 +103,7 @@ size_t initialize_tile_list(const char* filename, tile** list) {
     size_t len = find_tile_list_len(filename);
     *list = malloc(sizeof(tile) * len);
     if (!parse_tile_list(filename, *list, len)) {
+        free(*list);
         fputs("error parsing tile list\n", stderr);
         exit(EXIT_FAILURE);
     }
