@@ -25,8 +25,8 @@ void free_board(size_t size, tile* board[size][size]) {
     }
 }
 
-bool can_place_tile(size_t size, tile* board[size][size],
-                    tile* t, size_t height, size_t width) {
+bool can_place_tile(size_t size, const tile* board[size][size],
+                    const tile* t, size_t height, size_t width) {
     // if out of bounds return false
     if (height > size || width > size) {
         return false;

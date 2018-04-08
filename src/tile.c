@@ -59,7 +59,7 @@ bool parse_tile(FILE* file, tile* t) {
     return false;
 }
 
-bool parse_tile_list(char* filename, tile* list, size_t len) {
+bool parse_tile_list(const char* filename, tile* list, size_t len) {
     if (!list) {
         return false;
     }
@@ -78,7 +78,7 @@ bool parse_tile_list(char* filename, tile* list, size_t len) {
     return true;
 }
 
-size_t find_tile_list_len(char* filename) {
+size_t find_tile_list_len(const char* filename) {
     FILE* list = fopen(filename, "r");
     size_t count = 0;
     if (list) {
@@ -97,6 +97,16 @@ size_t find_tile_list_len(char* filename) {
         fclose(list);
     }
     return count;
+}
+
+size_t initialize_tile_list(const char* filename, tile** list) {
+    size_t len = find_tile_list_len(filename);
+    *list = malloc(sizeof(tile) * len);
+    if (!parse_tile_list(filename, *list, len)) {
+        fputs("error parsing tile list\n", stderr);
+        exit(EXIT_FAILURE);
+    }
+    return len;
 }
 
 char element_to_char(element e) {
@@ -142,7 +152,7 @@ void print_tile(const tile* t) {
 void print_tile_list(const tile* t, size_t len) {
     for (unsigned int i = 0; i < len; ++i) {
         print_tile(&t[i]);
-        printf("\n");
+        putchar('\n');
     }
 }
 
