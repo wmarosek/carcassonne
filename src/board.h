@@ -14,11 +14,19 @@
 size_t get_board_size();
 
 /**
+ * allocates a board and sets all tiles to empty (null).
+ * remeber to free this, you can use {@code board_free} for this
+ * @param [in] size size of a board side
+ * @return board
+ */
+tile*** board_malloc(size_t);
+
+/**
  * frees array of tile pointers
  * @param [in] size size of the array
  * @param [in] array of tile pointers
  */
-void free_board(size_t, tile* [*][*]);
+void board_free(size_t, tile***);
 
 /**
  * check if specified tile can be placed in specified place on board.

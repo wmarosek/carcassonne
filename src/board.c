@@ -1,6 +1,8 @@
 #include "board.h"
 
+#include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 
 size_t get_board_size() {
     fputs("input board size: ", stdout);
@@ -9,20 +11,23 @@ size_t get_board_size() {
     return ret;
 }
 
-void initialize_board_malloc(size_t size, tile** board[size][size]) {
+tile*** board_malloc(size_t size) {
+    tile*** board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
-        for (size_t j = 0; j < size; ++j) {
-            *board[i][j] = make_tile(board[i][j]);
-        }
+        board[i] = malloc(sizeof(tile*) * size);
+        memset(board[i], 0, size);
     }
+    return board;
 }
 
-void free_board(size_t size, tile* board[size][size]) {
+void board_free(size_t size, tile*** board) {
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < size; ++j) {
             free(board[i][j]);
         }
+        free(board[i]);
     }
+    free(board);
 }
 
 bool can_place_tile(size_t size, const tile* board[size][size],
