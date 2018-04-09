@@ -1,6 +1,6 @@
-#ifndef MISC_H
-#define MISC_H
-/** @file misc.h */
+#ifndef LOGIC_H
+#define LOGIC_H
+/** @file logic.h */
 
 typedef enum {
     INTERACTIVE_NO_TILES,
@@ -16,16 +16,6 @@ typedef enum {
  * @param [out] board_file pointer to board file name
  */
 gamemode init(int, char**, char**, char**);
-
-/**
- * print usage.
- */
-void usage();
-
-/**
- * print greeting.
- */
-void greeting();
 
 /**
  * main game loop.
