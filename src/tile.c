@@ -47,6 +47,9 @@ bool parse_tile(FILE* file, tile* t) {
     char str[5];
     size_t i = 0;
     while ((ch = getc(file)) != EOF) {
+        if (ch == '\t') {
+            return true;
+        }
         if (isspace(ch)) {
             continue;
         }
