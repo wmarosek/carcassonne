@@ -15,7 +15,7 @@ board_t board_malloc(size_t size) {
     board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
         board[i] = malloc(sizeof(tile*) * size);
-        memset(board[i], 0, size);
+        memset(board[i], 0, sizeof(tile*) * size);
     }
     return board;
 }
@@ -88,10 +88,12 @@ bool parse_board(const char* filename, size_t size, board_t* board) {
     while ((ch = getc(file)) != EOF) {
         if (ch == '\t') {
             ++j;
+            count = 0;
         }
         if (ch == '\n') {
             ++i;
             j = 0;
+            count = 0;
         }
         if (i > size || j > size) {
             return false;
@@ -106,5 +108,6 @@ bool parse_board(const char* filename, size_t size, board_t* board) {
             ++j;
         }
     }
+    fclose(file);
     return count == 0;
 }

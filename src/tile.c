@@ -6,7 +6,7 @@
 #include <string.h>
 
 tile* make_tile(tile** ptr) {
-    return *ptr = malloc(sizeof(tile*));
+    return *ptr = malloc(sizeof(tile));
 }
 
 element char_to_element(char ch) {
