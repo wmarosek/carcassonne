@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+typedef tile*** board_t;
+
 /**
  * get size of the game board.
  * @return size of the board
@@ -19,14 +21,14 @@ size_t get_board_size();
  * @param [in] size size of a board side
  * @return board
  */
-tile*** board_malloc(size_t);
+board_t board_malloc(size_t);
 
 /**
  * frees array of tile pointers
  * @param [in] size size of the array
  * @param [in] array of tile pointers
  */
-void board_free(size_t, tile***);
+void board_free(size_t, board_t);
 
 /**
  * check if specified tile can be placed in specified place on board.
@@ -37,7 +39,7 @@ void board_free(size_t, tile***);
  * @param [in] width
  * @return if can place tile
  */
-bool can_place_tile(size_t, const tile***,
+bool can_place_tile(size_t, const board_t,
                     const tile*, size_t, size_t);
 
 /**
@@ -54,7 +56,7 @@ void place_tile(tile**, tile*);
  * @param [in, out] board 2 dimensional array of tile pointers
  * @return success of operation
  */
-bool parse_board(const char*, size_t, tile****);
+bool parse_board(const char*, size_t, board_t*);
 
 /**
  * write board to file.
@@ -63,6 +65,6 @@ bool parse_board(const char*, size_t, tile****);
  * @param [in] board tile pointer array portraying board
  * @return success of operation
  */
-bool write_board(const char*, size_t, const tile***);
+bool write_board(const char*, size_t, const board_t);
 
 #endif

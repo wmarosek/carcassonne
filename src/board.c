@@ -11,8 +11,8 @@ size_t get_board_size() {
     return ret;
 }
 
-tile*** board_malloc(size_t size) {
-    tile*** board = malloc(sizeof(tile**) * size);
+board_t board_malloc(size_t size) {
+    board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
         board[i] = malloc(sizeof(tile*) * size);
         memset(board[i], 0, size);
@@ -20,7 +20,7 @@ tile*** board_malloc(size_t size) {
     return board;
 }
 
-void board_free(size_t size, tile*** board) {
+void board_free(size_t size, board_t board) {
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < size; ++j) {
             free(board[i][j]);
@@ -30,7 +30,7 @@ void board_free(size_t size, tile*** board) {
     free(board);
 }
 
-bool can_place_tile(size_t size, const tile*** board,
+bool can_place_tile(size_t size, const board_t board,
                     const tile* t, size_t height, size_t width) {
     // if out of bounds return false
     if (height > size || width > size) {
