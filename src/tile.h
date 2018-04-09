@@ -136,7 +136,7 @@ int rate_tile(const tile*);
  * @param [in] size size of the board
  * @param [in] board gameboard
  */
-tile choose_best_tile(const tile*, size_t, size_t, const tile* [*][*]);
+tile choose_best_tile(const tile*, size_t, size_t, const tile***);
 
 /**
  * rotate tile clockwise.
