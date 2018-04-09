@@ -122,9 +122,21 @@ void print_tile_list(const tile*, size_t);
 
 bool write_tile_list(const tile*, size_t);
 
-// gameplay
-int rate_tile(const tile*);                 // return a tile rating
-tile choose_best_tile(const tile*, size_t); // choose best tile from the list based on rating
+/**
+ * gieve tile a ratign based on current state of a game.
+ * @param [in] t pointer to tile to be reviewed
+ * @return number indicating how good a tile is considering state of the game
+ */
+int rate_tile(const tile*);
+
+/**
+ * find the best tile depeding on the state of a game.
+ * @param [in] list of aviable tiles
+ * @param [in] len length of the list
+ * @param [in] size size of the board
+ * @param [in] board gameboard
+ */
+tile choose_best_tile(const tile*, size_t, size_t, const tile* [*][*]);
 
 /**
  * rotate tile clockwise.
