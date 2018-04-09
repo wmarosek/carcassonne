@@ -76,3 +76,35 @@ bool can_place_tile(size_t size, const board_t board,
 void place_tile(tile** place, tile* t) {
     *place = t;
 }
+
+bool parse_board(const char* filename, size_t size, board_t* board) {
+    FILE* file;
+    if ((file = fopen(filename, "r")) == 0) {
+        return false;
+    }
+    int ch;
+    char str[5];
+    size_t i = 0, j = 0, count = 0;
+    while ((ch = getc(file)) != EOF) {
+        if (ch == '\t') {
+            ++j;
+        }
+        if (ch == '\n') {
+            ++i;
+            j = 0;
+        }
+        if (i > size || j > size) {
+            return false;
+        }
+        if (isspace(ch)) {
+            continue;
+        }
+        str[count++] = (char)ch;
+        if (count == 5) {
+            count = 0;
+            make_tile_from_str(str, &(*board)[i][j]);
+            ++j;
+        }
+    }
+    return count == 0;
+}
