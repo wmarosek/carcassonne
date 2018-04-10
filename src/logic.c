@@ -1,23 +1,12 @@
-#include "misc.h"
+#include "logic.h"
+
+#include "board.h"
+#include "interactive.h"
 #include "tile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-void greeting() {
-    puts("hello player!\n"
-         "welcome to a simple carcassonne based game!\n"
-         "for usage run: carcassonne help\n");
-}
-
-void usage() {
-    puts("usage: carcassonne [tiles-list-file] [board-file]\n"
-         "tiles-list-file and board-file should be flies in current directory\n"
-         "if both tiles-list-file and board-file specified run in auto mode\n"
-         "if only tiles-list given use list specified in interactive mode\n"
-         "if none file specified use default tile list for interactive mode\n");
-}
 
 gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     if (argc > 1 && strcmp(argv[1], "help") == 0) {
@@ -60,7 +49,7 @@ void run(gamemode mode, char* list, char* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
         greeting();
     }
-    tile* tile_list;
+    tile_list_t tile_list;
     size_t list_len;
     if (mode == INTERACTIVE_NO_TILES) {
         // hardcoded, not very nice, and might not be present
@@ -69,7 +58,6 @@ void run(gamemode mode, char* list, char* board) {
     } else {
         list_len = initialize_tile_list(list, &tile_list);
     }
-    print_tile_list(tile_list, list_len);
-
+    run_interactive(&tile_list, list_len);
     free(tile_list);
 }

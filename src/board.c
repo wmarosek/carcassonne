@@ -1,6 +1,8 @@
 #include "board.h"
 
+#include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 
 size_t get_board_size() {
     fputs("input board size: ", stdout);
@@ -9,23 +11,26 @@ size_t get_board_size() {
     return ret;
 }
 
-void initialize_board_malloc(size_t size, tile** board[size][size]) {
+board_t board_malloc(size_t size) {
+    board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
-        for (size_t j = 0; j < size; ++j) {
-            *board[i][j] = make_tile(board[i][j]);
-        }
+        board[i] = malloc(sizeof(tile*) * size);
+        memset(board[i], 0, sizeof(tile*) * size);
     }
+    return board;
 }
 
-void free_board(size_t size, tile* board[size][size]) {
+void board_free(size_t size, board_t board) {
     for (size_t i = 0; i < size; ++i) {
         for (size_t j = 0; j < size; ++j) {
             free(board[i][j]);
         }
+        free(board[i]);
     }
+    free(board);
 }
 
-bool can_place_tile(size_t size, const tile* board[size][size],
+bool can_place_tile(size_t size, const board_t board,
                     const tile* t, size_t height, size_t width) {
     // if out of bounds return false
     if (height > size || width > size) {
@@ -70,4 +75,39 @@ bool can_place_tile(size_t size, const tile* board[size][size],
 
 void place_tile(tile** place, tile* t) {
     *place = t;
+}
+
+bool parse_board(const char* filename, size_t size, board_t* board) {
+    FILE* file;
+    if ((file = fopen(filename, "r")) == 0) {
+        return false;
+    }
+    int ch;
+    char str[5];
+    size_t i = 0, j = 0, count = 0;
+    while ((ch = getc(file)) != EOF) {
+        if (ch == '\t') {
+            ++j;
+            count = 0;
+        }
+        if (ch == '\n') {
+            ++i;
+            j = 0;
+            count = 0;
+        }
+        if (i > size || j > size) {
+            return false;
+        }
+        if (isspace(ch)) {
+            continue;
+        }
+        str[count++] = (char)ch;
+        if (count == 5) {
+            count = 0;
+            make_tile_from_str(str, &(*board)[i][j]);
+            ++j;
+        }
+    }
+    fclose(file);
+    return count == 0;
 }

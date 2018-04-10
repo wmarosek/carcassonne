@@ -1,4 +1,4 @@
-#include "misc.h"
+#include "logic.h"
 
 #include <stdlib.h>
 

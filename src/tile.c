@@ -6,7 +6,7 @@
 #include <string.h>
 
 tile* make_tile(tile** ptr) {
-    return *ptr = malloc(sizeof(tile*));
+    return *ptr = malloc(sizeof(tile));
 }
 
 element char_to_element(char ch) {
@@ -47,6 +47,9 @@ bool parse_tile(FILE* file, tile* t) {
     char str[5];
     size_t i = 0;
     while ((ch = getc(file)) != EOF) {
+        if (ch == '\t') {
+            return true;
+        }
         if (isspace(ch)) {
             continue;
         }
@@ -59,7 +62,7 @@ bool parse_tile(FILE* file, tile* t) {
     return false;
 }
 
-bool parse_tile_list(const char* filename, tile* list, size_t len) {
+bool parse_tile_list(const char* filename, tile_list_t list, size_t len) {
     if (!list) {
         return false;
     }
@@ -99,10 +102,11 @@ size_t find_tile_list_len(const char* filename) {
     return count;
 }
 
-size_t initialize_tile_list(const char* filename, tile** list) {
+size_t initialize_tile_list(const char* filename, tile_list_t* list) {
     size_t len = find_tile_list_len(filename);
     *list = malloc(sizeof(tile) * len);
     if (!parse_tile_list(filename, *list, len)) {
+        free(*list);
         fputs("error parsing tile list\n", stderr);
         exit(EXIT_FAILURE);
     }
