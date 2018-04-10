@@ -56,7 +56,7 @@ typedef enum {
 action prompt() {
     fputs("> ", stdout);
     char input[32] = { 0 };
-    scanf("%s", input);
+    fgets(input, sizeof(input), stdin);
     if (strcmp(input, "greeting") == 0) {
         return ACT_GREETING;
     }
