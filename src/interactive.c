@@ -53,10 +53,12 @@ typedef enum {
     ACT_UNKNOWN
 } action;
 
-action prompt() {
-    fputs("> ", stdout);
+char prompt[32] = "> ";
+action handle_input() {
+    fputs(prompt, stdout);
     char input[32] = { 0 };
     fgets(input, sizeof(input), stdin);
+    input[strcspn(input, "\n")] = '\0';
     if (strcmp(input, "greeting") == 0) {
         return ACT_GREETING;
     }
@@ -76,12 +78,18 @@ action prompt() {
     if (strcmp(input, "quit") == 0) {
         return ACT_QUIT;
     }
+    if (strcmp(input, "prompt") == 0) {
+        fputs("new prompt: ", stdout);
+        fgets(prompt, sizeof(prompt), stdin);
+        prompt[strcspn(prompt, "\n")] = '\0';
+        return handle_action();
+    }
     return ACT_UNKNOWN;
 }
 
 void run_interactive(tile_list_t* tile_list, size_t list_len) {
     while (true) {
-        switch(prompt()) {
+        switch(handle_input()) {
         case ACT_GREETING: greeting(); break;
         case ACT_USAGE: usage(); break;
         case ACT_HELP: help(); break;
