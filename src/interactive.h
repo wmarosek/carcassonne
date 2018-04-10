@@ -12,4 +12,7 @@ void usage();
  */
 void greeting();
 
+void help();
+void run_interactive();
+
 #endif
