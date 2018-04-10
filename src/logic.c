@@ -47,7 +47,7 @@ void run(gamemode mode, char* list, char* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
         greeting();
     }
-    tile* tile_list;
+    tile_list_t tile_list;
     size_t list_len;
     if (mode == INTERACTIVE_NO_TILES) {
         // hardcoded, not very nice, and might not be present

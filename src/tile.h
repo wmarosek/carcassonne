@@ -21,7 +21,7 @@ typedef struct {
 } tile;
 /** @} */
 
-typedef tile** tile_list_t;
+typedef tile* tile_list_t;
 
 /**
  * set tile pointer to valid memory.
@@ -85,7 +85,7 @@ size_t find_tile_list_len(const char*);
  * @param [out] list pointer to pointer to allocate tile list array
  * @return length of initialized tile list
  */
-size_t initialize_tile_list(const char*, tile_list_t);
+size_t initialize_tile_list(const char*, tile_list_t*);
 
 char element_to_char(element);
 char modifier_to_char(modifier);
