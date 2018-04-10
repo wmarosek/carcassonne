@@ -62,7 +62,7 @@ bool parse_tile(FILE* file, tile* t) {
     return false;
 }
 
-bool parse_tile_list(const char* filename, tile* list, size_t len) {
+bool parse_tile_list(const char* filename, tile_list_t list, size_t len) {
     if (!list) {
         return false;
     }
@@ -102,7 +102,7 @@ size_t find_tile_list_len(const char* filename) {
     return count;
 }
 
-size_t initialize_tile_list(const char* filename, tile** list) {
+size_t initialize_tile_list(const char* filename, tile_list_t* list) {
     size_t len = find_tile_list_len(filename);
     *list = malloc(sizeof(tile) * len);
     if (!parse_tile_list(filename, *list, len)) {
