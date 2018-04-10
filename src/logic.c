@@ -58,6 +58,6 @@ void run(gamemode mode, char* list, char* board) {
     } else {
         list_len = initialize_tile_list(list, &tile_list);
     }
-    run_interactive(tile_list, list_len);
+    run_interactive(&tile_list, list_len);
     free(tile_list);
 }

@@ -3,12 +3,14 @@
 #include "board.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void greeting() {
     puts("hello player!\n"
          "welcome to a simple carcassonne based game!\n"
-         "for usage run: carcassonne help\n");
+         "for usage run: carcassonne help\n"
+         "for help type '?'\n");
 }
 
 void usage() {
@@ -28,12 +30,22 @@ void help() {
          "quit: quits the game\n");
 }
 
+size_t initialize_tile_list_interactive(tile_list_t* p_list) {
+    free(*p_list);
+    *p_list = 0;
+    char name[64] = { 0 };
+    fputs("enter name of a file containing tile list: ", stdout);
+    scanf("%s", name);
+    return initialize_tile_list(name, p_list);
+}
+
 typedef enum {
     ACT_GREETING,
     ACT_USAGE,
     ACT_HELP,
     ACT_LIST,
     ACT_QUIT,
+    ACT_LOAD,
     ACT_UNKNOWN
 } action;
 
@@ -54,19 +66,25 @@ action prompt() {
     if (strcmp(input, "list") == 0) {
         return ACT_LIST;
     }
+    if (strcmp(input, "load") == 0) {
+        return ACT_LOAD;
+    }
     if (strcmp(input, "quit") == 0) {
         return ACT_QUIT;
     }
     return ACT_UNKNOWN;
 }
 
-void run_interactive(tile_list_t tile_list, size_t list_len) {
+void run_interactive(tile_list_t* tile_list, size_t list_len) {
     while (true) {
         switch(prompt()) {
         case ACT_GREETING: greeting(); break;
         case ACT_USAGE: usage(); break;
         case ACT_HELP: help(); break;
-        case ACT_LIST: print_tile_list(tile_list, list_len); break;
+        case ACT_LIST: print_tile_list(*tile_list, list_len); break;
+        case ACT_LOAD:
+            initialize_tile_list_interactive(tile_list);
+            break;
         case ACT_QUIT: return;
         default: fputs("unknown option\n", stderr);
         }

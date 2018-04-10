@@ -2,6 +2,8 @@
 #define INTERACTIVE_H
 /** @file interactive.h */
 
+#include "tile.h"
+
 /**
  * print usage.
  */
