@@ -21,8 +21,8 @@ void help();
 
 /**
  * interactive mode logic and game loop.
- * @param tile_list tile list
- * @param list_len list length
+ * @param [in] tile_list tile list
+ * @param [in] list_len list length
  */
 void run_interactive(tile_list_t*, size_t);
 
