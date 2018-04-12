@@ -181,7 +181,7 @@ tile* rotate_tile(tile* t) {
 }
 
 bool tile_isEmpty(const tile* t) {
-    return t->isEmpty;
+    return t == 0;
 }
 
 element tile_getSideElement(const tile* t, Direction dir) {
