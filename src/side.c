@@ -1,9 +1,15 @@
 #include <stdlib.h>
 #include "side.h"
 
+typedef enum {
+    COMPL_NOT_SET = 0,
+    COMPL_NOT_COMPLETED = -1,
+    COMPL_COMPLETED = 1,
+} compl;
+
 struct Side {
 	element type;
-	int completion;	// 0 - not set, -1 - not completed, 1 - completed
+	compl completion;
 };
 
 Side* Side_new(element type) {
