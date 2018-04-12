@@ -6,11 +6,11 @@ typedef enum {
     COMPL_NOT_SET = 0,
     COMPL_NOT_COMPLETED = -1,
     COMPL_COMPLETED = 1,
-} compl;
+} cmpl;
 
 struct Side {
     element type;
-    compl completion;
+    cmpl completion;
 };
 
 Side* Side_new(element type) {
