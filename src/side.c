@@ -13,14 +13,14 @@ struct Side {
 };
 
 Side* Side_new(element type) {
-	Side* self = (Side*)malloc(sizeof(Side));
+	Side* self = malloc(sizeof(Side));
 	self->type = type;
 	self->completion = 0;
 	return self;
 }
 
 Side* Side_newDefault(void) {
-	Side* self = (Side*)malloc(sizeof(Side));
+	Side* self = malloc(sizeof(Side));
 	self->type = -1;
 	self->completion = 0;
 	return self;

@@ -13,7 +13,7 @@ struct Point {
 };
 
 Point* Point_new(int i, int j, Direction side) {
-	Point* self = (Point*)malloc(sizeof(Point));
+	Point* self = malloc(sizeof(Point));
 	self->x = i;
 	self->y = j;
 	self->side = side;
@@ -46,7 +46,7 @@ struct ListNode {
 };
 
 ListNode* ListNode_new(Point* p) {
-	ListNode* self = (ListNode*)malloc(sizeof(struct ListNode));
+	ListNode* self = malloc(sizeof(struct ListNode));
 	self->next = NULL;
 	self->p = p;
 	return self;
@@ -83,13 +83,13 @@ struct List {
 };
 
 List* List_new(void) {
-	List* self = (List*)malloc(sizeof(struct List));
+	List* self = malloc(sizeof(struct List));
 	self->size = 0;
 	self->items = NULL;
 	return self;
 }
 
-void List_free(List ** selfPtr) {
+void List_free(List** selfPtr) {
 	assert((selfPtr == NULL || *selfPtr == NULL) && "Null pointer on free()");
 	ListNode* cur = (*selfPtr)->items;
 	ListNode* temp = NULL;

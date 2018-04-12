@@ -268,7 +268,7 @@ int tile_numOfSegments(tile* t, element type) {
 }
 
 Direction* tile_getSegments(tile* t, element type, int count) {
-	Direction* segments = (Direction*)malloc(count * sizeof(Direction));
+	Direction* segments = malloc(count * sizeof(Direction));
 	int i = 0;
 
 	if (Side_getType(t->up) == type) {
