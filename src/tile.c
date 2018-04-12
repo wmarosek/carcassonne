@@ -185,32 +185,20 @@ bool tile_isEmpty(const tile* t) {
 }
 
 element tile_getSideElement(const tile* t, Direction dir) {
-    if (dir == NORTH) {
-        return Side_getType(t->up);
-    }
-    else if (dir == EAST) {
-        return Side_getType(t->right);
-    }
-    else if (dir == SOUTH) {
-        return Side_getType(t->down);
-    }
-    else  {
-        return Side_getType(t->left);
+    switch (dir) {
+    case NORTH: return Side_getType(t->up);
+    case EAST: return Side_getType(t->right);
+    case SOUTH: return Side_getType(t->down);
+    case WEST: return Side_getType(t->left);
     }
 }
 
 Side* tile_getSide(const tile* t, Direction dir) {
-    if (dir == NORTH) {
-        return t->up;
-    }
-    else if (dir == EAST) {
-        return t->right;
-    }
-    else if (dir == SOUTH) {
-        return t->down;
-    }
-    else {
-        return t->left;
+    switch (dir) {
+    case NORTH: return t->up;
+    case EAST: return t->right;
+    case SOUTH: return t->down;
+    case WEST: return t->left;
     }
 }
 
