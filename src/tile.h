@@ -14,13 +14,13 @@
 
 typedef enum { NONE, SHIELD, TEMPLE, CROSSROASDS, CITY } modifier;
 typedef struct {
-	Side* up;
-	Side* right;
-	Side* down;
-	Side* left;
-	bool shield;
-	modifier mod;
-	bool isEmpty;
+    Side* up;
+    Side* right;
+    Side* down;
+    Side* left;
+    bool shield;
+    modifier mod;
+    bool isEmpty;
 } tile;
 /** @} */
 
