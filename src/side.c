@@ -53,8 +53,8 @@ Direction Direction_getOpposite(Direction dir) {
 }
 
 bool Direction_areOpposite(Direction dir1, Direction dir2) {
-	if ((dir1 == NORTH && dir2 == SOUTH) || (dir1 == SOUTH && dir2 == NORTH) || (dir1 == WEST && dir2 == EAST) || (dir1 == EAST && dir2 == WEST)) {
-		return true;
-	}
-	return false;
+	return (dir1 == NORTH && dir2 == SOUTH)
+        || (dir1 == SOUTH && dir2 == NORTH)
+        || (dir1 == WEST && dir2 == EAST)
+        || (dir1 == EAST && dir2 == WEST);
 }
