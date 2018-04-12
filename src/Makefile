@@ -1,7 +1,7 @@
-CFLAGS=-std=c11 -Wall -Wextra -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wrestrict -Wnull-dereference -Wdouble-promotion -Wconversion -Wsign-conversion -Wshadow -Wformat=2 -g  -Wjump-misses-init -pedantic
+CFLAGS=-std=c11 -Wall -Wextra -Wlogical-op -Wdouble-promotion -Wconversion -Wsign-conversion -Wshadow -Wformat=2 -g  -Wjump-misses-init -pedantic
 
-carcassonne: main.o board.o logic.o interactive.o tile.o 
-	$(CC) $(CFLAGS) main.o board.o logic.o interactive.o tile.o -o carcassonne
+carcassonne: main.o board.o logic.o interactive.o side.o point.o tile.o calculator.o
+	$(CC) $(CFLAGS) main.o board.o logic.o interactive.o side.o point.o tile.o calculator.o -o carcassonne
 
 clean:
 	rm *.o
