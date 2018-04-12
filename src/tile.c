@@ -14,7 +14,6 @@ element char_to_element(char ch) {
     switch (tolower(ch)) {
     case 'c': return CASTLE;
     case 'r': return ROAD;
-        // returns FIELD for anything different form 'c' and 'r'
     default: return FIELD;
     }
 }
@@ -27,23 +26,18 @@ modifier char_to_modifier(char ch) {
     }
 }
 
-tile* str_to_tile(const char str[/*static*/ 5], tile* t) {
+tile* str_to_tile(const char str[static 5], tile* t) {
     if (t) {
         t->up = Side_new(char_to_element(str[0]));
         t->right = Side_new(char_to_element(str[1]));
         t->down = Side_new(char_to_element(str[2]));
         t->left = Side_new(char_to_element(str[3]));
-
-        //t->up = char_to_element(str[0]);
-        //t->right = char_to_element(str[1]);
-        //t->down = char_to_element(str[2]);
-        //t->left = char_to_element(str[3]);
         t->mod = char_to_modifier(str[4]);
     }
     return t;
 }
 
-tile* make_tile_from_str(const char str[/*static*/ 5], tile** ptr) {
+tile* make_tile_from_str(const char str[static 5], tile** ptr) {
     return str_to_tile(str, make_tile(ptr));
 }
 
@@ -135,7 +129,7 @@ char modifier_to_char(modifier m) {
     }
 }
 
-char* tile_to_str(const tile* t, char buff[/*static*/ 5]) {
+char* tile_to_str(const tile* t, char buff[static 5]) {
     if (t && buff) {    // check if pointers are not null
         buff[0] = element_to_char(tile_getSideElement(t,NORTH));
         buff[1] = element_to_char(tile_getSideElement(t, EAST));
@@ -143,7 +137,7 @@ char* tile_to_str(const tile* t, char buff[/*static*/ 5]) {
         buff[3] = element_to_char(tile_getSideElement(t,WEST));
         buff[4] = modifier_to_char(t->mod);
     }
-    else if (buff) {  // null tile pointer should mean empty board cell
+    else if (buff) {    // null tile pointer should mean empty board cell
         buff[0] = '\t';
         memset(&buff[1], '\0', 4);
     }
@@ -220,14 +214,10 @@ void tile_setSideCompletion(const tile* t, Direction dir, int status) {
 
 int tile_getSideCompletion(const tile* t, Direction dir) {
     switch (dir) {
-    case NORTH:
-        return Side_isCompleted(t->up);
-    case EAST:
-        return Side_isCompleted(t->right);
-    case SOUTH:
-        return Side_isCompleted(t->down);
-    case WEST:
-        return Side_isCompleted(t->left);
+    case NORTH: return Side_isCompleted(t->up);
+    case EAST: return Side_isCompleted(t->right);
+    case SOUTH: return Side_isCompleted(t->down);
+    case WEST: return Side_isCompleted(t->left);
     }
     return 0;
 }
@@ -282,11 +272,17 @@ void tile_freeSegments(Direction** selfPtr) {
 }
 
 bool tile_hasCastle(const tile* t) {
-    return Side_getType(t->up) == CASTLE || Side_getType(t->right) == CASTLE || Side_getType(t->down) == CASTLE || Side_getType(t->left) == CASTLE;
+    return Side_getType(t->up) == CASTLE
+        || Side_getType(t->right) == CASTLE
+        || Side_getType(t->down) == CASTLE
+        || Side_getType(t->left) == CASTLE;
 }
 
 bool tile_hasRoad(const tile* t) {
-    return Side_getType(t->up) == ROAD || Side_getType(t->right) == ROAD || Side_getType(t->down) == ROAD || Side_getType(t->left) == ROAD;
+    return Side_getType(t->up) == ROAD
+        || Side_getType(t->right) == ROAD
+        || Side_getType(t->down) == ROAD
+        || Side_getType(t->left) == ROAD;
 }
 
 bool tile_hasTemple(const tile* t) {
