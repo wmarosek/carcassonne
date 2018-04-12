@@ -33,13 +33,14 @@ void handle_args(int argc, char* argv[]) {
 
 
 
-#define CHECK_VALID_FILE(file, name)                    \
-    FILE* temp;                                         \
-    if ((temp = fopen(file, "rw")) == 0) {              \
-        fprintf(stderr, "error opening %s\n", name);    \
-        exit(EXIT_FAILURE);                             \
-    }                                                   \
+void check_valid_file(const char* file, const char* mode, const char* name) {
+    FILE* temp;
+    if ((temp = fopen(file, mode)) == 0) {
+        fprintf(stderr, "error opening %s\n", name);
+        exit(EXIT_FAILURE);
+    }
     fclose(temp);
+}
 
 gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     handle_args(argc, argv);
@@ -53,13 +54,13 @@ gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     if (mode == INTERACTIVE || mode == AUTO) {
         *list_file = argv[1];
         // check if can open list file in rw mode
-        CHECK_VALID_FILE(*list_file, "tile-list file")
+        check_valid_file(*list_file, "rw", "tile-list file");
     }
 
     if (mode == AUTO) {
         *board_file = argv[2];
         // check if can open list file in rw mode
-        CHECK_VALID_FILE(*board_file, "board file")
+        check_valid_file(*board_file, "rw", "board file");
     }
 
     return mode;

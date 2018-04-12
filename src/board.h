@@ -4,10 +4,16 @@
 
 #include "tile.h"
 
+#include "logic.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 
 typedef tile*** board_t;
+typedef struct {
+    board_t fields;
+    size_t size;
+} sized_board;
 
 /**
  * get size of the game board.
@@ -24,23 +30,29 @@ size_t get_board_size();
 board_t board_malloc(size_t);
 
 /**
- * frees array of tile pointers
- * @param [in] size size of the array
- * @param [in] array of tile pointers
+ * returns struct sized_board, sets size and allocates fields, parses board in auto mode.
+ * arguements only used in auto mode
+ * @param [in] mode game mode
+ * @param [in] filename name of board file
+ * @return sized_board structure representing game board
  */
-void board_free(size_t, board_t);
+sized_board initialize_board(gamemode, const char*);
+
+/**
+ * frees array of tile pointers
+ * @param [in] board game board pointer
+ */
+void board_free(sized_board*);
 
 /**
  * check if specified tile can be placed in specified place on board.
- * @param [in] size board size
- * @param [in] board tile pointer array
+ * @param [in] board pointer to game board
  * @param [in] t tile pointer
- * @param [in] height
- * @param [in] width
+ * @param [in] y y coordinate of placement
+ * @param [in] x x coordinate of placement
  * @return if can place tile
  */
-bool can_place_tile(size_t, const board_t,
-                    const tile*, size_t, size_t);
+bool can_place_tile(sized_board*, const tile*, size_t, size_t);
 
 /**
  * place tile in specified location.
@@ -52,11 +64,10 @@ void place_tile(tile**, tile*);
 /**
  * assign tile pointers to board array based on specified file
  * @param [in] filename board file name
- * @param [in] size board size
- * @param [in, out] board 2 dimensional array of tile pointers
+ * @param [in, out] board game board
  * @return success of operation
  */
-bool parse_board(const char*, size_t, board_t*);
+bool parse_board(const char*, sized_board*);
 
 /**
  * write board to file.
