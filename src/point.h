@@ -1,10 +1,11 @@
 #ifndef POINT_H
 #define POINT_H
 
+#include "side.h"
+
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "side.h"
 
 typedef struct Point Point;
 

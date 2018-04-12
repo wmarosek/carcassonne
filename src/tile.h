@@ -2,16 +2,16 @@
 #define TILE_H
 /** @file tile.h */
 
+#include "side.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include "side.h"
 
 /** @addtogroup Tile
 * enumerators and struct used to represent a tile
 * @{
 */
-
 typedef enum { NONE, SHIELD, TEMPLE, CROSSROASDS, CITY } modifier;
 typedef struct {
     Side* up;

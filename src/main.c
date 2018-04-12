@@ -1,5 +1,5 @@
 #include "logic.h"
-#include "calculator.h"
+
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {

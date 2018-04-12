@@ -1,6 +1,7 @@
+#include "calculator.h"
+
 #include <stdlib.h>
 #include <stdio.h>
-#include "calculator.h"
 
 static int __completionToStatus(bool isCompleted) {
     if (isCompleted) return 1;

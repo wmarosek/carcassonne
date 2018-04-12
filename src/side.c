@@ -1,5 +1,6 @@
-#include <stdlib.h>
 #include "side.h"
+
+#include <stdlib.h>
 
 typedef enum {
     COMPL_NOT_SET = 0,
