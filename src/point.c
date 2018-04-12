@@ -23,8 +23,7 @@ Point* Point_new(int i, int j, Direction side) {
 }
 
 void Point_free(Point** selfPtr) {
-	Point* self = *selfPtr;
-	free(self);
+	free(*selfPtr);
 	*selfPtr = NULL;
 }
 
@@ -56,9 +55,8 @@ ListNode* ListNode_new(Point* p) {
 }
 
 void ListNode_free(ListNode** selfPtr) {
-	ListNode* self = *selfPtr;
-	Point_free(&(self->p));
-	free(self);
+	Point_free(&(*selfPtr)->p);
+	free(*selfPtr);
 	*selfPtr = NULL;
 }
 

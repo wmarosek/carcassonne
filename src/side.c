@@ -27,8 +27,7 @@ Side* Side_newDefault(void) {
 }
 
 void Side_free(Side** selfPtr) {
-	Side* self = *selfPtr;
-	free(self);
+	free(*selfPtr);
 	*selfPtr = NULL;
 }
 
