@@ -31,14 +31,17 @@ void handle_args(int argc, char* argv[]) {
     }
 }
 
-
-
-void check_valid_file(const char* file, const char* mode, const char* name) {
-    FILE* temp;
-    if ((temp = fopen(file, mode)) == 0) {
+FILE* exit_on_bad_file_open(const char* filename, const char* mode, const char* name) {
+    FILE* file;
+    if ((file = fopen(filename, mode)) == 0) {
         fprintf(stderr, "error opening %s\n", name);
         exit(EXIT_FAILURE);
     }
+    return file;
+}
+
+void check_valid_file(const char* filename, const char* mode, const char* name) {
+    FILE* temp = exit_on_bad_file_open(filename, mode, name);
     fclose(temp);
 }
 
