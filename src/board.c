@@ -33,7 +33,7 @@ sized_board initialize_board(gamemode mode, const char* filename) {
         board.size = find_board_size(filename);
     }
     board.fields = board_malloc(board.size);
-    if (mode == AUTO && parse_board(filename, &board)) {
+    if (mode == AUTO && !parse_board(filename, &board)) {
             fprintf(stderr, "error parsing board file: %s\n", filename);
             exit(EXIT_FAILURE);
     }
