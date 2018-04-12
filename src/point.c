@@ -4,8 +4,6 @@
 #include <assert.h>
 #include "point.h"
 
-#define throw(MSG) assert(0 && MSG);
-
 /*point.c*/
 
 struct Point {
@@ -92,7 +90,7 @@ List* List_new(void) {
 }
 
 void List_free(List ** selfPtr) {
-	if (selfPtr == NULL || *selfPtr == NULL) throw("Null pointer on free()");
+	assert((selfPtr == NULL || *selfPtr == NULL) && "Null pointer on free()");
 	ListNode* cur = (*selfPtr)->items;
 	ListNode* temp = NULL;
 	while (cur != NULL) {
@@ -111,8 +109,8 @@ void List_addFirst(List* self, Point* p) {
 	self->size = List_count(self);
 }
 void List_insertAt(List* self, Point* point, int position) {
-	if (point == NULL) throw("Null reference");
-	if (position < 0) throw("Out of bounds");
+	assert((point == NULL) && "Null reference");
+	assert((position < 0) && "Out of bounds");
 	if (position >= self->size) position = self->size;
 
 	if (position == 0) {
@@ -134,20 +132,20 @@ void List_insertAt(List* self, Point* point, int position) {
 }
 
 void List_addLast(List* self, Point* point) {
-	if (point == NULL) throw("Null reference");
+	assert((point == NULL) && "Null reference");
 	List_insertAt(self, point, self->size++);
 }
 
 void List_removeFirst(List* self) {
 	ListNode* node = self->items;
-	if (node == NULL) throw ("NUll reference");
+	assert((node == NULL) && "NUll reference");
 	self->items = ListNode_getNext(node);
 	ListNode_free(&node);
 	self->size = List_count(self);
 }
 
 void List_removeAt(List* self, int position) {
-	if (position < 0 || position >= self->size) throw("Out of bounds");
+	assert((position < 0 || position >= self->size) && "Out of bounds");
 
 	if (position == 0) {
 		List_removeFirst(self);
@@ -171,7 +169,7 @@ void List_removeLast(List* self) {
 }
 
 Point* List_getPoint(List* self, int position) {
-	if (position < 0 || position > self->size) throw("Out of bounds");
+	assert((position < 0 || position > self->size) && "Out of bounds");
 	ListNode* cur = self->items;
 	int i = 0;
 
