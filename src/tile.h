@@ -166,7 +166,7 @@ modifier tile_getCenter(const tile*);
 
 int tile_numOfSegments(const tile* self, element);
 
-Direction* tile_getSegments(const tile*, element, int);
+Direction* tile_getSegments(const tile*, element, size_t);
 
 void tile_freeSegments(Direction**);
 

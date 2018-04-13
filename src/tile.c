@@ -247,7 +247,7 @@ int tile_numOfSegments(const tile* t, element type) {
     return count;
 }
 
-Direction* tile_getSegments(const tile* t, element type, int count) {
+Direction* tile_getSegments(const tile* t, element type, size_t count) {
     Direction* segments = malloc(count * sizeof(Direction));
     int i = 0;
 
