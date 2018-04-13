@@ -21,14 +21,14 @@ void usage() {
          "if none file specified use default tile list for interactive mode\n");
 }
 
-size_t initialize_tile_list_interactive(tile_list_t* p_list) {
-    free(*p_list);
-    *p_list = 0;
+void initialize_tile_list_interactive(sized_tlist* list) {
+    free(list->list);
+    list->list = 0;
     char name[64] = { 0 };
     fputs("enter name of a file containing tile list: ", stdout);
     fgets(name, sizeof(name), stdin);
     name[strcspn(name, "\n")] = '\0';
-    return initialize_tile_list(name, p_list);
+    initialize_tile_list(name, list);
 }
 
 typedef enum {
@@ -97,7 +97,7 @@ action handle_input() {
     return ACT_UNKNOWN;
 }
 
-void run_interactive(tile_list_t* tile_list, size_t list_len) {
+void run_interactive(sized_tlist* list) {
     greeting();
     while (true) {
         switch(handle_input()) {
@@ -111,10 +111,10 @@ void run_interactive(tile_list_t* tile_list, size_t list_len) {
             help();
             break;
         case ACT_PRINT_LIST:
-            print_tile_list(*tile_list, list_len);
+            print_tile_list(list);
             break;
         case ACT_LOAD_LIST:
-            initialize_tile_list_interactive(tile_list);
+            initialize_tile_list_interactive(list);
             break;
         case ACT_CHNG_PRMPT:
             change_prompt();

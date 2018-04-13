@@ -69,15 +69,14 @@ gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     return mode;
 }
 
-void run(gamemode mode, char* list, char* board) {
-    tile_list_t tile_list;
-    size_t list_len;
+void run(gamemode mode, char* list_filename, char* board_filename) {
     if (mode == INTERACTIVE_NO_TILES) {
         // hardcoded, not very nice, and might not be present
         // maybe have some kind of generating mechanism
-        list = "default_tiles";
+        list_filename = "default_tiles";
     }
-    list_len = initialize_tile_list(list, &tile_list);
-    run_interactive(&tile_list, list_len);
-    free(tile_list);
+    sized_tlist list;
+    initialize_tile_list(list_filename, &list);
+    run_interactive(&list);
+    free(list.list);
 }

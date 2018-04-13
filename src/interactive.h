@@ -21,9 +21,8 @@ void help();
 
 /**
  * interactive mode logic and game loop.
- * @param [in] tile_list tile list
- * @param [in] list_len list length
+ * @param [in] list sized_tlist pointer
  */
-void run_interactive(tile_list_t*, size_t);
+void run_interactive(sized_tlist*);
 
 #endif

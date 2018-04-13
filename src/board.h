@@ -76,6 +76,6 @@ bool parse_board(const char*, sized_board*);
  * @param [in] board tile pointer array portraying board
  * @return success of operation
  */
-bool write_board(const char*, size_t, const board_t);
+bool write_board(const char*, sized_tlist*);
 
 #endif
