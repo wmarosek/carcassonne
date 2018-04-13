@@ -185,6 +185,7 @@ element tile_getSideElement(const tile* t, Direction dir) {
     case SOUTH: return Side_getType(t->down);
     case WEST: return Side_getType(t->left);
     }
+    return 0;
 }
 
 Side* tile_getSide(const tile* t, Direction dir) {
@@ -194,6 +195,7 @@ Side* tile_getSide(const tile* t, Direction dir) {
     case SOUTH: return t->down;
     case WEST: return t->left;
     }
+    return 0;
 }
 
 void tile_setSideCompletion(const tile* t, Direction dir, int status) {
