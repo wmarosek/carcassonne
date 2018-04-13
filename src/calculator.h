@@ -1,11 +1,12 @@
 #ifndef CALCULATOR_H
 #define CALCULATOR_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include "tile.h"
 #include "point.h"
 #include "board.h"
+
+#include <stdlib.h>
+#include <stdio.h>
 
 
 int score(board_t board, int rows, int columns);
