@@ -36,10 +36,10 @@ typedef enum {
     ACT_USAGE,
     ACT_HELP,
     ACT_PRINT_LIST,
-    ACT_QUIT,
     ACT_LOAD_LIST,
     ACT_CHNG_PRMPT,
-    ACT_UNKNOWN
+    ACT_QUIT,
+    ACT_UNKNOWN,
 } action;
 
 // command enumerator, user command, command description
@@ -56,16 +56,18 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
     { ACT_HELP,         "?",            "abbrev"                },
     { ACT_PRINT_LIST,   "print list",   "prints tile list"      },
     { ACT_PRINT_LIST,   "p l",          "abbrev"                },
-    { ACT_QUIT,         "quit",         "quits the game"        },
-    { ACT_QUIT,         "q",            "abbrev"                },
     { ACT_LOAD_LIST,    "load list",    "load tile list file"   },
     { ACT_LOAD_LIST,    "l l",          "abbrev"                },
-    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"    }
+    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"    },
+    { ACT_QUIT,         "quit",         "quits the game"        },
+    { ACT_QUIT,         "q",            "abbrev"                },
 };
 
 void help() {
     for (size_t i = 0; i < sizeof(act_list) / sizeof(*act_list); ++i) {
         // do not print commands marked as abbreviations
+        // prints if desc different than 'abbrev'
+        // (strcmp returns 0 if the same)
         if (strcmp(act_list[i].desc, "abbrev")) {
             printf("%s: %s\n", act_list[i].cmd, act_list[i].desc);
         }
@@ -98,15 +100,26 @@ action handle_input() {
 void run_interactive(tile_list_t* tile_list, size_t list_len) {
     while (true) {
         switch(handle_input()) {
-        case ACT_GREETING: greeting(); break;
-        case ACT_USAGE: usage(); break;
-        case ACT_HELP: help(); break;
-        case ACT_PRINT_LIST: print_tile_list(*tile_list, list_len); break;
+        case ACT_GREETING:
+            greeting();
+            break;
+        case ACT_USAGE:
+            usage();
+            break;
+        case ACT_HELP:
+            help();
+            break;
+        case ACT_PRINT_LIST:
+            print_tile_list(*tile_list, list_len);
+            break;
         case ACT_LOAD_LIST:
             initialize_tile_list_interactive(tile_list);
             break;
-        case ACT_QUIT: return;
-        case ACT_CHNG_PRMPT: change_prompt(); break;
+        case ACT_CHNG_PRMPT:
+            change_prompt();
+            break;
+        case ACT_QUIT:
+            return;
         default: fputs("unknown option\n", stderr);
         }
     }
