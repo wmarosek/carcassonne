@@ -8,11 +8,41 @@
 #include <stdlib.h>
 #include <string.h>
 
-gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
-    if (argc > 1 && strcmp(argv[1], "help") == 0) {
-        usage();
-        exit(EXIT_SUCCESS);
+void handle_args(int argc, char* argv[]) {
+    if (argc < 1) {
+        return;
     }
+
+    const struct { const char* arg; void (*func)(); } arg_list[] = {
+        { "usage",      usage },
+        { "--usage",    usage },
+        { "help",       usage },
+        { "--help",     usage },
+        { "-h",         usage },
+    };
+
+    for (int i = 1; i < argc; ++i) {
+        for (size_t j = 0; j < sizeof(arg_list) / sizeof(*arg_list); ++j) {
+            if (strcmp(argv[i], arg_list[j].arg) == 0) {
+                arg_list[j].func();
+                exit(EXIT_SUCCESS);
+            }
+        }
+    }
+}
+
+
+
+#define CHECK_VALID_FILE(file, name)                    \
+    FILE* temp;                                         \
+    if ((temp = fopen(file, "rw")) == 0) {              \
+        fprintf(stderr, "error opening %s\n", name);    \
+        exit(EXIT_FAILURE);                             \
+    }                                                   \
+    fclose(temp);
+
+gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
+    handle_args(argc, argv);
 
     // argc is always at least 1 since program name is always first argument,
     // if zero additional arguments set mode to INTERACTIVE_NO_TILES,
@@ -22,24 +52,14 @@ gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
 
     if (mode == INTERACTIVE || mode == AUTO) {
         *list_file = argv[1];
-        FILE* temp;
         // check if can open list file in rw mode
-        if ((temp = fopen(*list_file, "rw")) == 0) {
-            fputs("error opening tiles-list-file\n", stderr);
-            exit(EXIT_FAILURE);
-        }
-        fclose(temp);
+        CHECK_VALID_FILE(*list_file, "tile-list file")
     }
 
     if (mode == AUTO) {
         *board_file = argv[2];
-        FILE* temp;
-        // check if can open board file in rw mode
-        if ((temp = fopen(*board_file, "rw")) == 0) {
-            fputs("error opening board-flie\n", stderr);
-            exit(EXIT_FAILURE);
-        }
-        fclose(temp);
+        // check if can open list file in rw mode
+        CHECK_VALID_FILE(*board_file, "board file")
     }
 
     return mode;
