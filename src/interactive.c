@@ -27,11 +27,7 @@ size_t initialize_tile_list_interactive(tile_list_t* p_list) {
     char name[64] = { 0 };
     fputs("enter name of a file containing tile list: ", stdout);
     fgets(name, sizeof(name), stdin);
-    int ch;
-    // exhaust stdin
-    while ((ch = getchar()) != '\n' && ch != EOF) {
-        continue;
-    }
+    name[strcspn(name, "\n")] = '\0';
     return initialize_tile_list(name, p_list);
 }
 
@@ -45,21 +41,35 @@ typedef enum {
     ACT_UNKNOWN
 } action;
 
+// command enumerator, user command, command description
+// if you want to abbrevietions and not have them printed in help command
+// put them right after main command
+// (only first command with specific enum value is printed)
 const struct { action act; const char* cmd; const char* desc; } act_list[] = {
     { ACT_GREETING,     "greeting",     "greets player"         },
+    { ACT_GREETING,     "g",            "abbrev"                },
     { ACT_USAGE,        "usage",        "prints usage"          },
-    { ACT_HELP,         "?",            "prints this message"   },
+    { ACT_USAGE,        "u",            "abbrev"                },
     { ACT_HELP,         "help",         "prints this message"   },
-    { ACT_LIST,         "list",         "prints tile list"      },
+    { ACT_HELP,         "h",            "abbrev"                },
+    { ACT_HELP,         "?",            "abbrev"                },
+    { ACT_LIST,         "print list",   "prints tile list"      },
+    { ACT_LIST,         "p l",          "abbrev"                },
     { ACT_QUIT,         "quit",         "quits the game"        },
-    { ACT_LOAD,         "load",         "load tile list file"   }
+    { ACT_QUIT,         "q",            "abbrev"                },
+    { ACT_LOAD,         "load list",    "load tile list file"   },
+    { ACT_LOAD,         "l l",          "abberv"                }
 };
 
 void help() {
     // handle special case
     puts("prompt: change prompt text");
+
     for (size_t i = 0; i < sizeof(act_list) / sizeof(*act_list); ++i) {
-        printf("%s: %s\n", act_list[i].cmd, act_list[i].desc);
+        // do not print commands marked as abbreviations
+        if (strcmp(act_list[i].desc, "abbrev")) {
+            printf("%s: %s\n", act_list[i].cmd, act_list[i].desc);
+        }
     }
 }
 

@@ -2,11 +2,22 @@
 #define LOGIC_H
 /** @file logic.h */
 
+#include <stdio.h>
+
 typedef enum {
     INTERACTIVE_NO_TILES,
     INTERACTIVE,
     AUTO
 } gamemode;
+
+/**
+ * try to open filename whith spefified mode, exit and print name on fopen error.
+ * @param filename name of the file
+ * @param mode mode of operation
+ * @name of file in error message
+ * @return file stream pointer
+ */
+FILE* exit_on_bad_file_open(const char* filename, const char* mode, const char* name);
 
 /**
  * initializes file streams for tile list and gameboard returns gamemode.
