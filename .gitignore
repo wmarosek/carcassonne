@@ -6,3 +6,9 @@ carcassonne
 # doxygen documentation
 doc/html
 doc/latex
+
+# tags
+TAGS
+
+# valgrind
+vgcore.*
