@@ -45,7 +45,7 @@ modifier char_to_modifier(char);
 * @param [out] t tile pointer being assigned to
 * @return returns tile pointer
 */
-tile* str_to_tile(const char[/*static*/ 5], tile*);
+tile* str_to_tile(const char[static 5], tile*);
 
 /**
 * set tile pointer to valid memory and initialize according to string.
@@ -54,7 +54,7 @@ tile* str_to_tile(const char[/*static*/ 5], tile*);
 * @param [out] ptr pointer to tile pointer
 * @return pointer to initialized tile
 */
-tile* make_tile_from_str(const char[/*static*/ 5], tile**);
+tile* make_tile_from_str(const char[static 5], tile**);
 
 /**
 * parse next tile in specified file stream.
@@ -101,7 +101,7 @@ char modifier_to_char(modifier);
 * @param [out] buff string at least length 5, being assigned to
 * @return string representing tile, buff
 */
-char* tile_to_str(const tile*, char[/*static*/ 5]);
+char* tile_to_str(const tile*, char[static 5]);
 
 /**
 * {@code tile_to_str} wrapper, dynamically allocates memory for string.
