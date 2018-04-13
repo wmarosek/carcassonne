@@ -98,6 +98,7 @@ action handle_input() {
 }
 
 void run_interactive(tile_list_t* tile_list, size_t list_len) {
+    greeting();
     while (true) {
         switch(handle_input()) {
         case ACT_GREETING:
