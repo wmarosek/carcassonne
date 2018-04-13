@@ -58,7 +58,7 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
     { ACT_QUIT,         "quit",         "quits the game"        },
     { ACT_QUIT,         "q",            "abbrev"                },
     { ACT_LOAD,         "load list",    "load tile list file"   },
-    { ACT_LOAD,         "l l",          "abberv"                }
+    { ACT_LOAD,         "l l",          "abbrev"                }
 };
 
 void help() {
