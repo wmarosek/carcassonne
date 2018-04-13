@@ -268,8 +268,7 @@ Direction* tile_getSegments(const tile* t, element type, int count) {
 }
 
 void tile_freeSegments(Direction** selfPtr) {
-    Direction* self = *selfPtr;
-    free(self);
+    free(*selfPtr);
     *selfPtr = NULL;
 }
 
