@@ -2,29 +2,33 @@
 #define TILE_H
 /** @file tile.h */
 
+#include "side.h"
+
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include "side.h"
 
 /** @addtogroup Tile
 * enumerators and struct used to represent a tile
 * @{
 */
-
 typedef enum { NONE, SHIELD, TEMPLE, CROSSROASDS, CITY } modifier;
 typedef struct {
-	Side* up;
-	Side* right;
-	Side* down;
-	Side* left;
-	bool shield;
-	modifier mod;
-	bool isEmpty;
+    Side* up;
+    Side* right;
+    Side* down;
+    Side* left;
+    bool shield;
+    modifier mod;
+    bool isEmpty;
 } tile;
 /** @} */
 
 typedef tile* tile_list_t;
+typedef struct {
+    tile_list_t list;
+    size_t len;
+} sized_tlist;
 
 /**
 * set tile pointer to valid memory.
@@ -45,7 +49,7 @@ modifier char_to_modifier(char);
 * @param [out] t tile pointer being assigned to
 * @return returns tile pointer
 */
-tile* str_to_tile(const char[/*static*/ 5], tile*);
+tile* str_to_tile(const char[static 5], tile*);
 
 /**
 * set tile pointer to valid memory and initialize according to string.
@@ -54,7 +58,7 @@ tile* str_to_tile(const char[/*static*/ 5], tile*);
 * @param [out] ptr pointer to tile pointer
 * @return pointer to initialized tile
 */
-tile* make_tile_from_str(const char[/*static*/ 5], tile**);
+tile* make_tile_from_str(const char[static 5], tile**);
 
 /**
 * parse next tile in specified file stream.
@@ -101,7 +105,7 @@ char modifier_to_char(modifier);
 * @param [out] buff string at least length 5, being assigned to
 * @return string representing tile, buff
 */
-char* tile_to_str(const tile*, char[/*static*/ 5]);
+char* tile_to_str(const tile*, char[static 5]);
 
 /**
 * {@code tile_to_str} wrapper, dynamically allocates memory for string.
@@ -152,31 +156,31 @@ tile choose_best_tile(const tile*, size_t, size_t, const tile***);
 */
 tile* rotate_tile(tile*);
 
-bool tile_isEmpty(tile*);
+bool tile_isEmpty(const tile*);
 
-element tile_getSideElement(tile*, Direction);
+element tile_getSideElement(const tile*, Direction);
 
-Side* tile_getSide(tile*, Direction); 
+Side* tile_getSide(const tile*, Direction); 
 
-void tile_setSideCompletion(tile*, Direction, int status);
+void tile_setSideCompletion(const tile*, Direction, int status);
 
-int tile_getSideCompletion(tile*, Direction);
+int tile_getSideCompletion(const tile*, Direction);
 
-modifier tile_getCenter(tile*);
+modifier tile_getCenter(const tile*);
 
-int tile_numOfSegments(tile* self, element);
+int tile_numOfSegments(const tile* self, element);
 
-Direction* tile_getSegments(tile*, element, int);
+Direction* tile_getSegments(const tile*, element, size_t);
 
 void tile_freeSegments(Direction**);
 
-bool tile_hasCastle(tile*);
+bool tile_hasCastle(const tile*);
 
-bool tile_hasRoad(tile*);
+bool tile_hasRoad(const tile*);
 
-bool tile_hasTemple(tile*);
+bool tile_hasTemple(const tile*);
 
-bool tile_hasCrossroads(tile*);
+bool tile_hasCrossroads(const tile*);
 
-bool tile_hasShield(tile*);
+bool tile_hasShield(const tile*);
 #endif

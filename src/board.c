@@ -11,6 +11,11 @@ size_t get_board_size() {
     return ret;
 }
 
+// TODO:
+size_t find_board_size(const char* filename) {
+    return 30;
+}
+
 board_t board_malloc(size_t size) {
     board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
@@ -20,52 +25,67 @@ board_t board_malloc(size_t size) {
     return board;
 }
 
-void board_free(size_t size, board_t board) {
-    for (size_t i = 0; i < size; ++i) {
-        for (size_t j = 0; j < size; ++j) {
-            free(board[i][j]);
-        }
-        free(board[i]);
+sized_board initialize_board(gamemode mode, const char* filename) {
+    sized_board board;
+    if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
+        board.size = get_board_size();
+    } else {
+        board.size = find_board_size(filename);
     }
-    free(board);
+    board.fields = board_malloc(board.size);
+    if (mode == AUTO && !parse_board(filename, &board)) {
+            fprintf(stderr, "error parsing board file: %s\n", filename);
+            exit(EXIT_FAILURE);
+    }
+    return board;
+}
+void board_free(sized_board* board) {
+    for (size_t i = 0; i < board->size; ++i) {
+        for (size_t j = 0; j < board->size; ++j) {
+            free(board->fields[i][j]);
+        }
+        free(board->fields[i]);
+    }
+    free(board->fields);
+    board->fields = 0;
 }
 
-bool can_place_tile(size_t size, const board_t board,
-                    const tile* t, size_t height, size_t width) {
+bool can_place_tile(sized_board* board,
+                    const tile* t, size_t y, size_t x) {
     // if out of bounds return false
-    if (height > size || width > size) {
+    if (y > board->size || x > board->size) {
         return false;
     }
     // return false if target cell is already populated
-    if (board[height][width]) {
+    if (board->fields[y][x]) {
         return false;
     }
     // count amount of surrounding tiles
     int count = 0;
     // check if placement is on the edge and if neighbor tile is not null
-    if (height != 0 && board[height - 1][width]) {
+    if (y != 0 && board->fields[y - 1][x]) {
         // increase amount of surrounding tiles count
         ++count;
         // check if the types are the same
-        if (board[height - 1][width]->down != t->up) {
+        if (board->fields[y - 1][x]->down != t->up) {
             return false;
         }
     }
-    if (height != size && board[height + 1][width]) {
+    if (y != board->size && board->fields[y + 1][x]) {
         ++count;
-        if (board[height + 1][width]->up != t->down) {
+        if (board->fields[y + 1][x]->up != t->down) {
             return false;
         }
     }
-    if (width != 0 && board[height][width - 1]) {
+    if (x != 0 && board->fields[y][x - 1]) {
         ++count;
-        if (board[height][width - 1]->right != t->left) {
+        if (board->fields[y][x - 1]->right != t->left) {
             return false;
         }
     }
-    if (width != size && board[height][width + 1]) {
+    if (x != board->size && board->fields[y][x + 1]) {
         ++count;
-        if (board[height][width + 1]->left != t->right) {
+        if (board->fields[y][x + 1]->left != t->right) {
             return false;
         }
     }
@@ -77,7 +97,7 @@ void place_tile(tile** place, tile* t) {
     *place = t;
 }
 
-bool parse_board(const char* filename, size_t size, board_t* board) {
+bool parse_board(const char* filename, sized_board* board) {
     FILE* file;
     if ((file = fopen(filename, "r")) == 0) {
         return false;
@@ -95,7 +115,7 @@ bool parse_board(const char* filename, size_t size, board_t* board) {
             j = 0;
             count = 0;
         }
-        if (i > size || j > size) {
+        if (i > board->size || j > board->size) {
             return false;
         }
         if (isspace(ch)) {
@@ -104,7 +124,7 @@ bool parse_board(const char* filename, size_t size, board_t* board) {
         str[count++] = (char)ch;
         if (count == 5) {
             count = 0;
-            make_tile_from_str(str, &(*board)[i][j]);
+            make_tile_from_str(str, &(board->fields)[i][j]);
             ++j;
         }
     }
