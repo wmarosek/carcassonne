@@ -27,11 +27,7 @@ size_t initialize_tile_list_interactive(tile_list_t* p_list) {
     char name[64] = { 0 };
     fputs("enter name of a file containing tile list: ", stdout);
     fgets(name, sizeof(name), stdin);
-    int ch;
-    // exhaust stdin
-    while ((ch = getchar()) != '\n' && ch != EOF) {
-        continue;
-    }
+    name[strcspn(name, "\n")] = '\0';
     return initialize_tile_list(name, p_list);
 }
 
