@@ -38,6 +38,7 @@ typedef enum {
     ACT_LIST,
     ACT_QUIT,
     ACT_LOAD,
+    ACT_CHNG_PRMPT,
     ACT_UNKNOWN
 } action;
 
@@ -58,13 +59,11 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
     { ACT_QUIT,         "quit",         "quits the game"        },
     { ACT_QUIT,         "q",            "abbrev"                },
     { ACT_LOAD,         "load list",    "load tile list file"   },
-    { ACT_LOAD,         "l l",          "abbrev"                }
+    { ACT_LOAD,         "l l",          "abbrev"                },
+    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"    }
 };
 
 void help() {
-    // handle special case
-    puts("prompt: change prompt text");
-
     for (size_t i = 0; i < sizeof(act_list) / sizeof(*act_list); ++i) {
         // do not print commands marked as abbreviations
         if (strcmp(act_list[i].desc, "abbrev")) {
@@ -74,6 +73,12 @@ void help() {
 }
 
 char prompt[32] = "> ";
+
+void change_prompt() {
+    fputs("new prompt: ", stdout);
+    fgets(prompt, sizeof(prompt), stdin);
+    prompt[strcspn(prompt, "\n")] = '\0';
+}
 
 action handle_input() {
     fputs(prompt, stdout);
@@ -87,15 +92,6 @@ action handle_input() {
             return act_list[i].act;
         }
     }
-
-    // handle special option
-    if (strcmp(input, "prompt") == 0) {
-        fputs("new prompt: ", stdout);
-        fgets(prompt, sizeof(prompt), stdin);
-        prompt[strcspn(prompt, "\n")] = '\0';
-        return handle_input();
-    }
-
     return ACT_UNKNOWN;
 }
 
@@ -110,6 +106,7 @@ void run_interactive(tile_list_t* tile_list, size_t list_len) {
             initialize_tile_list_interactive(tile_list);
             break;
         case ACT_QUIT: return;
+        case ACT_CHNG_PRMPT: change_prompt(); break;
         default: fputs("unknown option\n", stderr);
         }
     }
