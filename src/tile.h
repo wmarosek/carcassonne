@@ -22,6 +22,10 @@ typedef struct {
 /** @} */
 
 typedef tile* tile_list_t;
+typedef struct {
+    tile_list_t list;
+    size_t len;
+} sized_tlist;
 
 /**
  * set tile pointer to valid memory.
