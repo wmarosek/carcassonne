@@ -35,10 +35,11 @@ typedef enum {
     ACT_GREETING,
     ACT_USAGE,
     ACT_HELP,
-    ACT_LIST,
+    ACT_PRINT_LIST,
+    ACT_LOAD_LIST,
+    ACT_CHNG_PRMPT,
     ACT_QUIT,
-    ACT_LOAD,
-    ACT_UNKNOWN
+    ACT_UNKNOWN,
 } action;
 
 // command enumerator, user command, command description
@@ -53,20 +54,20 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
     { ACT_HELP,         "help",         "prints this message"   },
     { ACT_HELP,         "h",            "abbrev"                },
     { ACT_HELP,         "?",            "abbrev"                },
-    { ACT_LIST,         "print list",   "prints tile list"      },
-    { ACT_LIST,         "p l",          "abbrev"                },
+    { ACT_PRINT_LIST,   "print list",   "prints tile list"      },
+    { ACT_PRINT_LIST,   "p l",          "abbrev"                },
+    { ACT_LOAD_LIST,    "load list",    "load tile list file"   },
+    { ACT_LOAD_LIST,    "l l",          "abbrev"                },
+    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"    },
     { ACT_QUIT,         "quit",         "quits the game"        },
     { ACT_QUIT,         "q",            "abbrev"                },
-    { ACT_LOAD,         "load list",    "load tile list file"   },
-    { ACT_LOAD,         "l l",          "abbrev"                }
 };
 
 void help() {
-    // handle special case
-    puts("prompt: change prompt text");
-
     for (size_t i = 0; i < sizeof(act_list) / sizeof(*act_list); ++i) {
         // do not print commands marked as abbreviations
+        // prints if desc different than 'abbrev'
+        // (strcmp returns 0 if the same)
         if (strcmp(act_list[i].desc, "abbrev")) {
             printf("%s: %s\n", act_list[i].cmd, act_list[i].desc);
         }
@@ -74,6 +75,12 @@ void help() {
 }
 
 char prompt[32] = "> ";
+
+void change_prompt() {
+    fputs("new prompt: ", stdout);
+    fgets(prompt, sizeof(prompt), stdin);
+    prompt[strcspn(prompt, "\n")] = '\0';
+}
 
 action handle_input() {
     fputs(prompt, stdout);
@@ -87,29 +94,32 @@ action handle_input() {
             return act_list[i].act;
         }
     }
-
-    // handle special option
-    if (strcmp(input, "prompt") == 0) {
-        fputs("new prompt: ", stdout);
-        fgets(prompt, sizeof(prompt), stdin);
-        prompt[strcspn(prompt, "\n")] = '\0';
-        return handle_input();
-    }
-
     return ACT_UNKNOWN;
 }
 
 void run_interactive(tile_list_t* tile_list, size_t list_len) {
     while (true) {
         switch(handle_input()) {
-        case ACT_GREETING: greeting(); break;
-        case ACT_USAGE: usage(); break;
-        case ACT_HELP: help(); break;
-        case ACT_LIST: print_tile_list(*tile_list, list_len); break;
-        case ACT_LOAD:
+        case ACT_GREETING:
+            greeting();
+            break;
+        case ACT_USAGE:
+            usage();
+            break;
+        case ACT_HELP:
+            help();
+            break;
+        case ACT_PRINT_LIST:
+            print_tile_list(*tile_list, list_len);
+            break;
+        case ACT_LOAD_LIST:
             initialize_tile_list_interactive(tile_list);
             break;
-        case ACT_QUIT: return;
+        case ACT_CHNG_PRMPT:
+            change_prompt();
+            break;
+        case ACT_QUIT:
+            return;
         default: fputs("unknown option\n", stderr);
         }
     }
