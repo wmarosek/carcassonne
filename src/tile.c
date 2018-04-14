@@ -131,10 +131,10 @@ char modifier_to_char(modifier m) {
 
 char* tile_to_str(const tile* t, char buff[static 5]) {
     if (t && buff) {    // check if pointers are not null
-        buff[0] = element_to_char(tile_getSideElement(t,NORTH));
+        buff[0] = element_to_char(tile_getSideElement(t, NORTH));
         buff[1] = element_to_char(tile_getSideElement(t, EAST));
         buff[2] = element_to_char(tile_getSideElement(t, SOUTH));
-        buff[3] = element_to_char(tile_getSideElement(t,WEST));
+        buff[3] = element_to_char(tile_getSideElement(t, WEST));
         buff[4] = modifier_to_char(t->mod);
     }
     else if (buff) {    // null tile pointer should mean empty board cell
