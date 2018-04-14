@@ -8,12 +8,53 @@ size_t get_board_size() {
     fputs("input board size: ", stdout);
     size_t ret;
     scanf("%zu", &ret);
+    int ch;
+    // exhaust stdin
+    while ((ch = getchar()) != EOF && ch != '\n') {
+        continue;
+    }
     return ret;
 }
 
-// TODO:
 size_t find_board_size(const char* filename) {
-    return 30;
+    FILE* file;
+    if ((file = fopen(filename, "r")) == 0) {
+        return false;
+    }
+    int ch;
+    size_t row = 0, col = 0, col_max = 0;
+    size_t count = 0;
+    while ((ch = getc(file)) != EOF) {
+        // increase columns on empty tile
+        if (ch == '\t') {
+            ++col;
+            if (count) {
+                return 0;
+            }
+            count = 0;
+        }
+        // increase rows on newline
+        if (ch == '\n') {
+            ++row;
+            col_max = col > col_max ? col : col_max;
+            col = 0;
+            if (count) {
+                return 0;
+            }
+            count = 0;
+        }
+        // ignore whitespace
+        if (isspace(ch)) {
+            continue;
+        }
+        ++count;
+        if (count == 5) {
+            count = 0;
+            ++col;
+        }
+    }
+    fclose(file);
+    return row > col_max ? row : col_max;
 }
 
 board_t board_malloc(size_t size) {
