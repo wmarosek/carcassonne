@@ -16,10 +16,17 @@ typedef struct {
 } sized_board;
 
 /**
- * get size of the game board.
+ * get size of the game board interactily.
  * @return size of the board
  */
-size_t get_board_size();
+size_t get_board_size_interactive();
+
+/**
+ * get size of the game board traversing trough file.
+ * @param fliename name of the board file
+ * @return size of the board, (return size of the current board, need to add margin)
+ */
+size_t get_board_size(const char*);
 
 /**
  * allocates a board and sets all tiles to empty (null).
@@ -27,7 +34,7 @@ size_t get_board_size();
  * @param [in] size size of a board side
  * @return board
  */
-board_t board_malloc(size_t);
+board_t board_alloc(size_t);
 
 /**
  * returns struct sized_board, sets size and allocates fields, parses board in auto mode.
@@ -36,7 +43,7 @@ board_t board_malloc(size_t);
  * @param [in] filename name of board file
  * @return sized_board structure representing game board
  */
-sized_board initialize_board(gamemode, const char*);
+sized_board init_board(gamemode, const char*);
 
 /**
  * frees array of tile pointers
@@ -69,6 +76,7 @@ void place_tile(tile**, tile*);
  */
 bool parse_board(const char*, sized_board*);
 
+// not done
 /**
  * write board to file.
  * @param [in] filename board file name

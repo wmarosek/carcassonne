@@ -76,7 +76,8 @@ void run(gamemode mode, char* list_filename, char* board_filename) {
         list_filename = "default_tiles";
     }
     sized_tlist list;
-    initialize_tile_list(list_filename, &list);
+    init_tile_list(list_filename, &list);
+    sized_board board = init_board(mode, board_filename);
     run_interactive(&list);
     free(list.list);
 }

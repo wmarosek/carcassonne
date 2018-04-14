@@ -36,7 +36,7 @@ typedef struct {
 * @param [out] ptr pointer to tile pointer
 * @return valid tile pointer
 */
-tile* make_tile(tile**);
+tile* tile_alloc(tile**);
 
 element char_to_element(char);
 modifier char_to_modifier(char);
@@ -58,7 +58,7 @@ tile* str_to_tile(const char[static 5], tile*);
 * @param [out] ptr pointer to tile pointer
 * @return pointer to initialized tile
 */
-tile* make_tile_from_str(const char[static 5], tile**);
+tile* tile_alloc_from_str(const char[static 5], tile**);
 
 /**
 * parse next tile in specified file stream.
@@ -82,7 +82,7 @@ bool parse_tile_list(const char*, sized_tlist*);
 * @param [in] filename name of tile list file
 * @return length the tile list should be
 */
-size_t find_tile_list_len(const char*);
+size_t get_tile_list_len(const char*);
 
 /**
 * allocates and initializes tile list based on tile list file.
@@ -91,7 +91,7 @@ size_t find_tile_list_len(const char*);
 * @param [out] list pointer to sized_tlist struct
 * @return length of initialized tile list
 */
-sized_tlist* initialize_tile_list(const char*, sized_tlist*);
+sized_tlist* init_tile_list(const char*, sized_tlist*);
 
 char element_to_char(element);
 char modifier_to_char(modifier);
@@ -112,7 +112,7 @@ char* tile_to_str(const tile*, char[static 5]);
 * @param [in] t tile being converted
 * @return pointer to dynamically allocated string tile representation
 */
-char* tile_to_str_malloc(const tile*);
+char* tile_to_str_alloc(const tile*);
 
 /**
 * print single tile.
@@ -128,7 +128,8 @@ void print_tile(const tile*);
 */
 void print_tile_list(const sized_tlist*);
 
-bool write_tile_list(const tile*, size_t);
+// not done
+bool write_tile_list(const sized_tlist*);
 
 /**
 * gieve tile a ratign based on current state of a game.

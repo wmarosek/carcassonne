@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-size_t get_board_size() {
+size_t get_board_size_interactive() {
     fputs("input board size: ", stdout);
     size_t ret;
     scanf("%zu", &ret);
@@ -16,7 +16,7 @@ size_t get_board_size() {
     return ret;
 }
 
-size_t find_board_size(const char* filename) {
+size_t get_board_size(const char* filename) {
     FILE* file;
     if ((file = fopen(filename, "r")) == 0) {
         return false;
@@ -57,7 +57,7 @@ size_t find_board_size(const char* filename) {
     return row > col_max ? row : col_max;
 }
 
-board_t board_malloc(size_t size) {
+board_t board_alloc(size_t size) {
     board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
         board[i] = malloc(sizeof(tile*) * size);
@@ -66,14 +66,15 @@ board_t board_malloc(size_t size) {
     return board;
 }
 
-sized_board initialize_board(gamemode mode, const char* filename) {
+sized_board init_board(gamemode mode, const char* filename) {
     sized_board board;
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
-        board.size = get_board_size();
+        board.size = get_board_size_interactive();
     } else {
-        board.size = find_board_size(filename);
+        // margin
+        board.size = get_board_size(filename) + 2;
     }
-    board.fields = board_malloc(board.size);
+    board.fields = board_alloc(board.size);
     if (mode == AUTO && !parse_board(filename, &board)) {
             fprintf(stderr, "error parsing board file: %s\n", filename);
             exit(EXIT_FAILURE);
@@ -177,7 +178,7 @@ bool parse_board(const char* filename, sized_board* board) {
         str[count++] = (char)ch;
         if (count == 5) {
             count = 0;
-            make_tile_from_str(str, &(board->fields)[i][j]);
+            tile_alloc_from_str(str, &(board->fields)[i][j]);
             ++j;
         }
     }

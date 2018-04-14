@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-tile* make_tile(tile** ptr) {
+tile* tile_alloc(tile** ptr) {
     return *ptr = malloc(sizeof(tile));
 }
 
@@ -37,8 +37,8 @@ tile* str_to_tile(const char str[static 5], tile* t) {
     return t;
 }
 
-tile* make_tile_from_str(const char str[static 5], tile** ptr) {
-    return str_to_tile(str, make_tile(ptr));
+tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
+    return str_to_tile(str, tile_alloc(ptr));
 }
 
 bool parse_tile(FILE* file, tile* t) {
@@ -80,7 +80,7 @@ bool parse_tile_list(const char* filename, sized_tlist* list) {
     return true;
 }
 
-size_t find_tile_list_len(const char* filename) {
+size_t get_tile_list_len(const char* filename) {
     FILE* list = fopen(filename, "r");
     size_t count = 0;
     if (list) {
@@ -101,8 +101,8 @@ size_t find_tile_list_len(const char* filename) {
     return count;
 }
 
-sized_tlist* initialize_tile_list(const char* filename, sized_tlist* list) {
-    list->len = find_tile_list_len(filename);
+sized_tlist* init_tile_list(const char* filename, sized_tlist* list) {
+    list->len = get_tile_list_len(filename);
     list->list = malloc(sizeof(tile) * list->len);
     if (!parse_tile_list(filename, list)) {
         free(list->list);
@@ -144,7 +144,7 @@ char* tile_to_str(const tile* t, char buff[static 5]) {
     return buff;
 }
 
-char* tile_to_str_malloc(const tile* t) {
+char* tile_to_str_alloc(const tile* t) {
     return tile_to_str(t, malloc(sizeof(char) * 5));
 }
 
