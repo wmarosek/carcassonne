@@ -104,23 +104,35 @@ bool parse_board(const char* filename, sized_board* board) {
     }
     int ch;
     char str[5];
+    // i: rows, j: columns, count: current tile letter counter
     size_t i = 0, j = 0, count = 0;
     while ((ch = getc(file)) != EOF) {
+        // increase columns on empty tile
         if (ch == '\t') {
             ++j;
+            if (count != 5) {
+                return false;
+            }
             count = 0;
         }
+        // increase rows on newline
         if (ch == '\n') {
             ++i;
             j = 0;
+            if (count != 5) {
+                return false;
+            }
             count = 0;
         }
+        // out of bounds
         if (i > board->size || j > board->size) {
             return false;
         }
+        // ignore whitespace
         if (isspace(ch)) {
             continue;
         }
+        // generate tile string and parse it, assign correct values to the board
         str[count++] = (char)ch;
         if (count == 5) {
             count = 0;
