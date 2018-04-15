@@ -3,10 +3,19 @@
 
 #include <stdbool.h>
 
-typedef struct Side Side;
+typedef enum {
+    COMPL_NOT_SET = 0,
+    COMPL_NOT_COMPLETED = -1,
+    COMPL_COMPLETED = 1,
+} cmpl;
 
 typedef enum Direction { NORTH, EAST, SOUTH, WEST } Direction;
 typedef enum { CASTLE, ROAD, FIELD } element;
+
+typedef struct {
+    element type;
+    cmpl completion;
+} Side;
 
 Side* Side_new(element type);
 

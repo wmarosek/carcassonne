@@ -2,17 +2,6 @@
 
 #include <stdlib.h>
 
-typedef enum {
-    COMPL_NOT_SET = 0,
-    COMPL_NOT_COMPLETED = -1,
-    COMPL_COMPLETED = 1,
-} cmpl;
-
-struct Side {
-    element type;
-    cmpl completion;
-};
-
 Side* Side_new(element type) {
     Side* self = malloc(sizeof(Side));
     self->type = type;
