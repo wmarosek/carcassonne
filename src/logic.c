@@ -75,9 +75,7 @@ void run(gamemode mode, char* list_filename, char* board_filename) {
         // maybe have some kind of generating mechanism
         list_filename = "default_tiles";
     }
-    sized_tlist list;
-    init_tile_list(list_filename, &list);
-    sized_board board = init_board(mode, board_filename);
-    run_interactive(&list);
-    free(list.list);
+    if (mode == INTERACTIVE || mode == INTERACTIVE_NO_TILES) {
+        run_interactive(list_filename);
+    }
 }

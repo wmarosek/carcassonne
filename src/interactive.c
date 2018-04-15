@@ -100,8 +100,12 @@ action handle_input() {
     return ACT_UNKNOWN;
 }
 
-void run_interactive(sized_tlist* list) {
+void run_interactive(const char* list_filename) {
     greeting();
+    sized_tlist list;
+    if (!init_tlist(list_filename, &list)) {
+        init_tlist_interactive(&list);
+    }
     while (true) {
         switch(handle_input()) {
         case ACT_GREETING:
@@ -114,15 +118,16 @@ void run_interactive(sized_tlist* list) {
             help();
             break;
         case ACT_PRINT_LIST:
-            print_tile_list(list);
+            print_tile_list(&list);
             break;
         case ACT_LOAD_LIST:
-            init_tile_list_interactive(list);
+            init_tlist_interactive(&list);
             break;
         case ACT_CHNG_PRMPT:
             change_prompt();
             break;
         case ACT_QUIT:
+            free(list.list);
             return;
         default: fputs("unknown option\n", stderr);
         }

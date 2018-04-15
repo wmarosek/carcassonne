@@ -23,6 +23,6 @@ void help();
  * interactive mode logic and game loop.
  * @param [in] list sized_tlist pointer
  */
-void run_interactive(sized_tlist*);
+void run_interactive(const char*);
 
 #endif
