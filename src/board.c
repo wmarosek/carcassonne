@@ -152,7 +152,7 @@ bool parse_board(const char* filename, sized_board* board) {
         // increase columns on empty tile
         if (ch == '\t') {
             ++j;
-            if (count != 5) {
+            if (count != 0) {
                 return false;
             }
             count = 0;
@@ -161,7 +161,7 @@ bool parse_board(const char* filename, sized_board* board) {
         if (ch == '\n') {
             ++i;
             j = 0;
-            if (count != 5) {
+            if (count != 0) {
                 return false;
             }
             count = 0;
