@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ARR_LEN(arr) sizeof(arr) / sizeof(*arr)
+
 void greeting() {
     puts("hello player!\n"
          "welcome to a simple carcassonne based game!\n"
@@ -67,7 +69,7 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
 };
 
 void help() {
-    for (size_t i = 0; i < sizeof(act_list) / sizeof(*act_list); ++i) {
+    for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
         // do not print commands marked as abbreviations
         // prints if desc different than 'abbrev'
         // (strcmp returns 0 if the same)
@@ -92,7 +94,7 @@ action handle_input() {
     fgets(input, sizeof(input), stdin);
     input[strcspn(input, "\n")] = '\0';
 
-    for (size_t i = 0; i < sizeof(act_list) / sizeof(*act_list); ++i) {
+    for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
         if (strcmp(input, act_list[i].cmd) == 0) {
             return act_list[i].act;
         }
