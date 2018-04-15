@@ -18,9 +18,7 @@ typedef struct {
     Side* right;
     Side* down;
     Side* left;
-    bool shield;
     modifier mod;
-    bool isEmpty;
 } tile;
 /** @} */
 

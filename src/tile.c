@@ -295,5 +295,5 @@ bool tile_hasCrossroads(const tile* t) {
 }
 
 bool tile_hasShield(const tile* t) {
-    return t->shield;
+    return t->mod == SHIELD;
 }
