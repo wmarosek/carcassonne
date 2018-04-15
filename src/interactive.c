@@ -60,6 +60,8 @@ typedef enum {
     ACT_HELP,
     ACT_PRINT_LIST,
     ACT_LOAD_LIST,
+    ACT_PRINT_BOARD,
+    ACT_LOAD_BOARD,
     ACT_CHNG_PRMPT,
     ACT_QUIT,
     ACT_UNKNOWN,
@@ -81,6 +83,10 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
     { ACT_PRINT_LIST,   "p l",          "abbrev"                },
     { ACT_LOAD_LIST,    "load list",    "load tile list file"   },
     { ACT_LOAD_LIST,    "l l",          "abbrev"                },
+    { ACT_PRINT_BOARD,  "print board",  "prints the board"      },
+    { ACT_PRINT_BOARD,  "p b",          "abbrev"                },
+    { ACT_LOAD_BOARD,   "load board",   "load board file"       },
+    { ACT_LOAD_BOARD,   "l b",          "abbrev"                },
     { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"    },
     { ACT_QUIT,         "quit",         "quits the game"        },
     { ACT_QUIT,         "q",            "abbrev"                },
@@ -126,6 +132,12 @@ void run_interactive(gamemode mode, const char* list_filename) {
     if (!init_tlist(list_filename, &list)) {
         init_tlist_interactive(&list);
     }
+
+    sized_board board;
+    if (!init_board(mode, 0, &board)) {
+        load_board_interactive(&board);
+    }
+
     while (true) {
         switch(handle_input()) {
         case ACT_GREETING:
@@ -142,6 +154,12 @@ void run_interactive(gamemode mode, const char* list_filename) {
             break;
         case ACT_LOAD_LIST:
             init_tlist_interactive(&list);
+            break;
+        case ACT_PRINT_BOARD:
+            print_board(&board);
+            break;
+        case ACT_LOAD_BOARD:
+            load_board_interactive(&board);
             break;
         case ACT_CHNG_PRMPT:
             change_prompt();
