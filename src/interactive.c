@@ -21,14 +21,17 @@ void usage() {
          "if none file specified use default tile list for interactive mode\n");
 }
 
-void init_tile_list_interactive(sized_tlist* list) {
+void init_tlist_interactive(sized_tlist* list) {
     free(list->list);
     list->list = 0;
     char name[64] = { 0 };
     fputs("enter name of a file containing tile list: ", stdout);
     fgets(name, sizeof(name), stdin);
     name[strcspn(name, "\n")] = '\0';
-    init_tile_list(name, list);
+    if (init_tlist(name, list)) {
+        return;
+    }
+    fputs("initializing failed, try again.\n", stderr);
 }
 
 typedef enum {
