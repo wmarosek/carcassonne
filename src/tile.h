@@ -87,9 +87,16 @@ size_t get_tile_list_len(const char*);
 * remeber to free this, if filename is bad program will exit
 * @param [in] filename name of the tile list file
 * @param [out] list pointer to sized_tlist struct
-* @return length of initialized tile list
+* @return status of operation
 */
-sized_tlist* init_tile_list(const char*, sized_tlist*);
+bool init_tlist(const char*, sized_tlist*);
+
+/**
+ * wrapper around {@code init_tlist} exits on error.
+ * @param filename [in] name of the tile list file
+ * @retunr sized_tlist aviable tile list
+ */
+sized_tlist init_tlist_exit_on_err(const char*);
 
 char element_to_char(element);
 char modifier_to_char(modifier);

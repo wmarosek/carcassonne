@@ -101,11 +101,16 @@ size_t get_tile_list_len(const char* filename) {
     return count;
 }
 
-sized_tlist* init_tile_list(const char* filename, sized_tlist* list) {
+bool init_tlist(const char* filename, sized_tlist* list) {
     list->len = get_tile_list_len(filename);
     list->list = malloc(sizeof(tile) * list->len);
-    if (!parse_tile_list(filename, list)) {
-        free(list->list);
+    return parse_tile_list(filename, list);
+}
+
+sized_tlist init_tlist_exit_on_err(const char* filename) {
+    sized_tlist list;
+    if (!init_tlist(filename, &list)) {
+        free(list.list);
         fputs("error parsing tile list\n", stderr);
         exit(EXIT_FAILURE);
     }
