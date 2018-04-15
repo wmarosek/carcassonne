@@ -27,13 +27,31 @@ void init_tlist_interactive(sized_tlist* list) {
     free(list->list);
     list->list = 0;
     char name[64] = { 0 };
-    fputs("enter name of a file containing tile list: ", stdout);
-    fgets(name, sizeof(name), stdin);
-    name[strcspn(name, "\n")] = '\0';
-    if (init_tlist(name, list)) {
-        return;
+    while (true) {
+        fputs("enter name of a file containing tile list: ", stdout);
+        fgets(name, sizeof(name), stdin);
+        name[strcspn(name, "\n")] = '\0';
+        if (init_tlist(name, list)) {
+            return;
+        }
+        fputs("initializing failed, try again.\n", stderr);
     }
-    fputs("initializing failed, try again.\n", stderr);
+}
+
+void load_board_interactive(sized_board* board) {
+    board_free(board);
+    board->fields = 0;
+    char name[64] = { 0 };
+    while (true) {
+        fputs("enter name of a file containing board: ", stdout);
+        fgets(name, sizeof(name), stdin);
+        name[strcspn(name, "\n")] = '\0';
+        // mode auto to load board from file
+        if (init_board(AUTO, name, board)) {
+            return;
+        }
+        fputs("initializing failed, try again.\n", stderr);
+    }
 }
 
 typedef enum {
