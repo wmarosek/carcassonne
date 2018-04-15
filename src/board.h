@@ -76,6 +76,12 @@ void place_tile(tile**, tile*);
  */
 bool parse_board(const char*, sized_board*);
 
+/**
+ * prints out board.
+ * @param board pointer to sized_board to print
+ */
+void print_board(sized_board*);
+
 // not done
 /**
  * write board to file.

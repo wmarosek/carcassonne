@@ -185,3 +185,56 @@ bool parse_board(const char* filename, sized_board* board) {
     fclose(file);
     return count == 0;
 }
+
+void print_board(sized_board* board) {
+    // print rows
+    for (size_t i = 0; i < board->size; ++i) {
+        // print up
+        for (size_t j = 0; j < board->size; ++j) {
+            if (board->fields[i][j]) {
+                printf("  %c  ", element_to_char(board->fields[i][j]->up->type));
+            } else {
+                fputs("     ", stdout);
+            }
+            // print separator
+            if (j < board->size - 1) {
+                putchar('|');
+            }
+        }
+        putchar('\n');
+        // print mid
+        for (size_t j = 0; j < board->size; ++j) {
+            if (board->fields[i][j]) {
+                printf(" %c%c%c ",
+                       element_to_char(board->fields[i][j]->left->type),
+                       modifier_to_char(board->fields[i][j]->mod),
+                       element_to_char(board->fields[i][j]->right->type));
+            } else {
+                fputs("     ", stdout);
+            }
+            if (j < board->size - 1) {
+                putchar('|');
+            }
+        }
+        putchar('\n');
+        // print down
+        for (size_t j = 0; j < board->size; ++j) {
+            if (board->fields[i][j]) {
+                printf("  %c  ", element_to_char(board->fields[i][j]->up->type));
+            } else {
+                fputs("     ", stdout);
+            }
+            if (j < board->size - 1) {
+                putchar('|');
+            }
+        }
+        putchar('\n');
+        // print separator
+        if (i < board->size - 1) {
+            for (size_t j = 1; j < board->size * 6; ++j) {
+                putchar(j % 6 ? '-' : '+');
+            }
+        }
+        putchar('\n');
+    }
+}
