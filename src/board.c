@@ -139,6 +139,7 @@ void place_tile(tile** place, tile* t) {
     *place = t;
 }
 
+// TODO: take margin into consideration
 bool parse_board(const char* filename, sized_board* board) {
     FILE* file;
     if ((file = fopen(filename, "r")) == 0) {
