@@ -41,9 +41,18 @@ board_t board_alloc(size_t);
  * arguements only used in auto mode
  * @param [in] mode game mode
  * @param [in] filename name of board file
- * @return sized_board structure representing game board
+ * @param [out] board sized_board pointer
+ * @return success of operation
  */
-sized_board init_board(gamemode, const char*);
+bool init_board(gamemode, const char*, sized_board*);
+
+/**
+ * inits board, exit on error.
+ * @param [in] mode game mode
+ * @param [in] filename name of the board file
+ * @return initialized board
+ */
+sized_board init_board_on_exit_on_err(gamemode, const char*);
 
 /**
  * frees array of tile pointers

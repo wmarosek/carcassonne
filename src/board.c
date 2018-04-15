@@ -66,21 +66,29 @@ board_t board_alloc(size_t size) {
     return board;
 }
 
-sized_board init_board(gamemode mode, const char* filename) {
-    sized_board board;
+bool init_board(gamemode mode, const char* filename, sized_board* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
-        board.size = get_board_size_interactive();
+        board->size = get_board_size_interactive();
     } else {
         // margin
-        board.size = get_board_size(filename) + 2;
+        board->size = get_board_size(filename) + 2;
     }
-    board.fields = board_alloc(board.size);
-    if (mode == AUTO && !parse_board(filename, &board)) {
+    board->fields = board_alloc(board->size);
+    if (mode == AUTO && !parse_board(filename, board)) {
+        return false;
+    }
+    return true;
+}
+
+sized_board init_board_exit_on_err(gamemode mode, const char* filename) {
+    sized_board board;
+    if (init_board(mode, filename, &board)) {
             fprintf(stderr, "error parsing board file: %s\n", filename);
             exit(EXIT_FAILURE);
     }
     return board;
 }
+
 void board_free(sized_board* board) {
     for (size_t i = 0; i < board->size; ++i) {
         for (size_t j = 0; j < board->size; ++j) {
