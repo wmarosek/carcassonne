@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-tile* make_tile(tile** ptr) {
+tile* tile_alloc(tile** ptr) {
     return *ptr = malloc(sizeof(tile));
 }
 
@@ -37,8 +37,8 @@ tile* str_to_tile(const char str[static 5], tile* t) {
     return t;
 }
 
-tile* make_tile_from_str(const char str[static 5], tile** ptr) {
-    return str_to_tile(str, make_tile(ptr));
+tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
+    return str_to_tile(str, tile_alloc(ptr));
 }
 
 bool parse_tile(FILE* file, tile* t) {
@@ -61,17 +61,17 @@ bool parse_tile(FILE* file, tile* t) {
     return false;
 }
 
-bool parse_tile_list(const char* filename, tile_list_t list, size_t len) {
-    if (!list) {
+bool parse_tile_list(const char* filename, sized_tlist* list) {
+    if (!list && !list->list) {
         return false;
     }
     FILE* file;
     if ((file = fopen(filename, "r")) == 0) {
         return false;
     }
-    for (size_t i = 0; i < len; ++i) {
+    for (size_t i = 0; i < list->len; ++i) {
         // if any tile parsing fails return false
-        if (!parse_tile(file, &list[i])) {
+        if (!parse_tile(file, &list->list[i])) {
             fclose(file);
             return false;
         }
@@ -80,7 +80,7 @@ bool parse_tile_list(const char* filename, tile_list_t list, size_t len) {
     return true;
 }
 
-size_t find_tile_list_len(const char* filename) {
+size_t get_tile_list_len(const char* filename) {
     FILE* list = fopen(filename, "r");
     size_t count = 0;
     if (list) {
@@ -101,15 +101,20 @@ size_t find_tile_list_len(const char* filename) {
     return count;
 }
 
-size_t initialize_tile_list(const char* filename, tile_list_t* list) {
-    size_t len = find_tile_list_len(filename);
-    *list = malloc(sizeof(tile) * len);
-    if (!parse_tile_list(filename, *list, len)) {
-        free(*list);
+bool init_tlist(const char* filename, sized_tlist* list) {
+    list->len = get_tile_list_len(filename);
+    list->list = malloc(sizeof(tile) * list->len);
+    return parse_tile_list(filename, list);
+}
+
+sized_tlist init_tlist_exit_on_err(const char* filename) {
+    sized_tlist list;
+    if (!init_tlist(filename, &list)) {
+        free(list.list);
         fputs("error parsing tile list\n", stderr);
         exit(EXIT_FAILURE);
     }
-    return len;
+    return list;
 }
 
 char element_to_char(element e) {
@@ -131,10 +136,10 @@ char modifier_to_char(modifier m) {
 
 char* tile_to_str(const tile* t, char buff[static 5]) {
     if (t && buff) {    // check if pointers are not null
-        buff[0] = element_to_char(tile_getSideElement(t,NORTH));
+        buff[0] = element_to_char(tile_getSideElement(t, NORTH));
         buff[1] = element_to_char(tile_getSideElement(t, EAST));
         buff[2] = element_to_char(tile_getSideElement(t, SOUTH));
-        buff[3] = element_to_char(tile_getSideElement(t,WEST));
+        buff[3] = element_to_char(tile_getSideElement(t, WEST));
         buff[4] = modifier_to_char(t->mod);
     }
     else if (buff) {    // null tile pointer should mean empty board cell
@@ -144,7 +149,7 @@ char* tile_to_str(const tile* t, char buff[static 5]) {
     return buff;
 }
 
-char* tile_to_str_malloc(const tile* t) {
+char* tile_to_str_alloc(const tile* t) {
     return tile_to_str(t, malloc(sizeof(char) * 5));
 }
 
@@ -153,9 +158,9 @@ void print_tile(const tile* t) {
     printf("%.*s", 5, tile_to_str(t, buff));
 }
 
-void print_tile_list(const tile* t, size_t len) {
-    for (unsigned int i = 0; i < len; ++i) {
-        print_tile(&t[i]);
+void print_tile_list(const sized_tlist* list) {
+    for (size_t i = 0; i < list->len; ++i) {
+        print_tile(&list->list[i]);
         putchar('\n');
     }
 }
@@ -295,5 +300,5 @@ bool tile_hasCrossroads(const tile* t) {
 }
 
 bool tile_hasShield(const tile* t) {
-    return t->shield;
+    return t->mod == SHIELD;
 }
