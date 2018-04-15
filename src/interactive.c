@@ -102,7 +102,7 @@ action handle_input() {
     return ACT_UNKNOWN;
 }
 
-void run_interactive(const char* list_filename) {
+void run_interactive(gamemode mode, const char* list_filename) {
     greeting();
     sized_tlist list;
     if (!init_tlist(list_filename, &list)) {

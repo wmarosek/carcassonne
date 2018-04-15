@@ -76,6 +76,6 @@ void run(gamemode mode, char* list_filename, char* board_filename) {
         list_filename = "default_tiles";
     }
     if (mode == INTERACTIVE || mode == INTERACTIVE_NO_TILES) {
-        run_interactive(list_filename);
+        run_interactive(mode, list_filename);
     }
 }

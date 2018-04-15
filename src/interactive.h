@@ -3,6 +3,7 @@
 /** @file interactive.h */
 
 #include "tile.h"
+#include "logic.h"
 
 /**
  * print usage.
@@ -23,6 +24,6 @@ void help();
  * interactive mode logic and game loop.
  * @param [in] list sized_tlist pointer
  */
-void run_interactive(const char*);
+void run_interactive(gamemode, const char*);
 
 #endif
