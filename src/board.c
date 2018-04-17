@@ -200,6 +200,11 @@ bool parse_board(const char* filename, sized_board* board) {
 }
 
 void print_board(sized_board* board) {
+    // pass null tile pointer for can_place_tile to always fail
+    print_board_legal_moves(board, 0);
+}
+
+void print_board_legal_moves(sized_board* board, tile* t) {
     // print rows
     for (size_t i = 0; i < board->size; ++i) {
         // print up
@@ -223,7 +228,7 @@ void print_board(sized_board* board) {
                        modifier_to_char(board->fields[i][j]->mod),
                        element_to_char(board->fields[i][j]->right->type));
             } else {
-                fputs("     ", stdout);
+                printf("  %c  ", can_place_tile(board, t, i, j) ? 'x' : ' ');
             }
             if (j < board->size - 1) {
                 putchar('|');
