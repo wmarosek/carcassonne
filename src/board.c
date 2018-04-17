@@ -117,25 +117,25 @@ bool can_place_tile(sized_board* board,
         // increase amount of surrounding tiles count
         ++count;
         // check if the types are the same
-        if (board->fields[y - 1][x]->down != t->up) {
+        if (board->fields[y - 1][x]->down->type != t->up->type) {
             return false;
         }
     }
     if (y != board->size && board->fields[y + 1][x]) {
         ++count;
-        if (board->fields[y + 1][x]->up != t->down) {
+        if (board->fields[y + 1][x]->up->type != t->down->type) {
             return false;
         }
     }
     if (x != 0 && board->fields[y][x - 1]) {
         ++count;
-        if (board->fields[y][x - 1]->right != t->left) {
+        if (board->fields[y][x - 1]->right->type != t->left->type) {
             return false;
         }
     }
     if (x != board->size && board->fields[y][x + 1]) {
         ++count;
-        if (board->fields[y][x + 1]->left != t->right) {
+        if (board->fields[y][x + 1]->left->type != t->right->type) {
             return false;
         }
     }
