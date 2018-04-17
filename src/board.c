@@ -125,7 +125,7 @@ bool can_place_tile(sized_board* board,
             return false;
         }
     }
-    if (y != board->size && board->fields[y + 1][x]) {
+    if (y < board->size - 1 && board->fields[y + 1][x]) {
         ++count;
         if (board->fields[y + 1][x]->up->type != t->down->type) {
             return false;
@@ -137,7 +137,7 @@ bool can_place_tile(sized_board* board,
             return false;
         }
     }
-    if (x != board->size && board->fields[y][x + 1]) {
+    if (x < board->size - 1 && board->fields[y][x + 1]) {
         ++count;
         if (board->fields[y][x + 1]->left->type != t->right->type) {
             return false;
