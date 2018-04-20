@@ -36,8 +36,19 @@ typedef struct {
 */
 tile* tile_alloc(tile**);
 
-element char_to_element(char);
-modifier char_to_modifier(char);
+/**
+ * convert character to element.
+ * @param [in] ch character to convert to element
+ * @return element converted from char
+ */
+element elem_from_char(char);
+
+/**
+ * convert character to modifier.
+ * @param [in] ch character to convert to modifier
+ * @return modifier converted from char
+ */
+modifier mod_form_char(char);
 
 /**
 * set tile values based on supplied string.
@@ -47,7 +58,7 @@ modifier char_to_modifier(char);
 * @param [out] t tile pointer being assigned to
 * @return returns tile pointer
 */
-tile* str_to_tile(const char[static 5], tile*);
+tile* tile_from_str(const char[static 5], tile*);
 
 /**
 * set tile pointer to valid memory and initialize according to string.
@@ -65,7 +76,7 @@ tile* tile_alloc_from_str(const char[static 5], tile**);
 * @param [out] t tile pointer being assigned to
 * @return success of operation, returns false if reaches EOF before parsing full tile
 */
-bool parse_tile(FILE*, tile**);
+bool tile_parse(FILE*, tile**);
 
 /**
 * assign tile values to tile array based on specified file.
@@ -73,14 +84,14 @@ bool parse_tile(FILE*, tile**);
 * @param [out] list sized_tlist list
 * @return success of operation, return false if parse tile fails, list / tile is NULL
 */
-bool parse_tile_list(const char*, sized_tlist*);
+bool tlist_parse(const char*, sized_tlist*);
 
 /**
 * reads file to find out how big tile list to allocate.
 * @param [in] filename name of tile list file
 * @return length the tile list should be
 */
-size_t get_tile_list_len(const char*);
+size_t tlist_get_len(const char*);
 
 /**
 * allocates and initializes tile list based on tile list file.
@@ -89,17 +100,28 @@ size_t get_tile_list_len(const char*);
 * @param [out] list pointer to sized_tlist struct
 * @return status of operation
 */
-bool init_tlist(const char*, sized_tlist*);
+bool tlist_init(const char*, sized_tlist*);
 
 /**
  * wrapper around {@code init_tlist} exits on error.
- * @param filename [in] name of the tile list file
+ * @param [in] filename name of the tile list file
  * @retunr sized_tlist aviable tile list
  */
-sized_tlist init_tlist_exit_on_err(const char*);
+sized_tlist tlist_init_exit_on_err(const char*);
 
-char element_to_char(element);
-char modifier_to_char(modifier);
+/**
+ * convert element to character.
+ * @param [in] e element to convert
+ * @return char element representation
+ */
+char elem_to_char(element);
+
+/**
+ * convert modifier to character.
+ * @param [in] m modifier to convert
+ * @return char modifier representation
+ */
+char mod_to_char(modifier);
 
 /**
 * set string based on supplied tile.
@@ -124,25 +146,27 @@ char* tile_to_str_alloc(const tile*);
 * wraps around {@code tile_to_str}, no newline
 * @param [in] t tile to print
 */
-void print_tile(const tile*);
+void tile_print(const tile*);
 
 /**
 * print tile array, tiles are separated by newlines.
 * @param [in] t tile array
 * @param [in] len tile array length
 */
-void print_tile_list(const sized_tlist*);
+void tlist_print(const sized_tlist*);
 
-// not done
-bool write_tile_list(const sized_tlist*);
+// TODO: not done
+bool tlist_write(const sized_tlist*);
 
+// TODO: not done
 /**
 * gieve tile a ratign based on current state of a game.
 * @param [in] t pointer to tile to be reviewed
 * @return number indicating how good a tile is considering state of the game
 */
-int rate_tile(const tile*);
+int tile_rate(const tile*);
 
+// TODO: not done
 /**
 * find the best tile depeding on the state of a game.
 * @param [in] list of aviable tiles
@@ -150,7 +174,7 @@ int rate_tile(const tile*);
 * @param [in] size size of the board
 * @param [in] board gameboard
 */
-tile choose_best_tile(const tile*, size_t, size_t, const tile***);
+tile tile_choose_best(const tile*, size_t, size_t, const tile***);
 
 /**
 * rotate tile clockwise.
@@ -159,7 +183,7 @@ tile choose_best_tile(const tile*, size_t, size_t, const tile***);
 * @param [in,out] t tile to rotate
 * @return rotated tile
 */
-tile* rotate_tile(tile*);
+tile* tile_rotate(tile*);
 
 bool tile_isEmpty(const tile*);
 

@@ -9,7 +9,7 @@ tile* tile_alloc(tile** ptr) {
     return *ptr = malloc(sizeof(tile));
 }
 
-element char_to_element(char ch) {
+element elem_from_char(char ch) {
     assert(ch == 'c' || ch == 'r' || ch == 'f');
     switch (tolower(ch)) {
     case 'c': return CASTLE;
@@ -18,7 +18,7 @@ element char_to_element(char ch) {
     }
 }
 
-modifier char_to_modifier(char ch) {
+modifier mod_from_char(char ch) {
     switch (tolower(ch)) {
     case '*': return SHIELD;
     case 't': return TEMPLE;
@@ -26,22 +26,22 @@ modifier char_to_modifier(char ch) {
     }
 }
 
-tile* str_to_tile(const char str[static 5], tile* t) {
+tile* tile_from_str(const char str[static 5], tile* t) {
     if (t) {
-        t->up = Side_new(char_to_element(str[0]));
-        t->right = Side_new(char_to_element(str[1]));
-        t->down = Side_new(char_to_element(str[2]));
-        t->left = Side_new(char_to_element(str[3]));
-        t->mod = char_to_modifier(str[4]);
+        t->up = Side_new(elem_from_char(str[0]));
+        t->right = Side_new(elem_from_char(str[1]));
+        t->down = Side_new(elem_from_char(str[2]));
+        t->left = Side_new(elem_from_char(str[3]));
+        t->mod = mod_from_char(str[4]);
     }
     return t;
 }
 
 tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
-    return str_to_tile(str, tile_alloc(ptr));
+    return tile_from_str(str, tile_alloc(ptr));
 }
 
-bool parse_tile(FILE* file, tile** t) {
+bool tile_parse(FILE* file, tile** t) {
     int ch;
     char str[5];
     size_t i = 0;
@@ -61,7 +61,7 @@ bool parse_tile(FILE* file, tile** t) {
     return false;
 }
 
-bool parse_tile_list(const char* filename, sized_tlist* list) {
+bool tlist_parse(const char* filename, sized_tlist* list) {
     if (!list && !list->list) {
         return false;
     }
@@ -71,7 +71,7 @@ bool parse_tile_list(const char* filename, sized_tlist* list) {
     }
     for (size_t i = 0; i < list->len; ++i) {
         // if any tile parsing fails return false
-        if (!parse_tile(file, &list->list[i])) {
+        if (!tile_parse(file, &list->list[i])) {
             fclose(file);
             return false;
         }
@@ -80,7 +80,7 @@ bool parse_tile_list(const char* filename, sized_tlist* list) {
     return true;
 }
 
-size_t get_tile_list_len(const char* filename) {
+size_t tlist_get_len(const char* filename) {
     FILE* list = fopen(filename, "r");
     size_t count = 0;
     if (list) {
@@ -101,16 +101,16 @@ size_t get_tile_list_len(const char* filename) {
     return count;
 }
 
-bool init_tlist(const char* filename, sized_tlist* list) {
-    list->len = get_tile_list_len(filename);
+bool tlist_init(const char* filename, sized_tlist* list) {
+    list->len = tlist_get_len(filename);
     list->list = malloc(sizeof(tile*) * list->len);
     memset(list->list, 0, sizeof(tile*) * list->len);
-    return parse_tile_list(filename, list);
+    return tlist_parse(filename, list);
 }
 
-sized_tlist init_tlist_exit_on_err(const char* filename) {
+sized_tlist tlist_init_exit_on_err(const char* filename) {
     sized_tlist list;
-    if (!init_tlist(filename, &list)) {
+    if (!tlist_init(filename, &list)) {
         free(list.list);
         fputs("error parsing tile list\n", stderr);
         exit(EXIT_FAILURE);
@@ -118,7 +118,7 @@ sized_tlist init_tlist_exit_on_err(const char* filename) {
     return list;
 }
 
-char element_to_char(element e) {
+char elem_to_char(element e) {
     switch (e) {
     case CASTLE: return 'c';
     case ROAD: return 'r';
@@ -127,7 +127,7 @@ char element_to_char(element e) {
     }
 }
 
-char modifier_to_char(modifier m) {
+char mod_to_char(modifier m) {
     switch (m) {
     case SHIELD: return '*';
     case TEMPLE: return 't';
@@ -137,11 +137,11 @@ char modifier_to_char(modifier m) {
 
 char* tile_to_str(const tile* t, char buff[static 5]) {
     if (t && buff) {    // check if pointers are not null
-        buff[0] = element_to_char(tile_getSideElement(t, NORTH));
-        buff[1] = element_to_char(tile_getSideElement(t, EAST));
-        buff[2] = element_to_char(tile_getSideElement(t, SOUTH));
-        buff[3] = element_to_char(tile_getSideElement(t, WEST));
-        buff[4] = modifier_to_char(t->mod);
+        buff[0] = elem_to_char(tile_getSideElement(t, NORTH));
+        buff[1] = elem_to_char(tile_getSideElement(t, EAST));
+        buff[2] = elem_to_char(tile_getSideElement(t, SOUTH));
+        buff[3] = elem_to_char(tile_getSideElement(t, WEST));
+        buff[4] = mod_to_char(t->mod);
     }
     else if (buff) {    // null tile pointer should mean empty board cell
         buff[0] = '\t';
@@ -154,19 +154,19 @@ char* tile_to_str_alloc(const tile* t) {
     return tile_to_str(t, malloc(sizeof(char) * 5));
 }
 
-void print_tile(const tile* t) {
+void tile_print(const tile* t) {
     char buff[5];
     printf("%.*s", 5, tile_to_str(t, buff));
 }
 
-void print_tile_list(const sized_tlist* list) {
+void tlist_print(const sized_tlist* list) {
     for (size_t i = 0; i < list->len; ++i) {
-        print_tile(list->list[i]);
+        tile_print(list->list[i]);
         putchar('\n');
     }
 }
 
-tile* rotate_tile(tile* t) {
+tile* tile_rotate(tile* t) {
     if (t) {
         Side* u = t->up;
         Side* r = t->right;

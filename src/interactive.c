@@ -31,7 +31,7 @@ void init_tlist_interactive(sized_tlist* list) {
         fputs("enter name of a file containing tile list: ", stdout);
         fgets(name, sizeof(name), stdin);
         name[strcspn(name, "\n")] = '\0';
-        if (init_tlist(name, list)) {
+        if (tlist_init(name, list)) {
             return;
         }
         fputs("initializing failed, try again.\n", stderr);
@@ -129,7 +129,7 @@ action handle_input() {
 void run_interactive(gamemode mode, const char* list_filename) {
     greeting();
     sized_tlist list;
-    if (!init_tlist(list_filename, &list)) {
+    if (!tlist_init(list_filename, &list)) {
         init_tlist_interactive(&list);
     }
 
@@ -150,7 +150,7 @@ void run_interactive(gamemode mode, const char* list_filename) {
             help();
             break;
         case ACT_PRINT_LIST:
-            print_tile_list(&list);
+            tlist_print(&list);
             break;
         case ACT_LOAD_LIST:
             init_tlist_interactive(&list);

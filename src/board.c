@@ -210,7 +210,7 @@ void print_board_legal_moves(sized_board* board, tile* t) {
         // print up
         for (size_t j = 0; j < board->size; ++j) {
             if (board->fields[i][j]) {
-                printf("  %c  ", element_to_char(board->fields[i][j]->up->type));
+                printf("  %c  ", elem_to_char(board->fields[i][j]->up->type));
             } else {
                 fputs("     ", stdout);
             }
@@ -224,9 +224,9 @@ void print_board_legal_moves(sized_board* board, tile* t) {
         for (size_t j = 0; j < board->size; ++j) {
             if (board->fields[i][j]) {
                 printf(" %c%c%c ",
-                       element_to_char(board->fields[i][j]->left->type),
-                       modifier_to_char(board->fields[i][j]->mod),
-                       element_to_char(board->fields[i][j]->right->type));
+                       elem_to_char(board->fields[i][j]->left->type),
+                       mod_to_char(board->fields[i][j]->mod),
+                       elem_to_char(board->fields[i][j]->right->type));
             } else {
                 printf("  %c  ", can_place_tile(board, t, i, j) ? 'x' : ' ');
             }
@@ -238,7 +238,7 @@ void print_board_legal_moves(sized_board* board, tile* t) {
         // print down
         for (size_t j = 0; j < board->size; ++j) {
             if (board->fields[i][j]) {
-                printf("  %c  ", element_to_char(board->fields[i][j]->up->type));
+                printf("  %c  ", elem_to_char(board->fields[i][j]->up->type));
             } else {
                 fputs("     ", stdout);
             }
