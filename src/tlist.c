@@ -63,8 +63,13 @@ sized_tlist tlist_init_exit_on_err(const char* filename) {
 
 
 void tlist_print(const sized_tlist* list) {
+    int counter = 1;            // separate counter for display
     for (size_t i = 0; i < list->len; ++i) {
-        tile_print(list->tiles[i]);
-        putchar('\n');
+        if (list->tiles[i]) {   // if tile nonempty
+            printf("%-3d: ", counter);
+            tile_print(list->tiles[i]);
+            putchar('\n');
+            ++counter;
+        }
     }
 }
