@@ -5,6 +5,12 @@
 
 #include <stdbool.h>
 
+typedef tile** tlist_t;
+typedef struct {
+    tlist_t tiles;
+    size_t len;
+} sized_tlist;
+
 /**
 * assign tile values to tile array based on specified file.
 * @param [in] filename tile list file name

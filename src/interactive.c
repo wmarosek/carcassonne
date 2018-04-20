@@ -25,8 +25,8 @@ void usage() {
 }
 
 void init_tlist_interactive(sized_tlist* list) {
-    free(list->list);
-    list->list = 0;
+    free(list->tiles);
+    list->tiles = 0;
     char name[64] = { 0 };
     while (true) {
         fputs("enter name of a file containing tile list: ", stdout);
@@ -166,7 +166,7 @@ void run_interactive(gamemode mode, const char* list_filename) {
             change_prompt();
             break;
         case ACT_QUIT:
-            free(list.list);
+            free(list.tiles);
             return;
         default: fputs("unknown option\n", stderr);
         }
