@@ -185,31 +185,101 @@ tile tile_choose_best(const tile*, size_t, size_t, const tile***);
 */
 tile* tile_rotate(tile*);
 
+/**
+ * check if tile is empty.
+ * @param [in] t tile pointer to check if no tile is placed there on the board
+ * @return bool if there is tile
+ */
 bool tile_isEmpty(const tile*);
 
+/**
+ * return element of tile in direction.
+ * @param [in] t tile pointer
+ * @param [in] dir direction of element we want to get
+ * @return element of tile in specified direction
+ */
 element tile_getSideElement(const tile*, Direction);
 
+/**
+ * get side in specified directon.
+ * @param [in] t tile pointer to get side from
+ * @param dir directon
+ * @return Side
+ */
 Side* tile_getSide(const tile*, Direction); 
 
+/**
+ * set completition status for tile direction.
+ * @param [in] t tile pointer
+ * @param [in] dir direction
+ * @param [in] status status of completition
+ */
 void tile_setSideCompletion(const tile*, Direction, int status);
 
+/**
+ * get side completition status.
+ * @param [in] t tile pointer to get completition status in directions from.
+ * @param [in] dir direction
+ * @return completition status
+ */
 int tile_getSideCompletion(const tile*, Direction);
 
+/**
+ * get tile modifier.
+ * @param [in] t tile pointer
+ * @return modifier
+ */
 modifier tile_getCenter(const tile*);
 
+/**
+ * get amount of segments of with element on specified tile.
+ * @param [in] t tile pointer
+ * @param [in] type element to check amount of
+ * @return amount of segments with element on tile
+ */
 int tile_numOfSegments(const tile* self, element);
 
 Direction* tile_getSegments(const tile*, element, size_t);
 
+/**
+ * free segments set pointer to null.
+ * @param [in,out] selfPtr segments pointer to pointer to free
+ */
 void tile_freeSegments(Direction**);
 
+/**
+ * check if tile has castle.
+ * @param [in] t tile pointer
+ * @return if tile has castle
+ */
 bool tile_hasCastle(const tile*);
 
+/**
+ * check if tile has road.
+ * @param [in] t tile pointer
+ * @return if tile has road
+ */
 bool tile_hasRoad(const tile*);
 
+/**
+ * check if tile has temple.
+ * @param [in] t tile pointer
+ * @return if tile has temple
+ */
 bool tile_hasTemple(const tile*);
 
+/**
+ * check if tile has crossroads.
+ * @param [in] t tile pointer
+ * @return if tile has crossroads
+ */
 bool tile_hasCrossroads(const tile*);
 
+/**
+ * check if tile has shield.
+ * @param [in] t tile pointer
+ * @return if tile has shield
+ */
 bool tile_hasShield(const tile*);
+
 #endif
