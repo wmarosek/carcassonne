@@ -61,6 +61,16 @@ sized_tlist tlist_init_exit_on_err(const char* filename) {
     return list;
 }
 
+void tlist_free(sized_tlist* list) {
+    for (size_t i = 0; i < list->len; ++i) {
+        tile_free(list->tiles[i]);
+        free(list->tiles[i]);
+        list->tiles[i] = 0;
+    }
+    free(list->tiles);
+    list->tiles = 0;
+}
+
 
 void tlist_print(const sized_tlist* list) {
     int counter = 1;            // separate counter for display

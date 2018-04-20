@@ -41,6 +41,16 @@ tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
     return tile_from_str(str, tile_alloc(ptr));
 }
 
+void tile_free(tile* t) {
+    if (t) {
+        Side_free(&t->up);
+        Side_free(&t->right);
+        Side_free(&t->down);
+        Side_free(&t->left);
+    }
+}
+
+
 bool tile_parse(FILE* file, tile** t) {
     int ch;
     char str[5];

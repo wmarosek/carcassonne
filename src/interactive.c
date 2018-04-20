@@ -166,7 +166,8 @@ void run_interactive(gamemode mode, const char* list_filename) {
             change_prompt();
             break;
         case ACT_QUIT:
-            free(list.tiles);
+            tlist_free(&list);
+            board_free(&board);
             return;
         default: fputs("unknown option\n", stderr);
         }

@@ -92,6 +92,7 @@ sized_board init_board_exit_on_err(gamemode mode, const char* filename) {
 void board_free(sized_board* board) {
     for (size_t i = 0; i < board->size; ++i) {
         for (size_t j = 0; j < board->size; ++j) {
+            tile_free(board->fields[i][j]);
             free(board->fields[i][j]);
         }
         free(board->fields[i]);

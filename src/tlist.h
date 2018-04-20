@@ -50,6 +50,12 @@ sized_tlist tlist_init_exit_on_err(const char*);
 */
 void tlist_print(const sized_tlist*);
 
+/**
+ * free tlist, set pointer to null.
+ * @param [in,out] list sized_list pointer to free
+ */
+void tlist_free(sized_tlist*);
+
 // TODO: not done
 bool tlist_write(const sized_tlist*);
 

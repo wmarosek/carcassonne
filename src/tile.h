@@ -64,6 +64,12 @@ tile* tile_from_str(const char[static 5], tile*);
 tile* tile_alloc_from_str(const char[static 5], tile**);
 
 /**
+ * frees all Sides, not the tile pointer!
+ * @param [in] t tile pointer to free
+ */
+void tile_free(tile*);
+
+/**
 * parse next tile in specified file stream.
 * ignores whitespace inside tile specification
 * @param [in] file file stream pointer
