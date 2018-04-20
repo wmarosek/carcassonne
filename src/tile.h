@@ -22,9 +22,9 @@ typedef struct {
 } tile;
 /** @} */
 
-typedef tile* tile_list_t;
+typedef tile** tlist_t;
 typedef struct {
-    tile_list_t list;
+    tlist_t list;
     size_t len;
 } sized_tlist;
 
@@ -65,7 +65,7 @@ tile* tile_alloc_from_str(const char[static 5], tile**);
 * @param [out] t tile pointer being assigned to
 * @return success of operation, returns false if reaches EOF before parsing full tile
 */
-bool parse_tile(FILE*, tile*);
+bool parse_tile(FILE*, tile**);
 
 /**
 * assign tile values to tile array based on specified file.

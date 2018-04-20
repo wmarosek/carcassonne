@@ -41,7 +41,7 @@ tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
     return str_to_tile(str, tile_alloc(ptr));
 }
 
-bool parse_tile(FILE* file, tile* t) {
+bool parse_tile(FILE* file, tile** t) {
     int ch;
     char str[5];
     size_t i = 0;
@@ -54,7 +54,7 @@ bool parse_tile(FILE* file, tile* t) {
         }
         str[i++] = (char)ch;
         if (i == 5) {
-            str_to_tile(str, t);
+            tile_alloc_from_str(str, t);
             return true;
         }
     }
@@ -103,7 +103,8 @@ size_t get_tile_list_len(const char* filename) {
 
 bool init_tlist(const char* filename, sized_tlist* list) {
     list->len = get_tile_list_len(filename);
-    list->list = malloc(sizeof(tile) * list->len);
+    list->list = malloc(sizeof(tile*) * list->len);
+    memset(list->list, 0, sizeof(tile*) * list->len);
     return parse_tile_list(filename, list);
 }
 
@@ -160,7 +161,7 @@ void print_tile(const tile* t) {
 
 void print_tile_list(const sized_tlist* list) {
     for (size_t i = 0; i < list->len; ++i) {
-        print_tile(&list->list[i]);
+        print_tile(list->list[i]);
         putchar('\n');
     }
 }
