@@ -106,6 +106,6 @@ void print_board_legal_moves(sized_board*, tile*);
  * @param [in] board tile pointer array portraying board
  * @return success of operation
  */
-bool write_board(const char*, sized_tlist*);
+bool write_board(const char*, sized_board*);
 
 #endif

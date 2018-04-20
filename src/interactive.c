@@ -1,6 +1,7 @@
 #include "interactive.h"
 
 #include "board.h"
+#include "tlist.h"
 
 #include <stdio.h>
 #include <stdlib.h>
