@@ -105,11 +105,25 @@ void board_free(sized_board* board) {
     board->fields = 0;
 }
 
+bool board_is_empty(sized_board* board) {
+    for (size_t i = 0; i < board->size; ++i) {
+        for (size_t j = 0; j < board->size; ++j) {
+            if (board->fields[i][j]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 bool can_place_tile(sized_board* board,
                     const tile* t, size_t y, size_t x) {
     // return false on null tile
     if (t == 0) {
         return false;
+    }
+    if (board_is_empty(board)) {
+        return true;
     }
     // if out of bounds return false
     if (y > board->size || x > board->size) {
