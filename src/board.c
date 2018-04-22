@@ -5,13 +5,17 @@
 #include <string.h>
 
 size_t get_board_size_interactive() {
-    fputs("input board size: ", stdout);
     size_t ret;
-    scanf("%lu", &ret);
-    int ch;
-    // exhaust stdin
-    while ((ch = getchar()) != EOF && ch != '\n' && ch != '\r') {
-        continue;
+    while (true) {
+        fputs("input board size: ", stdout);
+        if (scanf("%lu", &ret) == 1) {
+            // exhaust stdin
+            for (int ch; (ch = getchar()) != EOF && ch != '\n' && ch != '\r';) { ; }
+            break;
+        }
+        puts("bad input");
+        // exhaust stdin
+        for (int ch; (ch = getchar()) != EOF && ch != '\n' && ch != '\r';) { ; }
     }
     return ret;
 }
