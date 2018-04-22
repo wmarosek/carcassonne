@@ -192,6 +192,46 @@ action handle_input() {
     return ACT_UNKNOWN;
 }
 
+bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
+    switch(handle_input()) {
+    case ACT_GREETING:
+        greeting();
+        break;
+    case ACT_USAGE:
+        usage();
+        break;
+    case ACT_HELP:
+        help();
+        break;
+    case ACT_PRINT_LIST:
+        tlist_print(list);
+        break;
+    case ACT_LOAD_LIST:
+        init_tlist_interactive(list);
+        break;
+    case ACT_PRINT_BOARD:
+        print_board(board);
+        break;
+    case ACT_LOAD_BOARD:
+        load_board_interactive(board);
+        break;
+    case ACT_CHOOSE_TILE:
+        choose_tile_interactive(list, ctile);
+        break;
+    case ACT_PRINT_MOVES:
+        print_board_legal_moves(board, *ctile);
+        break;
+    case ACT_CHNG_PRMPT:
+        change_prompt();
+        break;
+    case ACT_QUIT:
+        return false;
+    default:
+        fputs("unknown option\n", stderr);
+    }
+    return true;
+}
+
 void run_interactive(gamemode mode, const char* list_filename) {
     greeting();
     sized_tlist list;
@@ -204,47 +244,12 @@ void run_interactive(gamemode mode, const char* list_filename) {
         load_board_interactive(&board);
     }
 
-    tile* curr_tile = 0;
+    tile* ctile = 0;
 
-    while (true) {
-        switch(handle_input()) {
-        case ACT_GREETING:
-            greeting();
-            break;
-        case ACT_USAGE:
-            usage();
-            break;
-        case ACT_HELP:
-            help();
-            break;
-        case ACT_PRINT_LIST:
-            tlist_print(&list);
-            break;
-        case ACT_LOAD_LIST:
-            init_tlist_interactive(&list);
-            break;
-        case ACT_PRINT_BOARD:
-            print_board(&board);
-            break;
-        case ACT_LOAD_BOARD:
-            load_board_interactive(&board);
-            break;
-        case ACT_CHOOSE_TILE:
-            choose_tile_interactive(&list, &curr_tile);
-            break;
-        case ACT_PRINT_MOVES:
-            print_board_legal_moves(&board, curr_tile);
-            break;
-        case ACT_CHNG_PRMPT:
-            change_prompt();
-            break;
-        case ACT_QUIT:
-            tlist_free(&list);
-            board_free(&board);
-            tile_free(curr_tile);
-            free(curr_tile);
-            return;
-        default: fputs("unknown option\n", stderr);
-        }
-    }
+    while (run_prompt(&list, &board, &ctile)) { ; }
+
+    tlist_free(&list);
+    board_free(&board);
+    tile_free(ctile);
+    free(ctile);
 }
