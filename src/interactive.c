@@ -8,6 +8,7 @@
 #include <string.h>
 
 #define ARR_LEN(arr) sizeof(arr) / sizeof(*arr)
+#define STR_EQ(s1, s2) (strcmp(s1, s2) == 0)
 
 void greeting() {
     puts("hello player!\n"
@@ -162,7 +163,7 @@ void help() {
         // do not print commands marked as abbreviations
         // prints if desc different than 'abbrev'
         // (strcmp returns 0 if the same)
-        if (strcmp(act_list[i].desc, "abbrev")) {
+        if (!STR_EQ(act_list[i].desc, "abbrev")) {
             printf("%s: %s\n", act_list[i].cmd, act_list[i].desc);
         }
     }
@@ -184,7 +185,7 @@ action handle_input() {
     input[strcspn(input, "\n")] = '\0';
 
     for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
-        if (strcmp(input, act_list[i].cmd) == 0) {
+        if (STR_EQ(input, act_list[i].cmd)) {
             return act_list[i].act;
         }
     }
