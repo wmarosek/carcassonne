@@ -180,8 +180,8 @@ modifier tile_getCenter(const tile* t) {
     return t->mod;
 }
 
-int tile_numOfSegments(const tile* t, element type) {
-    int count = 0;
+size_t tile_numOfSegments(const tile* t, element type) {
+    size_t count = 0;
 
     if (Side_getType(t->up) == type) {
         count++;

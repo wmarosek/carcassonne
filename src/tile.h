@@ -196,7 +196,7 @@ modifier tile_getCenter(const tile*);
  * @param [in] type element to check amount of
  * @return amount of segments with element on tile
  */
-int tile_numOfSegments(const tile* self, element);
+size_t tile_numOfSegments(const tile* self, element);
 
 Direction* tile_getSegments(const tile*, element, size_t);
 
