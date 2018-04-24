@@ -22,8 +22,8 @@ void handle_args(int argc, char* argv[]) {
     };
 
     for (int i = 1; i < argc; ++i) {
-        for (size_t j = 0; j < sizeof(arg_list) / sizeof(*arg_list); ++j) {
-            if (strcmp(argv[i], arg_list[j].arg) == 0) {
+        for (size_t j = 0; j < ARR_LEN(arg_list); ++j) {
+            if (STR_EQ(argv[i], arg_list[j].arg)) {
                 arg_list[j].func();
                 exit(EXIT_SUCCESS);
             }
