@@ -83,3 +83,18 @@ void tlist_print(const sized_tlist* list) {
         }
     }
 }
+
+bool tlist_write(const sized_tlist* list, const char* filename) {
+    FILE* file;
+    if ((file = fopen(filename, "w")) == 0) {
+        return false;
+    }
+    char str[5];
+    for (size_t i = 0; i < list->len; ++i) {
+        fprintf(file,
+                "%s\n",
+                tile_to_str(list->tiles[i], str));
+    }
+    fclose(file);
+    return true;
+}

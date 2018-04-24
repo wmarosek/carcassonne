@@ -56,7 +56,11 @@ void tlist_print(const sized_tlist*);
  */
 void tlist_free(sized_tlist*);
 
-// TODO: not done
-bool tlist_write(const sized_tlist*);
+/**
+ * write tlist to file.
+ * @param [in] list sized_tlist pointer, list of aviable tiles
+ * @param [in] filename name of tile file to write to
+ */
+bool tlist_write(const sized_tlist*, const char*);
 
 #endif
