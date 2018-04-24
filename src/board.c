@@ -286,3 +286,21 @@ void print_board_legal_moves(sized_board* board, tile* t) {
         putchar('\n');
     }
 }
+
+bool board_write(sized_board* board, const char* filename) {
+    FILE* file;
+    if ((file = fopen(filename, "w")) == 0) {
+        return false;
+    }
+    char str[5];
+    for (size_t i = 0; i < board->size; ++i) {
+        for (size_t j = 0; j < board->size; ++j) {
+            fprintf(file,
+                    "%s ",
+                    tile_to_str(board->fields[i][j], str));
+        }
+        fprintf(file, "\n");
+    }
+    fclose(file);
+    return true;
+}

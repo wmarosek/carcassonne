@@ -101,11 +101,10 @@ void print_board_legal_moves(sized_board*, tile*);
 // not done
 /**
  * write board to file.
- * @param [in] filename board file name
- * @param [in] size size of tile list array
  * @param [in] board tile pointer array portraying board
+ * @param [in] filename board file name
  * @return success of operation
  */
-bool write_board(const char*, sized_board*);
+bool board_write(sized_board*, const char*);
 
 #endif
