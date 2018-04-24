@@ -7,9 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ARR_LEN(arr) sizeof(arr) / sizeof(*arr)
-#define STR_EQ(s1, s2) (strcmp(s1, s2) == 0)
-
 void greeting() {
     puts("hello player!\n"
          "welcome to a simple carcassonne based game!\n"
