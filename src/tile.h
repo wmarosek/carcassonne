@@ -144,6 +144,16 @@ tile tile_choose_best(const tile*, size_t, size_t, const tile***);
 */
 tile* tile_rotate(tile*);
 
+typedef enum {
+    ROT_0,
+    ROT_90,
+    ROT_180,
+    ROT_270,
+    ROT_NO,
+} rotation_t;
+
+tile* tile_rotate_amount(rotation_t, tile*);
+
 /**
  * check if tile is empty.
  * @param [in] t tile pointer to check if no tile is placed there on the board

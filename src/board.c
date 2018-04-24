@@ -166,6 +166,17 @@ bool can_place_tile(sized_board* board,
     return count > 0;
 }
 
+rotation_t can_place_tile_rotated(sized_board* board,
+                                  const tile* t, size_t y, size_t x) {
+    tile temp = { t->up, t->right, t->down, t->left, t->mod };
+    for (rotation_t rot = ROT_0; rot < ROT_NO; ++rot) {
+        if (can_place_tile(board, tile_rotate_amount(rot, &temp), y, x)) {
+            return rot;
+        }
+    }
+    return ROT_NO;
+}
+
 void place_tile(tile** place, tile* t) {
     *place = t;
 }

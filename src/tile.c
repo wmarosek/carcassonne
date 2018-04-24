@@ -126,6 +126,16 @@ tile* tile_rotate(tile* t) {
     return t;
 }
 
+tile* tile_rotate_amount(rotation_t rot, tile* t) {
+    switch (rot) {
+    case ROT_270: tile_rotate(t);   // fall trough
+    case ROT_180: tile_rotate(t);   // fall trough
+    case ROT_90: tile_rotate(t);    // fall trough
+    default: { ; }
+    }
+    return t;
+}
+
 bool tile_isEmpty(const tile* t) {
     return t == 0;
 }
