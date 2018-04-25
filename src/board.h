@@ -91,14 +91,20 @@ bool parse_board(const char*, sized_board*);
  */
 void print_board(sized_board*);
 
+/**
+ * prints the board with x on empty cells on which tile specified could be placed.
+ * @param [in] board game board pointer
+ * @param [in] t tile pointer
+ */
+void print_board_legal_moves(sized_board*, tile*);
+
 // not done
 /**
  * write board to file.
- * @param [in] filename board file name
- * @param [in] size size of tile list array
  * @param [in] board tile pointer array portraying board
+ * @param [in] filename board file name
  * @return success of operation
  */
-bool write_board(const char*, sized_tlist*);
+bool board_write(sized_board*, const char*);
 
 #endif

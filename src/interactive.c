@@ -1,12 +1,11 @@
 #include "interactive.h"
 
 #include "board.h"
+#include "tlist.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define ARR_LEN(arr) sizeof(arr) / sizeof(*arr)
 
 void greeting() {
     puts("hello player!\n"
@@ -24,14 +23,14 @@ void usage() {
 }
 
 void init_tlist_interactive(sized_tlist* list) {
-    free(list->list);
-    list->list = 0;
+    free(list->tiles);
+    list->tiles = 0;
     char name[64] = { 0 };
     while (true) {
         fputs("enter name of a file containing tile list: ", stdout);
         fgets(name, sizeof(name), stdin);
         name[strcspn(name, "\n")] = '\0';
-        if (init_tlist(name, list)) {
+        if (tlist_init(name, list)) {
             return;
         }
         fputs("initializing failed, try again.\n", stderr);
@@ -54,6 +53,40 @@ void load_board_interactive(sized_board* board) {
     }
 }
 
+tile* choose_tile_interactive(sized_tlist* list, tile** t) {
+    tile* temp = *t;
+    fputs("choose tile (number): ", stdout);
+    size_t choice;
+    while (true) {
+        scanf("%lu", &choice);
+        // exhaust stdin
+        for (int ch; (ch = getchar()) != EOF && ch != '\n' && ch != '\r';) { ; }
+        if (choice == 0 || choice <= list->len) {
+            break;
+        }
+        puts("choice out of bounds");
+    }
+    // choose right tile based on user input (numbering from 1 and ignore null pointers)
+    for (size_t i = 0, count = 0; i < list->len; ++i) {
+        if (list->tiles[i] && ++count == choice) {
+            *t = list->tiles[i];
+            list->tiles[i] = 0;
+        }
+    }
+    // if current tile is not null put it back on the list
+    if (temp) {
+        // find empty space
+        for (size_t i = 0; i < list->len; ++i) {
+            // TODO: if it wont find empty space it will leak memory
+            if (list->tiles[i] == 0) {
+                list->tiles[i] = temp;
+                break;
+            }
+        }
+    }
+    return temp;
+}
+
 typedef enum {
     ACT_GREETING,
     ACT_USAGE,
@@ -62,6 +95,8 @@ typedef enum {
     ACT_LOAD_LIST,
     ACT_PRINT_BOARD,
     ACT_LOAD_BOARD,
+    ACT_CHOOSE_TILE,
+    ACT_PRINT_MOVES,
     ACT_CHNG_PRMPT,
     ACT_QUIT,
     ACT_UNKNOWN,
@@ -72,24 +107,52 @@ typedef enum {
 // put them right after main command
 // (only first command with specific enum value is printed)
 const struct { action act; const char* cmd; const char* desc; } act_list[] = {
-    { ACT_GREETING,     "greeting",     "greets player"         },
-    { ACT_GREETING,     "g",            "abbrev"                },
-    { ACT_USAGE,        "usage",        "prints usage"          },
-    { ACT_USAGE,        "u",            "abbrev"                },
-    { ACT_HELP,         "help",         "prints this message"   },
-    { ACT_HELP,         "h",            "abbrev"                },
-    { ACT_HELP,         "?",            "abbrev"                },
-    { ACT_PRINT_LIST,   "print list",   "prints tile list"      },
-    { ACT_PRINT_LIST,   "p l",          "abbrev"                },
-    { ACT_LOAD_LIST,    "load list",    "load tile list file"   },
-    { ACT_LOAD_LIST,    "l l",          "abbrev"                },
-    { ACT_PRINT_BOARD,  "print board",  "prints the board"      },
-    { ACT_PRINT_BOARD,  "p b",          "abbrev"                },
-    { ACT_LOAD_BOARD,   "load board",   "load board file"       },
-    { ACT_LOAD_BOARD,   "l b",          "abbrev"                },
-    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"    },
-    { ACT_QUIT,         "quit",         "quits the game"        },
-    { ACT_QUIT,         "q",            "abbrev"                },
+    // greeting
+    { ACT_GREETING,     "greeting",     "greets player"                     },
+    { ACT_GREETING,     "g",            "abbrev"                            },
+
+    // usage
+    { ACT_USAGE,        "usage",        "prints usage"                      },
+    { ACT_USAGE,        "u",            "abbrev"                            },
+
+    // help
+    { ACT_HELP,         "help",         "prints this message"               },
+    { ACT_HELP,         "h",            "abbrev"                            },
+    { ACT_HELP,         "?",            "abbrev"                            },
+
+    // list printing
+    { ACT_PRINT_LIST,   "print list",   "prints tile list"                  },
+    { ACT_PRINT_LIST,   "p l",          "abbrev"                            },
+
+    // loading list file
+    { ACT_LOAD_LIST,    "load list",    "load tile list file"               },
+    { ACT_LOAD_LIST,    "l l",          "abbrev"                            },
+
+    // board printing
+    { ACT_PRINT_BOARD,  "print board",  "prints the board"                  },
+    { ACT_PRINT_BOARD,  "p b",          "abbrev"                            },
+
+    // loading board file
+    { ACT_LOAD_BOARD,   "load board",   "load board file"                   },
+    { ACT_LOAD_BOARD,   "l b",          "abbrev"                            },
+
+    // choosing tile to place
+    { ACT_CHOOSE_TILE,  "choose tile",  "choose tile to place"              },
+    { ACT_CHOOSE_TILE,  "c t",          "abbrev"                            },
+
+    // print aviable moves with current tile
+    { ACT_PRINT_MOVES,  "print moves",  "print moves aviable"
+                                        " with current tile"                },
+    { ACT_PRINT_MOVES,  "p m",          "abbrev"                            },
+
+    // chnaging prompt text
+    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"                },
+
+    // quiting
+    { ACT_QUIT,         "quit",         "quits the game"                    },
+    { ACT_QUIT,         "q",            "abbrev"                            },
+    { ACT_QUIT,         "exit",         "abbrev"                            },
+    { ACT_QUIT,         "e",            "abbrev"                            },
 };
 
 void help() {
@@ -97,7 +160,7 @@ void help() {
         // do not print commands marked as abbreviations
         // prints if desc different than 'abbrev'
         // (strcmp returns 0 if the same)
-        if (strcmp(act_list[i].desc, "abbrev")) {
+        if (!STR_EQ(act_list[i].desc, "abbrev")) {
             printf("%s: %s\n", act_list[i].cmd, act_list[i].desc);
         }
     }
@@ -119,17 +182,57 @@ action handle_input() {
     input[strcspn(input, "\n")] = '\0';
 
     for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
-        if (strcmp(input, act_list[i].cmd) == 0) {
+        if (STR_EQ(input, act_list[i].cmd)) {
             return act_list[i].act;
         }
     }
     return ACT_UNKNOWN;
 }
 
+bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
+    switch(handle_input()) {
+    case ACT_GREETING:
+        greeting();
+        break;
+    case ACT_USAGE:
+        usage();
+        break;
+    case ACT_HELP:
+        help();
+        break;
+    case ACT_PRINT_LIST:
+        tlist_print(list);
+        break;
+    case ACT_LOAD_LIST:
+        init_tlist_interactive(list);
+        break;
+    case ACT_PRINT_BOARD:
+        print_board(board);
+        break;
+    case ACT_LOAD_BOARD:
+        load_board_interactive(board);
+        break;
+    case ACT_CHOOSE_TILE:
+        choose_tile_interactive(list, ctile);
+        break;
+    case ACT_PRINT_MOVES:
+        print_board_legal_moves(board, *ctile);
+        break;
+    case ACT_CHNG_PRMPT:
+        change_prompt();
+        break;
+    case ACT_QUIT:
+        return false;
+    default:
+        fputs("unknown option\n", stderr);
+    }
+    return true;
+}
+
 void run_interactive(gamemode mode, const char* list_filename) {
     greeting();
     sized_tlist list;
-    if (!init_tlist(list_filename, &list)) {
+    if (!tlist_init(list_filename, &list)) {
         init_tlist_interactive(&list);
     }
 
@@ -138,36 +241,12 @@ void run_interactive(gamemode mode, const char* list_filename) {
         load_board_interactive(&board);
     }
 
-    while (true) {
-        switch(handle_input()) {
-        case ACT_GREETING:
-            greeting();
-            break;
-        case ACT_USAGE:
-            usage();
-            break;
-        case ACT_HELP:
-            help();
-            break;
-        case ACT_PRINT_LIST:
-            print_tile_list(&list);
-            break;
-        case ACT_LOAD_LIST:
-            init_tlist_interactive(&list);
-            break;
-        case ACT_PRINT_BOARD:
-            print_board(&board);
-            break;
-        case ACT_LOAD_BOARD:
-            load_board_interactive(&board);
-            break;
-        case ACT_CHNG_PRMPT:
-            change_prompt();
-            break;
-        case ACT_QUIT:
-            free(list.list);
-            return;
-        default: fputs("unknown option\n", stderr);
-        }
-    }
+    tile* ctile = 0;
+
+    while (run_prompt(&list, &board, &ctile)) { ; }
+
+    tlist_free(&list);
+    board_free(&board);
+    tile_free(ctile);
+    free(ctile);
 }

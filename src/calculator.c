@@ -27,7 +27,7 @@ int score(board_t board, int rows, int columns) {
                         castleScore++;
                     }
 
-                    int castleSegments = tile_numOfSegments(t, CASTLE);
+                    size_t castleSegments = tile_numOfSegments(t, CASTLE);
                     Direction* sides = tile_getSegments(t, CASTLE, castleSegments);
                     if (castleSegments == 1) {
                         if (castleCompleted(board, rows, columns, i, j, sides[0])) {
@@ -40,7 +40,7 @@ int score(board_t board, int rows, int columns) {
                     //SPECIAL CASE
                     // when castleSegments==2 - there can be 2 cities: each segment then should be calculated individually
                     else if (castleSegments == 2 && tile_getCenter(t) != CITY) {
-                        for (int k = 0; k < castleSegments; k++) {
+                        for (size_t k = 0; k < castleSegments; k++) {
                             if (castleCompleted(board, rows, columns, i, j, sides[k])) {
                                 castleScore += 2;
                             }
@@ -51,7 +51,7 @@ int score(board_t board, int rows, int columns) {
                     }
                     else {
                         bool completed = true;
-                        for (int k = 0; k < castleSegments; k++) {
+                        for (size_t k = 0; k < castleSegments; k++) {
                             completed &= castleCompleted(board, rows, columns, i, j, sides[k]);
                             if (!completed) break; ///
                         }
@@ -71,11 +71,11 @@ int score(board_t board, int rows, int columns) {
                 }
                 // 2nd Criteria: Road
                 if (tile_hasRoad(t)) {
-                    int roadSegments = tile_numOfSegments(t, ROAD);
+                    size_t roadSegments = tile_numOfSegments(t, ROAD);
                     Direction* sides = tile_getSegments(t, ROAD, roadSegments);
                     int roadScore = 0;
 
-                    for (int k = 0; k < roadSegments; k++) {
+                    for (size_t k = 0; k < roadSegments; k++) {
                         if (roadCompleted(board, rows, columns, i, j, sides[k])) {
                             roadScore += 2;
                         }
@@ -195,7 +195,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     List_addLast(stack, Point_new(i, j, Direction_getOpposite(dir)));
 
     // get number of city segments of a tile
-    int numOfCastles = tile_numOfSegments(t, CASTLE);
+    size_t numOfCastles = tile_numOfSegments(t, CASTLE);
 
     // simpliest case: 1 city tile automatically means that this is border
     if (numOfCastles == 1) {
@@ -212,7 +212,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     bool isCompl = true;
     bool compl = true;
     int in, jn;
-    for (int k = 0; k < numOfCastles; k++) {
+    for (size_t k = 0; k < numOfCastles; k++) {
 
         // obtaining the coordinates for the next tile to be checked
         switch (sides[k]) {
