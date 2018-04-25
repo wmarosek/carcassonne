@@ -7,12 +7,14 @@
 size_t get_board_size_interactive() {
     fputs("input board size: ", stdout);
     size_t ret;
-    scanf("%zu", &ret);
+    scanf("%lu", &ret);
     int ch;
-    // exhaust stdin
-    while ((ch = getchar()) != EOF && ch != '\n') {
+
+    while ((ch = getchar()) != EOF && ch != '\n' && ch != '\r') {
         continue;
     }
+    // exhaust stdin
+
     return ret;
 }
 
