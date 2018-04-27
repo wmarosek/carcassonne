@@ -52,7 +52,7 @@ bool init_board(gamemode, const char*, sized_board*);
  * @param [in] filename name of the board file
  * @return initialized board
  */
-sized_board init_board_on_exit_on_err(gamemode, const char*);
+sized_board init_board_exit_on_err(gamemode, const char*);
 
 /**
  * frees array of tile pointers
