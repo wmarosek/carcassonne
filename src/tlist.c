@@ -29,15 +29,11 @@ size_t tlist_get_len(const char* filename) {
     if (list) {
         int ch;
         while ((ch = getc(list)) != EOF) {
-            while ((ch = getc(list)) != EOF && isspace(ch)) {
-                continue;
-            }
+            while ((ch = getc(list)) != EOF && isspace(ch)) { ; }
             if (ch != EOF && !isspace(ch)) {
                 ++count;
             }
-            while ((ch = getc(list)) != EOF && !isspace(ch)) {
-                continue;
-            }
+            while ((ch = getc(list)) != EOF && !isspace(ch)) { ; }
         }
         fclose(list);
     }
