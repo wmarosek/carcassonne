@@ -46,8 +46,7 @@ size_t tlist_get_len(const char* filename) {
 
 bool tlist_init(const char* filename, sized_tlist* list) {
     list->len = tlist_get_len(filename);
-    list->tiles = malloc(sizeof(tile*) * list->len);
-    memset(list->tiles, 0, sizeof(tile*) * list->len);
+    list->tiles = calloc(list->len, sizeof(tile*));
     return tlist_parse(filename, list);
 }
 

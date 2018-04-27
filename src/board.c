@@ -64,8 +64,7 @@ size_t get_board_size(const char* filename) {
 board_t board_alloc(size_t size) {
     board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
-        board[i] = malloc(sizeof(tile*) * size);
-        memset(board[i], 0, sizeof(tile*) * size);
+        board[i] = calloc(size, sizeof(tile*));
     }
     return board;
 }
