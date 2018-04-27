@@ -168,7 +168,7 @@ bool can_place_tile(sized_board* board,
 rotation_t can_place_tile_rotated(sized_board* board,
                                   const tile* t, size_t y, size_t x) {
     tile temp = { t->up, t->right, t->down, t->left, t->mod };
-    for (rotation_t rot = ROT_0; rot < ROT_NO; ++rot) {
+    for (rotation_t rot = ROT_90; rot <= ROT_270; ++rot) {
         if (can_place_tile(board, tile_rotate_amount(rot, &temp), y, x)) {
             return rot;
         }

@@ -126,12 +126,24 @@ tile* tile_rotate(tile* t) {
     return t;
 }
 
-tile* tile_rotate_amount(rotation_t rot, tile* t) {
+void rotation_print(rotation_t rot) {
     switch (rot) {
-    case ROT_270: tile_rotate(t);   // fall trough
-    case ROT_180: tile_rotate(t);   // fall trough
-    case ROT_90: tile_rotate(t);    // fall trough
+    case ROT_90:
+        fputs("90 degrees", stdout);
+        return;
+    case ROT_180:
+        fputs("180 degrees", stdout);
+        return;
+    case ROT_270:
+        fputs("270 degrees", stdout);
+        return;
     default: { ; }
+    }
+}
+
+tile* tile_rotate_amount(rotation_t rot, tile* t) {
+    while(rot--) {
+        tile_rotate(t);
     }
     return t;
 }
