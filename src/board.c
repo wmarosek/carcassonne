@@ -86,7 +86,7 @@ bool init_board(gamemode mode, const char* filename, sized_board* board) {
 
 sized_board init_board_exit_on_err(gamemode mode, const char* filename) {
     sized_board board;
-    if (init_board(mode, filename, &board)) {
+    if (!init_board(mode, filename, &board)) {
             fprintf(stderr, "error parsing board file: %s\n", filename);
             exit(EXIT_FAILURE);
     }
