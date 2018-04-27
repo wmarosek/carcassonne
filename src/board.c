@@ -268,7 +268,7 @@ void print_board_legal_moves(sized_board* board, tile* t) {
         // print down
         for (size_t j = 0; j < board->size; ++j) {
             if (board->fields[i][j]) {
-                printf("  %c  ", elem_to_char(board->fields[i][j]->up->type));
+                printf("  %c  ", elem_to_char(board->fields[i][j]->down->type));
             } else {
                 fputs("     ", stdout);
             }
