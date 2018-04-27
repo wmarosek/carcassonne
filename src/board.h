@@ -19,14 +19,14 @@ typedef struct {
  * get size of the game board interactily.
  * @return size of the board
  */
-size_t get_board_size_interactive();
+size_t board_get_size_interactive();
 
 /**
  * get size of the game board traversing trough file.
  * @param fliename name of the board file
  * @return size of the board, (return size of the current board, need to add margin)
  */
-size_t get_board_size(const char*);
+size_t board_get_size(const char*);
 
 /**
  * allocates a board and sets all tiles to empty (null).
@@ -44,7 +44,7 @@ board_t board_alloc(size_t);
  * @param [out] board sized_board pointer
  * @return success of operation
  */
-bool init_board(gamemode, const char*, sized_board*);
+bool board_init(gamemode, const char*, sized_board*);
 
 /**
  * inits board, exit on error.
@@ -52,13 +52,20 @@ bool init_board(gamemode, const char*, sized_board*);
  * @param [in] filename name of the board file
  * @return initialized board
  */
-sized_board init_board_on_exit_on_err(gamemode, const char*);
+sized_board board_init_exit_on_err(gamemode, const char*);
 
 /**
  * frees array of tile pointers
  * @param [in] board game board pointer
  */
 void board_free(sized_board*);
+
+/**
+ * check if board has no tiles on it.
+ * @param [in] board game board
+ * @return if board is empty
+ */
+bool board_is_empty(const sized_board*);
 
 /**
  * check if specified tile can be placed in specified place on board.
@@ -68,14 +75,24 @@ void board_free(sized_board*);
  * @param [in] x x coordinate of placement
  * @return if can place tile
  */
-bool can_place_tile(sized_board*, const tile*, size_t, size_t);
+bool tile_can_place(const sized_board*, const tile*, size_t, size_t);
+
+/**
+ * rotation in which tile can be placed in the cell
+ * @param [in] board
+ * @param [in] tile
+ * @param h height at which to check if can place
+ * @param w width at which to check
+ * @param rotation with which tile can be placed, if tile can't be placed return ROT_NO
+ */
+rotation_t tile_can_place_rotated(const sized_board*, const tile*, size_t, size_t);
 
 /**
  * place tile in specified location.
  * @param [out] place
  * @param [in] t tile to place
  */
-void place_tile(tile**, tile*);
+void tile_place(tile**, tile*);
 
 /**
  * assign tile pointers to board array based on specified file
@@ -83,20 +100,20 @@ void place_tile(tile**, tile*);
  * @param [in, out] board game board
  * @return success of operation
  */
-bool parse_board(const char*, sized_board*);
+bool board_parse(const char*, sized_board*);
 
 /**
  * prints out board.
  * @param board pointer to sized_board to print
  */
-void print_board(sized_board*);
+void board_print(const sized_board*);
 
 /**
  * prints the board with x on empty cells on which tile specified could be placed.
  * @param [in] board game board pointer
  * @param [in] t tile pointer
  */
-void print_board_legal_moves(sized_board*, tile*);
+void board_print_legal_moves(const sized_board*, tile*);
 
 // not done
 /**
@@ -105,6 +122,6 @@ void print_board_legal_moves(sized_board*, tile*);
  * @param [in] filename board file name
  * @return success of operation
  */
-bool board_write(sized_board*, const char*);
+bool board_write(const sized_board*, const char*);
 
 #endif

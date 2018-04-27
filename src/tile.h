@@ -145,13 +145,24 @@ tile tile_choose_best(const tile*, size_t, size_t, const tile***);
 tile* tile_rotate(tile*);
 
 typedef enum {
-    ROT_0,
+    ROT_NO,
     ROT_90,
     ROT_180,
     ROT_270,
-    ROT_NO,
 } rotation_t;
 
+/**
+ * print rotation amount, eg ROT_90 => 90 deg.
+ * @param [in] rot rotation to print
+ */
+void rotation_print(rotation_t);
+
+/**
+ * rotate tile by specified amount.
+ * @param [in] rot how much to rotate
+ * @param [in,out] t tile poiner to be rotated
+ * @return tile pointer to rotated tile
+ */
 tile* tile_rotate_amount(rotation_t, tile*);
 
 /**

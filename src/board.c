@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-size_t get_board_size_interactive() {
+size_t board_get_size_interactive() {
     size_t ret;
     while (true) {
         fputs("input board size: ", stdout);
@@ -20,7 +20,7 @@ size_t get_board_size_interactive() {
     return ret;
 }
 
-size_t get_board_size(const char* filename) {
+size_t board_get_size(const char* filename) {
     FILE* file;
     if ((file = fopen(filename, "r")) == 0) {
         return false;
@@ -33,6 +33,7 @@ size_t get_board_size(const char* filename) {
         if (ch == '\t') {
             ++col;
             if (count) {
+                fclose(file);
                 return 0;
             }
             count = 0;
@@ -43,6 +44,7 @@ size_t get_board_size(const char* filename) {
             col_max = col > col_max ? col : col_max;
             col = 0;
             if (count) {
+                fclose(file);
                 return 0;
             }
             count = 0;
@@ -64,29 +66,28 @@ size_t get_board_size(const char* filename) {
 board_t board_alloc(size_t size) {
     board_t board = malloc(sizeof(tile**) * size);
     for (size_t i = 0; i < size; ++i) {
-        board[i] = malloc(sizeof(tile*) * size);
-        memset(board[i], 0, sizeof(tile*) * size);
+        board[i] = calloc(size, sizeof(tile*));
     }
     return board;
 }
 
-bool init_board(gamemode mode, const char* filename, sized_board* board) {
+bool board_init(gamemode mode, const char* filename, sized_board* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
-        board->size = get_board_size_interactive();
+        board->size = board_get_size_interactive();
     } else {
         // margin
-        board->size = get_board_size(filename) + 2;
+        board->size = board_get_size(filename) + 2;
     }
     board->fields = board_alloc(board->size);
-    if (mode == AUTO && !parse_board(filename, board)) {
+    if (mode == AUTO && !board_parse(filename, board)) {
         return false;
     }
     return true;
 }
 
-sized_board init_board_exit_on_err(gamemode mode, const char* filename) {
+sized_board board_init_exit_on_err(gamemode mode, const char* filename) {
     sized_board board;
-    if (init_board(mode, filename, &board)) {
+    if (!board_init(mode, filename, &board)) {
             fprintf(stderr, "error parsing board file: %s\n", filename);
             exit(EXIT_FAILURE);
     }
@@ -105,7 +106,7 @@ void board_free(sized_board* board) {
     board->fields = 0;
 }
 
-bool board_is_empty(sized_board* board) {
+bool board_is_empty(const sized_board* board) {
     for (size_t i = 0; i < board->size; ++i) {
         for (size_t j = 0; j < board->size; ++j) {
             if (board->fields[i][j]) {
@@ -116,7 +117,7 @@ bool board_is_empty(sized_board* board) {
     return true;
 }
 
-bool can_place_tile(sized_board* board,
+bool tile_can_place(const sized_board* board,
                     const tile* t, size_t y, size_t x) {
     // return false on null tile
     if (t == 0) {
@@ -166,23 +167,23 @@ bool can_place_tile(sized_board* board,
     return count > 0;
 }
 
-rotation_t can_place_tile_rotated(sized_board* board,
+rotation_t tile_can_place_rotated(const sized_board* board,
                                   const tile* t, size_t y, size_t x) {
     tile temp = { t->up, t->right, t->down, t->left, t->mod };
-    for (rotation_t rot = ROT_0; rot < ROT_NO; ++rot) {
-        if (can_place_tile(board, tile_rotate_amount(rot, &temp), y, x)) {
+    for (rotation_t rot = ROT_90; rot <= ROT_270; ++rot) {
+        if (tile_can_place(board, tile_rotate_amount(rot, &temp), y, x)) {
             return rot;
         }
     }
     return ROT_NO;
 }
 
-void place_tile(tile** place, tile* t) {
+void tile_place(tile** place, tile* t) {
     *place = t;
 }
 
 // TODO: take margin into consideration
-bool parse_board(const char* filename, sized_board* board) {
+bool board_parse(const char* filename, sized_board* board) {
     FILE* file;
     if ((file = fopen(filename, "r")) == 0) {
         return false;
@@ -196,6 +197,7 @@ bool parse_board(const char* filename, sized_board* board) {
         if (ch == '\t') {
             ++j;
             if (count != 0) {
+                fclose(file);
                 return false;
             }
             count = 0;
@@ -205,12 +207,14 @@ bool parse_board(const char* filename, sized_board* board) {
             ++i;
             j = 0;
             if (count != 0) {
+                fclose(file);
                 return false;
             }
             count = 0;
         }
         // out of bounds
         if (i > board->size || j > board->size) {
+            fclose(file);
             return false;
         }
         // ignore whitespace
@@ -229,12 +233,12 @@ bool parse_board(const char* filename, sized_board* board) {
     return count == 0;
 }
 
-void print_board(sized_board* board) {
+void board_print(const sized_board* board) {
     // pass null tile pointer for can_place_tile to always fail
-    print_board_legal_moves(board, 0);
+    board_print_legal_moves(board, 0);
 }
 
-void print_board_legal_moves(sized_board* board, tile* t) {
+void board_print_legal_moves(const sized_board* board, tile* t) {
     // print rows
     for (size_t i = 0; i < board->size; ++i) {
         // print up
@@ -258,7 +262,7 @@ void print_board_legal_moves(sized_board* board, tile* t) {
                        mod_to_char(board->fields[i][j]->mod),
                        elem_to_char(board->fields[i][j]->right->type));
             } else {
-                printf("  %c  ", can_place_tile(board, t, i, j) ? 'x' : ' ');
+                printf("  %c  ", tile_can_place(board, t, i, j) ? 'x' : ' ');
             }
             if (j < board->size - 1) {
                 putchar('|');
@@ -268,7 +272,7 @@ void print_board_legal_moves(sized_board* board, tile* t) {
         // print down
         for (size_t j = 0; j < board->size; ++j) {
             if (board->fields[i][j]) {
-                printf("  %c  ", elem_to_char(board->fields[i][j]->up->type));
+                printf("  %c  ", elem_to_char(board->fields[i][j]->down->type));
             } else {
                 fputs("     ", stdout);
             }
@@ -287,7 +291,7 @@ void print_board_legal_moves(sized_board* board, tile* t) {
     }
 }
 
-bool board_write(sized_board* board, const char* filename) {
+bool board_write(const sized_board* board, const char* filename) {
     FILE* file;
     if ((file = fopen(filename, "w")) == 0) {
         return false;
