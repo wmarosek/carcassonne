@@ -108,7 +108,7 @@ void rotate_tile_interactive(tile** t) {
     while (true) {
         fputs("rotate by: (0) 0 deg, (1) 90 deg, (2) 180 deg, (3) 270 deg: ",
               stdout);
-        if (scanf("%d", &rot) && rot >= 0 && rot <= 3) {
+        if (scanf("%d", (int*)&rot) && rot >= 0 && rot <= 3) {
             tile_rotate_amount(rot, *t);
             for (int ch; (ch = getchar()) != EOF && ch != '\n' && ch != '\r';) { ; }
             return;
