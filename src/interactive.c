@@ -54,7 +54,7 @@ void load_board_interactive(sized_board* board) {
         fgets(name, sizeof(name), stdin);
         name[strcspn(name, "\n")] = '\0';
         // mode auto to load board from file
-        if (init_board(AUTO, name, board)) {
+        if (board_init(AUTO, name, board)) {
             return;
         }
         fputs("initializing failed, try again.\n", stderr);
@@ -136,8 +136,8 @@ void place_tile_interactive(sized_board* board, sized_tlist* list, tile** t) {
                 continue;
             }
             // czy to x y jest dobrze?
-            if (can_place_tile(board, *t, h, w)) {
-                place_tile(&board->fields[h][w], *t);
+            if (tile_can_place(board, *t, h, w)) {
+                tile_place(&board->fields[h][w], *t);
                 *t = 0;
                 return;
             }
@@ -297,7 +297,7 @@ bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
         write_tlist_interactive(list);
         break;
     case ACT_PRINT_BOARD:
-        print_board(board);
+        board_print(board);
         break;
     case ACT_LOAD_BOARD:
         load_board_interactive(board);
@@ -316,7 +316,7 @@ bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
         rotate_tile_interactive(ctile);
         break;
     case ACT_PRINT_MOVES:
-        print_board_legal_moves(board, *ctile);
+        board_print_legal_moves(board, *ctile);
         break;
     case ACT_PLACE_TILE:
         place_tile_interactive(board, list, ctile);
@@ -340,7 +340,7 @@ void run_interactive(gamemode mode, const char* list_filename) {
     }
 
     sized_board board;
-    if (!init_board(mode, 0, &board)) {
+    if (!board_init(mode, 0, &board)) {
         load_board_interactive(&board);
     }
 
