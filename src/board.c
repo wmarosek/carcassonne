@@ -33,6 +33,7 @@ size_t get_board_size(const char* filename) {
         if (ch == '\t') {
             ++col;
             if (count) {
+                fclose(file);
                 return 0;
             }
             count = 0;
@@ -43,6 +44,7 @@ size_t get_board_size(const char* filename) {
             col_max = col > col_max ? col : col_max;
             col = 0;
             if (count) {
+                fclose(file);
                 return 0;
             }
             count = 0;
@@ -195,6 +197,7 @@ bool parse_board(const char* filename, sized_board* board) {
         if (ch == '\t') {
             ++j;
             if (count != 0) {
+                fclose(file);
                 return false;
             }
             count = 0;
@@ -204,12 +207,14 @@ bool parse_board(const char* filename, sized_board* board) {
             ++i;
             j = 0;
             if (count != 0) {
+                fclose(file);
                 return false;
             }
             count = 0;
         }
         // out of bounds
         if (i > board->size || j > board->size) {
+            fclose(file);
             return false;
         }
         // ignore whitespace
