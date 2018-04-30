@@ -12,7 +12,7 @@ bool tlist_parse(const char* filename, sized_tlist* list) {
     if ((file = fopen(filename, "r")) == 0) {
         return false;
     }
-    for (size_t i = 0; i < list->len; ++i) {
+    for (size_t i = 0; i < list->size; ++i) {
         // if any tile parsing fails return false
         if (!tile_parse(file, &list->tiles[i])) {
             fclose(file);
@@ -41,8 +41,8 @@ size_t tlist_get_len(const char* filename) {
 }
 
 bool tlist_init(const char* filename, sized_tlist* list) {
-    list->len = tlist_get_len(filename);
-    list->tiles = calloc(list->len, sizeof(tile*));
+    list->size = tlist_get_len(filename);
+    list->tiles = calloc(list->size, sizeof(tile*));
     return tlist_parse(filename, list);
 }
 
@@ -57,7 +57,7 @@ sized_tlist tlist_init_exit_on_err(const char* filename) {
 }
 
 void tlist_free(sized_tlist* list) {
-    for (size_t i = 0; i < list->len; ++i) {
+    for (size_t i = 0; i < list->size; ++i) {
         tile_free(list->tiles[i]);
         free(list->tiles[i]);
         list->tiles[i] = 0;
@@ -69,7 +69,7 @@ void tlist_free(sized_tlist* list) {
 
 void tlist_print(const sized_tlist* list) {
     int counter = 1;            // separate counter for display
-    for (size_t i = 0; i < list->len; ++i) {
+    for (size_t i = 0; i < list->size; ++i) {
         if (list->tiles[i]) {   // if tile nonempty
             printf("%-3d: ", counter);
             tile_print(list->tiles[i]);
@@ -85,7 +85,7 @@ bool tlist_write(const sized_tlist* list, const char* filename) {
         return false;
     }
     char str[5];
-    for (size_t i = 0; i < list->len; ++i) {
+    for (size_t i = 0; i < list->size; ++i) {
         fprintf(file,
                 "%s\n",
                 tile_to_str(list->tiles[i], str));

@@ -11,7 +11,7 @@
 
 typedef tile*** board_t;
 typedef struct {
-    board_t fields;
+    board_t tiles;
     size_t size;
 } sized_board;
 
