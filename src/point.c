@@ -5,6 +5,8 @@
 #include <string.h>
 #include <assert.h>
 
+#define throw(MSG) assert(0 && MSG);
+
 /*point.c*/
 
 struct Point {
@@ -91,7 +93,7 @@ List* List_new(void) {
 }
 
 void List_free(List** selfPtr) {
-    assert((selfPtr == NULL || *selfPtr == NULL) && "Null pointer on free()");
+    if (selfPtr == NULL || *selfPtr == NULL) throw("Null pointer on free()");
     ListNode* cur = (*selfPtr)->items;
     ListNode* temp = NULL;
     while (cur != NULL) {
@@ -110,8 +112,8 @@ void List_addFirst(List* self, Point* p) {
     self->size = List_count(self);
 }
 void List_insertAt(List* self, Point* point, int position) {
-    assert((point == NULL) && "Null reference");
-    assert((position < 0) && "Out of bounds");
+    if (point == NULL) throw("Null reference");
+	if (position < 0) throw("Out of bounds");
     if (position >= self->size) position = self->size;
 
     if (position == 0) {
@@ -133,20 +135,21 @@ void List_insertAt(List* self, Point* point, int position) {
 }
 
 void List_addLast(List* self, Point* point) {
-    assert((point == NULL) && "Null reference");
+    if (point == NULL) throw("Null reference");
+    if(point != NULL)
     List_insertAt(self, point, self->size++);
 }
 
 void List_removeFirst(List* self) {
     ListNode* node = self->items;
-    assert((node == NULL) && "NUll reference");
+    if (node == NULL) throw("Null reference");
     self->items = ListNode_getNext(node);
     ListNode_free(&node);
     self->size = List_count(self);
 }
 
 void List_removeAt(List* self, int position) {
-    assert((position < 0 || position >= self->size) && "Out of bounds");
+    if (position < 0 || position >= self->size) throw("Out of bounds");
 
     if (position == 0) {
         List_removeFirst(self);
@@ -170,7 +173,7 @@ void List_removeLast(List* self) {
 }
 
 Point* List_getPoint(List* self, int position) {
-    assert((position < 0 || position > self->size) && "Out of bounds");
+    if (position < 0 || position > self->size) throw("Out of bounds");
     ListNode* cur = self->items;
     int i = 0;
 
