@@ -16,6 +16,13 @@ Side* Side_newDefault(void) {
     return self;
 }
 
+Side* Side_copy(Side* self) {
+    Side* copy = Side_newDefault();
+    copy->type = self->type;
+    copy->completion = self->completion;
+    return copy;
+}
+
 void Side_free(Side** selfPtr) {
     free(*selfPtr);
     *selfPtr = NULL;

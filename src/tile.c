@@ -33,6 +33,10 @@ tile* tile_from_str(const char str[static 5], tile* t) {
         t->down = Side_new(elem_from_char(str[2]));
         t->left = Side_new(elem_from_char(str[3]));
         t->mod = mod_from_char(str[4]);
+
+        if(tile_numOfSegments(t,ROAD)>2) {
+            t->mod = CROSSROASDS;
+        }
     }
     return t;
 }
