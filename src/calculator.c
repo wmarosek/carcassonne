@@ -8,18 +8,20 @@ static int __completionToStatus(bool isCompleted) {
     else return -1;
 }
 
-int score(board_t board, int rows, int columns) {
+int score(sized_board* board, int rows, int columns) {
     int score = 0, RS = 0, CS = 0, TS = 0;
+
+    board_t tiles = board->fields;
 
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < columns; j++) {
 
-            tile* t = board[i][j];
+            tile* t = tiles[i][j];
 
             if (!tile_isEmpty(t)) {
 
                 //1st Criteria: Castle
-                if (!tile_hasCastle(t)) {
+                if (tile_hasCastle(t)) {
 
                     int castleScore = 0;
 
@@ -30,7 +32,7 @@ int score(board_t board, int rows, int columns) {
                     size_t castleSegments = tile_numOfSegments(t, CASTLE);
                     Direction* sides = tile_getSegments(t, CASTLE, castleSegments);
                     if (castleSegments == 1) {
-                        if (castleCompleted(board, rows, columns, i, j, sides[0])) {
+                        if (castleCompleted(tiles, rows, columns, i, j, sides[0])) {
                             castleScore += 2;
                         }
                         else {
@@ -41,7 +43,7 @@ int score(board_t board, int rows, int columns) {
                     // when castleSegments==2 - there can be 2 cities: each segment then should be calculated individually
                     else if (castleSegments == 2 && tile_getCenter(t) != CITY) {
                         for (size_t k = 0; k < castleSegments; k++) {
-                            if (castleCompleted(board, rows, columns, i, j, sides[k])) {
+                            if (castleCompleted(tiles, rows, columns, i, j, sides[k])) {
                                 castleScore += 2;
                             }
                             else {
@@ -52,7 +54,7 @@ int score(board_t board, int rows, int columns) {
                     else {
                         bool completed = true;
                         for (size_t k = 0; k < castleSegments; k++) {
-                            completed &= castleCompleted(board, rows, columns, i, j, sides[k]);
+                            completed &= castleCompleted(tiles, rows, columns, i, j, sides[k]);
                             if (!completed) break; ///
                         }
 
@@ -76,7 +78,7 @@ int score(board_t board, int rows, int columns) {
                     int roadScore = 0;
 
                     for (size_t k = 0; k < roadSegments; k++) {
-                        if (roadCompleted(board, rows, columns, i, j, sides[k])) {
+                        if (roadCompleted(tiles, rows, columns, i, j, sides[k])) {
                             roadScore += 2;
                         }
                         else {
@@ -96,11 +98,22 @@ int score(board_t board, int rows, int columns) {
                 // 3rd Criteria: Chapel
                 if (tile_hasTemple(t)) {
                     int templeScore = 0;
-                    templeScore += (1 + tile_numOfNeighbours(board, rows, columns, i, j));
+                    templeScore += (1 + tile_numOfNeighbours(tiles, rows, columns, i, j));
                     score += templeScore;
                     TS += templeScore;
                 }
             }
+        }
+    }
+
+    // clear all incompleted side statuses - in further executions this status may be updated, so it can't be constant
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            tile* t = tiles[i][j];
+            if (!tile_isEmpty(t)) 
+                for(int k = 0; k < 4; k++) 
+                    if(tile_getSideCompletion(t,k)==-1) 
+                        tile_setSideCompletion(t,k,0);
         }
     }
     printf("Cities: %i\nRoads: %i\nTemples: %i\n", CS, RS, TS);
@@ -155,7 +168,8 @@ bool castleCompleted(board_t board, int rows, int columns, int i, int j, Directi
     // list will contain the mentions of all visited city sides in this turn
     List* list = List_new();
     // add current tile to a list of visited files
-    List_addLast(list, Point_new(i, j, dir));
+    Point* pre = Point_new(i,j,dir);
+    List_addLast(list, pre/*Point_new(i, j, dir)*/);
     // checking if a tile is a part of completed castle
     bool isCompl = tile_castleCompleted(board, rows, columns, in, jn, dir, list);
     // obtaining the index of completion depending on the status of completion
@@ -213,6 +227,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     bool compl = true;
     int in, jn;
     for (size_t k = 0; k < numOfCastles; k++) {
+        compl = true;
 
         // obtaining the coordinates for the next tile to be checked
         switch (sides[k]) {
@@ -245,7 +260,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
         //  1) We've already visited the tile (avoid infinite looping)
         //  2) We've came from this tile (can be recognised when dir(previous direction of movements) is opposite to sides[k] (new direction of movement)
         //  3) We are heading to the initial tile's unvisited side
-        if (!List_hasPoint(stack, in, jn, Direction_getOpposite(sides[k])) && !Direction_areOpposite(dir, sides[k]) && compl /*&& !Point_isEqual(List_getPoint(stack,0),in,jn)*/) {
+        if (compl && !List_hasPoint(stack, in, jn, Direction_getOpposite(sides[k])) && !Direction_areOpposite(dir, sides[k]) && compl /*&& !Point_isEqual(List_getPoint(stack,0),in,jn)*/) {
             List_addLast(stack, Point_new(i, j, sides[k]));
             //printf("%i,%i - %i\n", i, j, sides[k]);
             compl = tile_castleCompleted(board, rows, columns, in, jn, sides[k], stack);
@@ -339,7 +354,7 @@ int tile_numOfNeighbours(board_t board, int rows, int columns, int i, int j) {
     if (j > 0 && !tile_isEmpty(board[i][j - 1])) {
         count++;
     }
-    if (j < columns - 1 && tile_isEmpty(board[i][j + 1])) {
+    if (j < columns - 1 && !tile_isEmpty(board[i][j + 1])) {
         count++;
     }
     return count;
