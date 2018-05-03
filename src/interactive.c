@@ -2,6 +2,7 @@
 
 #include "board.h"
 #include "tlist.h"
+#include "calculator.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -173,6 +174,7 @@ typedef enum {
     ACT_PRINT_MOVES,
     ACT_PLACE_TILE,
     ACT_CHNG_PRMPT,
+    ACT_SCORE,
     ACT_QUIT,
     ACT_UNKNOWN,
 } action;
@@ -234,6 +236,8 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
 
     // chnaging prompt text
     { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"                },
+
+    { ACT_SCORE,        "score",        "give score for current board"      },
 
     // quiting
     { ACT_QUIT,         "quit",         "quits the game"                    },
@@ -323,6 +327,10 @@ bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
         break;
     case ACT_CHNG_PRMPT:
         change_prompt();
+        break;
+    case ACT_SCORE:
+        printf("current score is: %d\n",
+               score(board->tiles, board->size, board->size));
         break;
     case ACT_QUIT:
         return false;
