@@ -1,5 +1,6 @@
 #ifndef TLIST_H
 #define TLIST_H
+/** @file tlist.h */
 
 #include "tile.h"
 
@@ -8,7 +9,7 @@
 typedef tile** tlist_t;
 typedef struct {
     tlist_t tiles;
-    size_t len;
+    size_t size;
 } sized_tlist;
 
 /**

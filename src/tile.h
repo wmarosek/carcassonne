@@ -64,6 +64,13 @@ tile* tile_from_str(const char[static 5], tile*);
 tile* tile_alloc_from_str(const char[static 5], tile**);
 
 /**
+ * allocate copy of supplied tile.
+ * @param [in] orig pointer to tile to copy
+ * @return pointer to allocated copied tile
+ */
+tile* tile_alloc_from_tile(const tile*);
+
+/**
  * frees all Sides, not the tile pointer!
  * @param [in] t tile pointer to free
  */

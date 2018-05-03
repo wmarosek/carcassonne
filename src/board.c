@@ -75,12 +75,14 @@ bool board_init(gamemode mode, const char* filename, sized_board* board) {
     if (mode == INTERACTIVE_NO_TILES || mode == INTERACTIVE) {
         board->size = board_get_size_interactive();
     } else {
-        // margin
-        board->size = board_get_size(filename) + 2;
+        board->size = board_get_size(filename);
     }
     board->tiles = board_alloc(board->size);
     if (mode == AUTO && !board_parse(filename, board)) {
         return false;
+    }
+    if (mode == AUTO) {
+        board_resize(board->size + 2, board);
     }
     return true;
 }
@@ -307,4 +309,37 @@ bool board_write(const sized_board* board, const char* filename) {
     }
     fclose(file);
     return true;
+}
+
+void board_copy_offsetted(const sized_board* src, size_t h, size_t w, sized_board* dest) {
+    size_t size = MIN(src->size, dest->size);
+    for (size_t i = 0; i + h < size; ++i) {
+        for (size_t j = 0; j + w < size; ++j) {
+            dest->tiles[i + h][j + w] = tile_alloc_from_tile(src->tiles[i][j]);
+        }
+    }
+}
+
+void board_copy(const sized_board* src, sized_board* dest) {
+    board_copy_offsetted(src, 0, 0, dest);
+}
+
+void board_move(size_t dh, size_t dw, sized_board* board) {
+    sized_board temp = { board_alloc(board->size), board->size };
+    board_copy_offsetted(board, dh, dw, &temp);
+    board_free(board);
+    board->tiles = temp.tiles;
+}
+
+void board_resize(size_t size, sized_board* board) {
+    sized_board temp = { board_alloc(size), size };
+    if (size > board->size) {
+        size_t delt = (size - board->size) / 2; // integer division
+        board_copy_offsetted(board, delt, delt, &temp);
+    } else {
+        board_copy(board, &temp);
+    }
+    board_free(board);
+    board->tiles = temp.tiles;
+    board->size = temp.size;
 }

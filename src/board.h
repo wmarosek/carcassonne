@@ -115,7 +115,6 @@ void board_print(const sized_board*);
  */
 void board_print_legal_moves(const sized_board*, tile*);
 
-// not done
 /**
  * write board to file.
  * @param [in] board tile pointer array portraying board
@@ -123,5 +122,40 @@ void board_print_legal_moves(const sized_board*, tile*);
  * @return success of operation
  */
 bool board_write(const sized_board*, const char*);
+
+/**
+ * copy tiles from board src to board dest with offset h height and w width,
+ * if dest board had allocated tiles they are not free - memory leak.
+ * @param [in] src pointer to source board
+ * @param [in] h height offset
+ * @param [in] w width offset
+ * @param [out] dest pointer to destination board
+ */
+void board_copy_offsetted(const sized_board*, size_t, size_t, sized_board*);
+
+/**
+ * copy tiles from board src to board dest,
+ * if dest board had allocated tiles they are not free - memory leak.
+ * @param [in] src pointer to source board
+ * @param [out] dest pointer to destination board
+ */
+void board_copy(const sized_board*, sized_board*);
+
+/**
+ * move tiles on the board by h height and w width,
+ * pointers to original board tiles become invalid.
+ * @param [in] h height offset
+ * @param [in] w width offset
+ * @param [out] board with moved tiles
+ */
+void board_move(size_t, size_t, sized_board*);
+
+/**
+ * resize board,
+ * pointers to original board tiles become invalid.
+ * @param [in] size new size of the board
+ * @param [in, out] board to resize
+ */
+void board_resize(size_t, sized_board*);
 
 #endif
