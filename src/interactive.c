@@ -330,7 +330,7 @@ bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
         break;
     case ACT_SCORE:
         printf("current score is: %d\n",
-               score(board->tiles, board->size, board->size));
+               score(board));
         break;
     case ACT_QUIT:
         return false;

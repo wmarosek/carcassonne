@@ -8,13 +8,14 @@ static int __completionToStatus(bool isCompleted) {
     else return -1;
 }
 
-int score(sized_board* board, int rows, int columns) {
+int score(sized_board* board) {
     int score = 0, RS = 0, CS = 0, TS = 0;
 
-    board_t tiles = board->fields;
+    board_t tiles = board->tiles;
+    size_t rows = board->size, columns = board->size;
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < columns; j++) {
 
             tile* t = tiles[i][j];
 
@@ -107,8 +108,8 @@ int score(sized_board* board, int rows, int columns) {
     }
 
     // clear all incompleted side statuses - in further executions this status may be updated, so it can't be constant
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
+    for (size_t i = 0; i < rows; i++) {
+        for (size_t j = 0; j < columns; j++) {
             tile* t = tiles[i][j];
             if (!tile_isEmpty(t)) 
                 for(int k = 0; k < 4; k++) 
