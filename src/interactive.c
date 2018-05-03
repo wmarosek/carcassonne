@@ -2,6 +2,7 @@
 
 #include "board.h"
 #include "tlist.h"
+#include "calculator.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,7 +48,7 @@ void write_tlist_interactive(sized_tlist* list) {
 
 void load_board_interactive(sized_board* board) {
     board_free(board);
-    board->fields = 0;
+    board->tiles = 0;
     char name[64] = { 0 };
     while (true) {
         fputs("enter name of a file containing board: ", stdout);
@@ -77,13 +78,13 @@ tile* choose_tile_interactive(sized_tlist* list, tile** t) {
         scanf("%lu", &choice);
         // exhaust stdin
         for (int ch; (ch = getchar()) != EOF && ch != '\n' && ch != '\r';) { ; }
-        if (choice == 0 || choice <= list->len) {
+        if (choice == 0 || choice <= list->size) {
             break;
         }
         puts("choice out of bounds");
     }
     // choose right tile based on user input (numbering from 1 and ignore null pointers)
-    for (size_t i = 0, count = 0; i < list->len; ++i) {
+    for (size_t i = 0, count = 0; i < list->size; ++i) {
         if (list->tiles[i] && ++count == choice) {
             *t = list->tiles[i];
             list->tiles[i] = 0;
@@ -92,7 +93,7 @@ tile* choose_tile_interactive(sized_tlist* list, tile** t) {
     // if current tile is not null put it back on the list
     if (temp) {
         // find empty space
-        for (size_t i = 0; i < list->len; ++i) {
+        for (size_t i = 0; i < list->size; ++i) {
             // TODO: if it wont find empty space it will leak memory
             if (list->tiles[i] == 0) {
                 list->tiles[i] = temp;
@@ -137,7 +138,7 @@ void place_tile_interactive(sized_board* board, sized_tlist* list, tile** t) {
             }
             // czy to x y jest dobrze?
             if (tile_can_place(board, *t, h, w)) {
-                tile_place(&board->fields[h][w], *t);
+                tile_place(&board->tiles[h][w], *t);
                 *t = 0;
                 return;
             }
@@ -173,6 +174,7 @@ typedef enum {
     ACT_PRINT_MOVES,
     ACT_PLACE_TILE,
     ACT_CHNG_PRMPT,
+    ACT_SCORE,
     ACT_QUIT,
     ACT_UNKNOWN,
 } action;
@@ -234,6 +236,8 @@ const struct { action act; const char* cmd; const char* desc; } act_list[] = {
 
     // chnaging prompt text
     { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"                },
+
+    { ACT_SCORE,        "score",        "give score for current board"      },
 
     // quiting
     { ACT_QUIT,         "quit",         "quits the game"                    },
@@ -323,6 +327,10 @@ bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
         break;
     case ACT_CHNG_PRMPT:
         change_prompt();
+        break;
+    case ACT_SCORE:
+        printf("current score is: %d\n",
+               score(board));
         break;
     case ACT_QUIT:
         return false;
