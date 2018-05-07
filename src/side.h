@@ -1,5 +1,6 @@
 #ifndef SIDE_H
 #define SIDE_H
+/** @file side.h */
 
 #include <stdbool.h>
 
