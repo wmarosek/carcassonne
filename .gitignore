@@ -2,6 +2,7 @@
 *.o
 carcassonne
 *.exe
+build
 
 # doxygen documentation
 doc/html
