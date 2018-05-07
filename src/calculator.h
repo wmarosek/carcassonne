@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 
-int score(board_t board, int rows, int columns);
+int score(sized_board* board);
 
 bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir);
 

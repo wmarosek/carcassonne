@@ -5,6 +5,9 @@
 #include "tile.h"
 #include "logic.h"
 
+#define ARR_LEN(arr) sizeof(arr) / sizeof(*arr)
+#define STR_EQ(s1, s2) (strcmp(s1, s2) == 0)
+
 /**
  * print usage.
  */
