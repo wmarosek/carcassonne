@@ -158,92 +158,101 @@ void place_tile_interactive(sized_board* board, sized_tlist* list, tile** t) {
     }
 }
 
-typedef enum {
-    ACT_GREETING,
-    ACT_USAGE,
-    ACT_HELP,
-    ACT_PRINT_LIST,
-    ACT_LOAD_LIST,
-    ACT_WRITE_LIST,
-    ACT_PRINT_BOARD,
-    ACT_LOAD_BOARD,
-    ACT_WRITE_BOARD,
-    ACT_CHOOSE_TILE,
-    ACT_PRINT_TILE,
-    ACT_ROTATE_TILE,
-    ACT_PRINT_MOVES,
-    ACT_PLACE_TILE,
-    ACT_CHNG_PRMPT,
-    ACT_SCORE,
-    ACT_QUIT,
-    ACT_UNKNOWN,
-} action;
+typedef struct {
+    sized_tlist* list;
+    sized_board* board;
+    tile* c_tile;
+} state;
+
+#define UNUSED(x) (void)x
+#define MAKE_STATE_FUNC(f) bool f ## _state(state* s) { f(); UNUSED(s); return true; }
+#define MAKE_STATE_FUNC_LIST(f) bool f ## _state(state* s) { f(s->list); return true; }
+#define MAKE_STATE_FUNC_BOARD(f) bool f ## _state(state* s) { f(s->board); return true; }
+
+MAKE_STATE_FUNC(greeting)
+MAKE_STATE_FUNC(usage)
+MAKE_STATE_FUNC(help)
+MAKE_STATE_FUNC_LIST(tlist_print)
+MAKE_STATE_FUNC_LIST(init_tlist_interactive)
+MAKE_STATE_FUNC_LIST(write_tlist_interactive)
+MAKE_STATE_FUNC_BOARD(board_print)
+MAKE_STATE_FUNC_BOARD(load_board_interactive)
+MAKE_STATE_FUNC_BOARD(write_board_interactive)
+
+bool choose_tile_interactive_state(state* s) {
+    choose_tile_interactive(s->list, &s->c_tile);
+    return true;
+}
+
+bool tile_print_state(state* s) {
+    tile_print(s->c_tile);
+    putchar('\n');
+    return true;
+}
+
+bool rotate_tile_interactive_state(state* s) {
+    rotate_tile_interactive(&s->c_tile);
+    return true;
+}
+
+bool board_print_legal_moves_state(state* s) {
+    board_print_legal_moves(s->board, s->c_tile);
+    return true;
+}
+
+bool place_tile_interactive_state(state* s) {
+    place_tile_interactive(s->board, s->list, &s->c_tile);
+    return true;
+}
+
+void change_prompt();
+MAKE_STATE_FUNC(change_prompt)
+
+bool score_interactive_state(state* s) {
+    printf("current score is: %d\n", score(s->board));
+    return true;
+}
+
+bool quit_state(state* s) {
+    UNUSED(s);
+    return false;
+}
 
 // command enumerator, user command, command description
 // if you want to abbrevietions and not have them printed in help command
 // put them right after main command
 // (only first command with specific enum value is printed)
-const struct { action act; const char* cmd; const char* desc; } act_list[] = {
-    // greeting
-    { ACT_GREETING,     "greeting",     "greets player"                     },
-    { ACT_GREETING,     "g",            "abbrev"                            },
-
-    // usage
-    { ACT_USAGE,        "usage",        "prints usage"                      },
-    { ACT_USAGE,        "u",            "abbrev"                            },
-
-    // help
-    { ACT_HELP,         "help",         "prints this message"               },
-    { ACT_HELP,         "h",            "abbrev"                            },
-    { ACT_HELP,         "?",            "abbrev"                            },
-
-    // list printing
-    { ACT_PRINT_LIST,   "print list",   "prints tile list"                  },
-    { ACT_PRINT_LIST,   "p l",          "abbrev"                            },
-
-    // loading list file
-    { ACT_LOAD_LIST,    "load list",    "load tile list file"               },
-    { ACT_LOAD_LIST,    "l l",          "abbrev"                            },
-
-    { ACT_WRITE_LIST,   "write list",   "write list to file"                },
-
-    // board printing
-    { ACT_PRINT_BOARD,  "print board",  "prints the board"                  },
-    { ACT_PRINT_BOARD,  "p b",          "abbrev"                            },
-
-    // loading board file
-    { ACT_LOAD_BOARD,   "load board",   "load board file"                   },
-    { ACT_LOAD_BOARD,   "l b",          "abbrev"                            },
-
-    { ACT_WRITE_BOARD,  "write board",  "write board to file"               },
-
-    // choosing tile to place
-    { ACT_CHOOSE_TILE,  "choose tile",  "choose tile to place"              },
-    { ACT_CHOOSE_TILE,  "c t",          "abbrev"                            },
-
-    // print choosen tile
-    { ACT_PRINT_TILE,   "print tile",   "print current tile"                },
-
-    { ACT_ROTATE_TILE,  "rotate tile",  "rotate current tile"               },
-
-    // print aviable moves with current tile
-    { ACT_PRINT_MOVES,  "print moves",  "print moves aviable"
-                                        " with current tile"                },
-    { ACT_PRINT_MOVES,  "p m",          "abbrev"                            },
-
-    // ask where to place current tile
-    { ACT_PLACE_TILE,   "place tile",   "place choosen tile"                },
-
-    // chnaging prompt text
-    { ACT_CHNG_PRMPT,   "prompt",       "change prompt text"                },
-
-    { ACT_SCORE,        "score",        "give score for current board"      },
-
-    // quiting
-    { ACT_QUIT,         "quit",         "quits the game"                    },
-    { ACT_QUIT,         "q",            "abbrev"                            },
-    { ACT_QUIT,         "exit",         "abbrev"                            },
-    { ACT_QUIT,         "e",            "abbrev"                            },
+const struct { const char* cmd; const char* desc; bool (*func)(state*); } act_list[] = {
+    { "greeting",     "greets player",                  greeting_state                  },
+    { "g",            "abbrev",                         greeting_state                  },
+    { "usage",        "prints usage",                   usage_state                     },
+    { "u",            "abbrev",                         usage_state                     },
+    { "help",         "prints this message",            help_state                      },
+    { "h",            "abbrev",                         help_state                      },
+    { "?",            "abbrev",                         help_state                      },
+    { "print list",   "prints tile list",               tlist_print_state               },
+    { "p l",          "abbrev",                         tlist_print_state               },
+    { "load list",    "load tile list file",            init_tlist_interactive_state    },
+    { "l l",          "abbrev",                         init_tlist_interactive_state    },
+    { "write list",   "write list to file",             write_tlist_interactive_state   },
+    { "print board",  "prints the board",               board_print_state               },
+    { "p b",          "abbrev",                         board_print_state               },
+    { "load board",   "load board file",                load_board_interactive_state    },
+    { "l b",          "abbrev",                         load_board_interactive_state    },
+    { "write board",  "write board to file",            write_board_interactive_state   },
+    { "choose tile",  "choose tile to place",           choose_tile_interactive_state   },
+    { "c t",          "abbrev",                         choose_tile_interactive_state   },
+    { "print tile",   "print current tile",             tile_print_state                },
+    { "rotate tile",  "rotate current tile",            rotate_tile_interactive_state   },
+    { "print moves",  "print moves aviable",            board_print_legal_moves_state   },
+    { "p m",          "abbrev",                         board_print_legal_moves_state   },
+    { "place tile",   "place choosen tile",             place_tile_interactive_state    },
+    { "prompt",       "change prompt text",             change_prompt_state             },
+    { "score",        "give score for current board",   score_interactive_state         },
+    { "quit",         "quits the game",                 quit_state                      },
+    { "q",            "abbrev",                         quit_state                      },
+    { "exit",         "abbrev",                         quit_state                      },
+    { "e",            "abbrev",                         quit_state                      },
 };
 
 void help() {
@@ -265,7 +274,7 @@ void change_prompt() {
     prompt[strcspn(prompt, "\n")] = '\0';
 }
 
-action handle_input() {
+bool run_prompt(state* s) {
     fputs(prompt, stdout);
 
     char input[32] = { 0 };
@@ -274,70 +283,10 @@ action handle_input() {
 
     for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
         if (STR_EQ(input, act_list[i].cmd)) {
-            return act_list[i].act;
+            return act_list[i].func(s);
         }
     }
-    return ACT_UNKNOWN;
-}
-
-bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
-    switch(handle_input()) {
-    case ACT_GREETING:
-        greeting();
-        break;
-    case ACT_USAGE:
-        usage();
-        break;
-    case ACT_HELP:
-        help();
-        break;
-    case ACT_PRINT_LIST:
-        tlist_print(list);
-        break;
-    case ACT_LOAD_LIST:
-        init_tlist_interactive(list);
-        break;
-    case ACT_WRITE_LIST:
-        write_tlist_interactive(list);
-        break;
-    case ACT_PRINT_BOARD:
-        board_print(board);
-        break;
-    case ACT_LOAD_BOARD:
-        load_board_interactive(board);
-        break;
-    case ACT_WRITE_BOARD:
-        write_board_interactive(board);
-        break;
-    case ACT_CHOOSE_TILE:
-        choose_tile_interactive(list, ctile);
-        break;
-    case ACT_PRINT_TILE:
-        tile_print(*ctile);
-        putchar('\n');
-        break;
-    case ACT_ROTATE_TILE:
-        rotate_tile_interactive(ctile);
-        break;
-    case ACT_PRINT_MOVES:
-        board_print_legal_moves(board, *ctile);
-        break;
-    case ACT_PLACE_TILE:
-        place_tile_interactive(board, list, ctile);
-        break;
-    case ACT_CHNG_PRMPT:
-        change_prompt();
-        break;
-    case ACT_SCORE:
-        printf("current score is: %d\n",
-               score(board));
-        break;
-    case ACT_QUIT:
-        return false;
-    default:
-        fputs("unknown option\n", stderr);
-    }
-    return true;
+    return false;
 }
 
 void run_interactive(gamemode mode, const char* list_filename) {
@@ -352,12 +301,14 @@ void run_interactive(gamemode mode, const char* list_filename) {
         load_board_interactive(&board);
     }
 
-    tile* ctile = 0;
+    tile* c_tile = 0;
 
-    while (run_prompt(&list, &board, &ctile)) { ; }
+    state s = { &list, &board, c_tile };
+
+    while (run_prompt(&s)) { ; }
 
     tlist_free(&list);
     board_free(&board);
-    tile_free(ctile);
-    free(ctile);
+    tile_free(c_tile);
+    free(c_tile);
 }
