@@ -64,4 +64,12 @@ void tlist_free(sized_tlist*);
  */
 bool tlist_write(const sized_tlist*, const char*);
 
+/**
+ * erases the tile at a concrete index from the list
+ * @param [in] list sized_tlist pointer, list of aviable tiles
+ * @param [in] index of the tile to be erased form the list
+ * @return the pointer to the erased tile
+ */
+tile* tlist_eraseAt(sized_tlist*,int);
+
 #endif

@@ -53,6 +53,8 @@ void List_removeAt(List* self, int position);
 
 void List_removeLast(List* self);
 
+ListNode* List_getNodeAt(List* self, int position);
+
 Point* List_getPoint(List* self, int position);
 
 int List_getSize(List* self);

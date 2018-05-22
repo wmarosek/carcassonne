@@ -1,10 +1,12 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 2.8.9)
 project(carcassonne C)
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "-Wall -Wextra -Wlogical-op -Wdouble-promotion -Wconversion \
-    -Wsign-conversion -Wshadow -Wformat=2 -g3 -Wjump-misses-init -pedantic")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wlogical-op -Wdouble-promotion -Wconversion 
+    -Wsign-conversion -Wshadow -Wformat=2 -g3 -Wjump-misses-init -pedantic -std=c11")
 include_directories(src)
 set(carc_srcs
+        src/ai.c
+        src/ai.h
         src/board.c
         src/board.h
         src/calculator.c
@@ -14,6 +16,8 @@ set(carc_srcs
         src/logic.c
         src/logic.h
         src/main.c
+        src/move.c 
+        src/move.h
         src/point.c
         src/point.h
         src/side.c

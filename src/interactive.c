@@ -3,6 +3,7 @@
 #include "board.h"
 #include "tlist.h"
 #include "calculator.h"
+#include "ai.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -329,8 +330,7 @@ bool run_prompt(sized_tlist* list, sized_board* board, tile** ctile) {
         change_prompt();
         break;
     case ACT_SCORE:
-        printf("current score is: %d\n",
-               score(board));
+        printf("current score is: %d\n",score(board));
         break;
     case ACT_QUIT:
         return false;
