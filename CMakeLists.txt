@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.8.9)
+cmake_minimum_required(VERSION 3.11)
 project(carcassonne C)
 set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_FLAGS "-Wall -Wextra -Wlogical-op -Wdouble-promotion -Wconversion 
-    -Wsign-conversion -Wshadow -Wformat=2 -g3 -Wjump-misses-init -pedantic -std=c11")
+set(CMAKE_C_FLAGS "-Wall -Wextra -Wlogical-op -Wdouble-promotion -Wconversion \
+    -Wsign-conversion -Wshadow -Wformat=2 -g3 -Wjump-misses-init -pedantic")
 include_directories(src)
 set(carc_srcs
         src/ai.c
