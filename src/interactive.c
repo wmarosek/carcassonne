@@ -3,6 +3,7 @@
 #include "board.h"
 #include "tlist.h"
 #include "calculator.h"
+#include "ai.h"
 
 #include <stdio.h>
 #include <stdlib.h>
