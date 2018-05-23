@@ -93,3 +93,17 @@ bool tlist_write(const sized_tlist* list, const char* filename) {
     fclose(file);
     return true;
 }
+
+tile* tlist_eraseAt(sized_tlist* list,int index) {
+    if(index < 0 || index >= list->size) {
+        return NULL;
+    }
+    
+    tile* t = list->tiles[index];
+    (list->size)--;
+
+    for(int i = index; i < list->size; i++) {
+        list->tiles[i] = list->tiles[i+1];
+    }
+    return t;
+}

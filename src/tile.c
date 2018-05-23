@@ -45,15 +45,14 @@ tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
     return tile_from_str(str, tile_alloc(ptr));
 }
 
-// TODO: use side copy when merged
 tile* tile_alloc_from_tile(const tile* orig) {
     if (orig) {
         tile* new;
         tile_alloc(&new);
-        new->up = Side_new(orig->up->type);
-        new->right = Side_new(orig->right->type);
-        new->down = Side_new(orig->down->type);
-        new->left = Side_new(orig->left->type);
+        new->up = Side_copy(orig->up);
+        new->right = Side_copy(orig->right);
+        new->down = Side_copy(orig->down);
+        new->left = Side_copy(orig->left);
         return new;
     }
     return 0;
@@ -61,10 +60,10 @@ tile* tile_alloc_from_tile(const tile* orig) {
 
 void tile_free(tile* t) {
     if (t) {
-        Side_free(&t->up);
-        Side_free(&t->right);
-        Side_free(&t->down);
-        Side_free(&t->left);
+        Side_free(&(t->up));
+        Side_free(&(t->right));
+        Side_free(&(t->down));
+        Side_free(&(t->left));
     }
 }
 
@@ -288,4 +287,12 @@ bool tile_hasCrossroads(const tile* t) {
 
 bool tile_hasShield(const tile* t) {
     return t->mod == SHIELD;
+}
+
+bool tile_isSymmetric(const tile* t) {
+    return t->up==t->down && t->left==t->right;
+}
+
+bool tile_isUniform(const tile* t) {
+    return t->up==t->down==t->left==t->right;
 }

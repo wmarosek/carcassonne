@@ -158,4 +158,13 @@ void board_move(size_t, size_t, sized_board*);
  */
 void board_resize(size_t, sized_board*);
 
+/**
+* checks if a specific tile has a neighbours
+* @param [in] board to resize
+* @param [in] row of a tile
+* @param [in] column of a tile
+* @return  true is a tile has at elat 1 neighbour 
+*/
+bool board_tileHasNeighbour(const sized_board* board, int i,int j);
+
 #endif
