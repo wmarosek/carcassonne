@@ -53,6 +53,7 @@ tile* tile_alloc_from_tile(const tile* orig) {
         new->right = Side_copy(orig->right);
         new->down = Side_copy(orig->down);
         new->left = Side_copy(orig->left);
+        new->mod = orig->mod;
         return new;
     }
     return 0;
@@ -294,5 +295,5 @@ bool tile_isSymmetric(const tile* t) {
 }
 
 bool tile_isUniform(const tile* t) {
-    return t->up==t->down==t->left==t->right;
+    return t->up==t->down&&t->down==t->left&&t->left==t->right;
 }

@@ -14,14 +14,14 @@ void ai_makeMove(sized_board* board,sized_tlist* list,move* m) {
     tile* t = tlist_eraseAt(list,move_getTileIndex(m));
     tile_rotate_amount(move_getRotation(m),t);
     board->tiles[move_getRow(m)][move_getColumn(m)] = t;
+    move_free(&m);
 }
 
 move* ai_bruteForce(sized_board* board, sized_tlist* list) {
     bool placed = false;
-    int best = INT_MIN;
+    int best = INT_MIN, row,column,value,rotations;
     Point* maxPoint = NULL;
     move* bestMove = move_default();
-    int row,column,value;
 
     // get the List of Points for available moves
     List* moves = getAllPossibleMoves(board);
@@ -30,13 +30,24 @@ move* ai_bruteForce(sized_board* board, sized_tlist* list) {
         Point* p = List_getPoint(moves,i);
         row = Point_getRow(p); column = Point_getColumn(p);
         for(int j = 0; j < list->size; j++) {
-            for(int k = 0; k < ROTATION_MOVES; k++) {
+            // identify to no. of rotations required
+            if(tile_isSymmetric(list->tiles[j])) {
+                if(tile_isUniform(list->tiles[j])) {    // if all the sides of a tile are the same
+                    rotations = 1;
+                } else {                                // if opposite sides are identical
+                    rotations = 2;
+                }
+            } else {
+                rotations = 4;
+            }
+
+            for(int k = 0; k < rotations; k++) {
                 // check if tile is applicable at the point
                 if(tile_can_place(board,list->tiles[j],row,column)) {
                     // make move
                     board->tiles[row][column] = list->tiles[j];
                     // evaluate
-                    value = score(board); 
+                    value = score(board);
                     // analyze
                     if(value > best) {
                         move_set(bestMove,row,column,j,k,-1);
@@ -48,6 +59,8 @@ move* ai_bruteForce(sized_board* board, sized_tlist* list) {
                 // rotate tile
                 tile_rotate(list->tiles[j]);
             }
+            // rotate to the initial state
+            tile_rotate_amount(ROTATION_MOVES-rotations,list->tiles[j]);
         }
     }
 
@@ -56,7 +69,7 @@ move* ai_bruteForce(sized_board* board, sized_tlist* list) {
         move_free(&bestMove);
         bestMove = NULL;
     }
-  
+   
     List_free(&moves);
     return bestMove;
 }
