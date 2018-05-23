@@ -286,7 +286,7 @@ void board_print_legal_moves(const sized_board* board, tile* t) {
         // print separator
         if (i < board->size - 1) {
             for (size_t j = 1; j < board->size * 6; ++j) {
-                putchar(j % 6 ? '-' : '+');
+                putchar((j % 6) ? '-' : '+');
             }
         }
         putchar('\n');
@@ -302,7 +302,7 @@ bool board_write(const sized_board* board, const char* filename) {
     for (size_t i = 0; i < board->size; ++i) {
         for (size_t j = 0; j < board->size; ++j) {
             fprintf(file,
-                    "%s ",
+                    "%.*s ", 5,
                     tile_to_str(board->tiles[i][j], str));
         }
         fprintf(file, "\n");
