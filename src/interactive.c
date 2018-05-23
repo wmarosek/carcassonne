@@ -4,6 +4,7 @@
 #include "tlist.h"
 #include "calculator.h"
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -165,9 +166,21 @@ typedef struct {
 } state;
 
 #define UNUSED(x) (void)x
-#define MAKE_STATE_FUNC(f) bool f ## _state(state* s) { f(); UNUSED(s); return true; }
-#define MAKE_STATE_FUNC_LIST(f) bool f ## _state(state* s) { f(s->list); return true; }
-#define MAKE_STATE_FUNC_BOARD(f) bool f ## _state(state* s) { f(s->board); return true; }
+#define MAKE_STATE_FUNC(f) bool f ## _state(state* s) {         \
+        assert(s);                                              \
+        f();                                                    \
+        UNUSED(s);                                              \
+        return true; }
+
+#define MAKE_STATE_FUNC_LIST(f) bool f ## _state(state* s) {    \
+        assert(s);                                              \
+        f(s->list);                                             \
+        return true; }
+
+#define MAKE_STATE_FUNC_BOARD(f) bool f ## _state(state* s) {   \
+        assert(s);                                              \
+        f(s->board);                                            \
+        return true; }
 
 MAKE_STATE_FUNC(greeting)
 MAKE_STATE_FUNC(usage)
