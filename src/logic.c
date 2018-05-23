@@ -4,6 +4,7 @@
 #include "interactive.h"
 #include "tile.h"
 #include "tlist.h"
+#include "ai.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,6 +75,15 @@ gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
 void run_auto(const char* list_filename, const char* board_filename) {
     sized_tlist list = tlist_init_exit_on_err(list_filename);
     sized_board board = board_init_exit_on_err(AUTO, board_filename);
+    
+    // make a move fuond by brute force algorithm
+    ai_makeMove(&board,&list,ai_bruteForce(&board,&list));
+    printf("\nScore: %i",score(&board));
+
+    // write updated objects to files
+    tlist_write(&list,list_filename);
+    board_write(&board,board_filename);
+
     tlist_free(&list);
     board_free(&board);
 }

@@ -343,3 +343,10 @@ void board_resize(size_t size, sized_board* board) {
     board->tiles = temp.tiles;
     board->size = temp.size;
 }
+
+bool board_tileHasNeighbour(const sized_board* board,int i,int j) {
+    if( (i>0 && !tile_isEmpty(board->tiles[i-1][j])) || (j>0 && !tile_isEmpty(board->tiles[i][j-1])) || (i<board->size - 1 && !tile_isEmpty(board->tiles[i+1][j])) || (j<board->size - 1 && !tile_isEmpty(board->tiles[i][j+1]))) {
+        return true;
+    }
+    return false;
+}

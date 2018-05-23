@@ -61,10 +61,10 @@ tile* tile_alloc_from_tile(const tile* orig) {
 
 void tile_free(tile* t) {
     if (t) {
-        Side_free(&t->up);
-        Side_free(&t->right);
-        Side_free(&t->down);
-        Side_free(&t->left);
+        Side_free(&(t->up));
+        Side_free(&(t->right));
+        Side_free(&(t->down));
+        Side_free(&(t->left));
     }
 }
 
@@ -288,4 +288,12 @@ bool tile_hasCrossroads(const tile* t) {
 
 bool tile_hasShield(const tile* t) {
     return t->mod == SHIELD;
+}
+
+bool tile_isSymmetric(const tile* t) {
+    return t->up==t->down && t->left==t->right;
+}
+
+bool tile_isUniform(const tile* t) {
+    return t->up==t->down==t->left==t->right;
 }
