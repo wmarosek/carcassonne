@@ -45,15 +45,14 @@ tile* tile_alloc_from_str(const char str[static 5], tile** ptr) {
     return tile_from_str(str, tile_alloc(ptr));
 }
 
-// TODO: use side copy when merged
 tile* tile_alloc_from_tile(const tile* orig) {
     if (orig) {
         tile* new;
         tile_alloc(&new);
-        new->up = Side_new(orig->up->type);
-        new->right = Side_new(orig->right->type);
-        new->down = Side_new(orig->down->type);
-        new->left = Side_new(orig->left->type);
+        new->up = Side_copy(orig->up);
+        new->right = Side_copy(orig->right);
+        new->down = Side_copy(orig->down);
+        new->left = Side_copy(orig->left);
         return new;
     }
     return 0;
