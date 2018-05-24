@@ -3,6 +3,7 @@
 #include "board.h"
 #include "tlist.h"
 #include "calculator.h"
+#include "ai.h"
 
 #include <assert.h>
 #include <stdio.h>
@@ -159,28 +160,41 @@ void place_tile_interactive(sized_board* board, sized_tlist* list, tile** t) {
     }
 }
 
+char prompt[32] = "> ";
+
+void change_prompt() {
+    fputs("new prompt: ", stdout);
+    fgets(prompt, sizeof(prompt), stdin);
+    prompt[strcspn(prompt, "\n")] = '\0';
+}
+
 typedef struct {
     sized_tlist* list;
     sized_board* board;
     tile* c_tile;
 } state;
 
+typedef enum {
+    CMD_KNOWN,
+    CMD_UNKNOWN,
+    CMD_QUIT,
+} state_cmd;
+
 #define UNUSED(x) (void)x
-#define MAKE_STATE_FUNC(f) bool f ## _state(state* s) {         \
-        assert(s);                                              \
-        f();                                                    \
-        UNUSED(s);                                              \
-        return true; }
+#define MAKE_STATE_FUNC(f) state_cmd f ## _state(state* s) {        \
+        f();                                                        \
+        UNUSED(s);                                                  \
+        return CMD_KNOWN; }
 
-#define MAKE_STATE_FUNC_LIST(f) bool f ## _state(state* s) {    \
-        assert(s);                                              \
-        f(s->list);                                             \
-        return true; }
+#define MAKE_STATE_FUNC_LIST(f) state_cmd f ## _state(state* s) {   \
+        assert(s);                                                  \
+        f(s->list);                                                 \
+        return CMD_KNOWN; }
 
-#define MAKE_STATE_FUNC_BOARD(f) bool f ## _state(state* s) {   \
-        assert(s);                                              \
-        f(s->board);                                            \
-        return true; }
+#define MAKE_STATE_FUNC_BOARD(f) state_cmd f ## _state(state* s) {  \
+        assert(s);                                                  \
+        f(s->board);                                                \
+        return CMD_KNOWN; }
 
 MAKE_STATE_FUNC(greeting)
 MAKE_STATE_FUNC(usage)
@@ -191,51 +205,56 @@ MAKE_STATE_FUNC_LIST(write_tlist_interactive)
 MAKE_STATE_FUNC_BOARD(board_print)
 MAKE_STATE_FUNC_BOARD(load_board_interactive)
 MAKE_STATE_FUNC_BOARD(write_board_interactive)
-
-bool choose_tile_interactive_state(state* s) {
-    choose_tile_interactive(s->list, &s->c_tile);
-    return true;
-}
-
-bool tile_print_state(state* s) {
-    tile_print(s->c_tile);
-    putchar('\n');
-    return true;
-}
-
-bool rotate_tile_interactive_state(state* s) {
-    rotate_tile_interactive(&s->c_tile);
-    return true;
-}
-
-bool board_print_legal_moves_state(state* s) {
-    board_print_legal_moves(s->board, s->c_tile);
-    return true;
-}
-
-bool place_tile_interactive_state(state* s) {
-    place_tile_interactive(s->board, s->list, &s->c_tile);
-    return true;
-}
-
-void change_prompt();
 MAKE_STATE_FUNC(change_prompt)
 
-bool score_interactive_state(state* s) {
-    printf("current score is: %d\n", score(s->board));
-    return true;
+state_cmd choose_tile_interactive_state(state* s) {
+    assert(s);
+    choose_tile_interactive(s->list, &s->c_tile);
+    return CMD_KNOWN;
 }
 
-bool quit_state(state* s) {
+state_cmd tile_print_state(state* s) {
+    assert(s);
+    tile_print(s->c_tile);
+    putchar('\n');
+    return CMD_KNOWN;
+}
+
+state_cmd rotate_tile_interactive_state(state* s) {
+    assert(s);
+    rotate_tile_interactive(&s->c_tile);
+    return CMD_KNOWN;
+}
+
+state_cmd board_print_legal_moves_state(state* s) {
+    assert(s);
+    board_print_legal_moves(s->board, s->c_tile);
+    return CMD_KNOWN;
+}
+
+state_cmd place_tile_interactive_state(state* s) {
+    assert(s);
+    place_tile_interactive(s->board, s->list, &s->c_tile);
+    return CMD_KNOWN;
+}
+
+state_cmd score_interactive_state(state* s) {
+    assert(s);
+    printf("current score is: %d\n", score(s->board));
+    return CMD_KNOWN;
+}
+
+state_cmd quit_state(state* s) {
+    assert(s);
     UNUSED(s);
-    return false;
+    return CMD_QUIT;
 }
 
 // command enumerator, user command, command description
 // if you want to abbrevietions and not have them printed in help command
 // put them right after main command
 // (only first command with specific enum value is printed)
-const struct { const char* cmd; const char* desc; bool (*func)(state*); } act_list[] = {
+const struct { const char* cmd; const char* desc; state_cmd (*func)(state*); } act_list[] = {
     { "greeting",     "greets player",                  greeting_state                  },
     { "g",            "abbrev",                         greeting_state                  },
     { "usage",        "prints usage",                   usage_state                     },
@@ -279,15 +298,7 @@ void help() {
     }
 }
 
-char prompt[32] = "> ";
-
-void change_prompt() {
-    fputs("new prompt: ", stdout);
-    fgets(prompt, sizeof(prompt), stdin);
-    prompt[strcspn(prompt, "\n")] = '\0';
-}
-
-bool run_prompt(state* s) {
+state_cmd run_prompt(state* s) {
     fputs(prompt, stdout);
 
     char input[32] = { 0 };
@@ -299,7 +310,8 @@ bool run_prompt(state* s) {
             return act_list[i].func(s);
         }
     }
-    return false;
+    fprintf(stderr, "unknown command\n");
+    return CMD_UNKNOWN;
 }
 
 void run_interactive(gamemode mode, const char* list_filename) {
@@ -318,7 +330,7 @@ void run_interactive(gamemode mode, const char* list_filename) {
 
     state s = { &list, &board, c_tile };
 
-    while (run_prompt(&s)) { ; }
+    while (run_prompt(&s) != CMD_QUIT) { ; }
 
     tlist_free(&list);
     board_free(&board);

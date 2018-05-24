@@ -269,4 +269,19 @@ bool tile_hasCrossroads(const tile*);
  */
 bool tile_hasShield(const tile*);
 
+/** 
+ * check if tile's opposite sides are similar
+ * @param [in] t tile pointer
+ * @return if tile is symmetric
+ */
+bool tile_isSymmetric(const tile*);
+
+/** 
+ * check if all tile's sides are similar
+ * @param [in] t tile pointer
+ * @return if tile is uniform
+ */
+bool tile_isUniform(const tile*);
+
+
 #endif

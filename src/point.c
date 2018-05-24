@@ -172,7 +172,7 @@ void List_removeLast(List* self) {
     List_removeAt(self, self->size - 1);
 }
 
-Point* List_getPoint(List* self, int position) {
+ListNode* List_getNodeAt(List* self, int position) {
     if (position < 0 || position > self->size) throw("Out of bounds");
     ListNode* cur = self->items;
     int i = 0;
@@ -181,7 +181,11 @@ Point* List_getPoint(List* self, int position) {
         i++;
         cur = ListNode_getNext(cur);
     }
-    return ListNode_getPoint(cur);
+    return cur;
+}
+
+Point* List_getPoint(List* self, int position) {
+    return ListNode_getPoint(List_getNodeAt(self,position));
 }
 
 int List_getSize(List* self) {

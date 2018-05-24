@@ -78,18 +78,19 @@ int score(sized_board* board) {
                     Direction* sides = tile_getSegments(t, ROAD, roadSegments);
                     int roadScore = 0;
 
-                    for (size_t k = 0; k < roadSegments; k++) {
-                        if (roadCompleted(tiles, rows, columns, i, j, sides[k])) {
-                            roadScore += 2;
-                        }
-                        else {
-                            roadScore += 1;
+                    if(roadSegments == 2) {
+                        roadScore += roadScoreForTwo(tiles,rows,columns,i,j, sides);
+                    } else {
+                        for (size_t k = 0; k < roadSegments; k++) {
+                            if (roadCompleted(tiles, rows, columns, i, j, sides[k])) {
+                                roadScore += 2;
+                            }
+                            else {
+                                roadScore += 1;
+                            }
                         }
                     }
-                    // if there are 2 road segments - they won't have a separator between them => count as 1 segment
-                    if (roadSegments == 2) {
-                        roadScore /= 2;
-                    }
+                   
                     //printf("ROAD [%i][%i]: %i\n", i, j, roadScore);
                     score += roadScore;
                     RS += roadScore;
@@ -111,13 +112,16 @@ int score(sized_board* board) {
     for (size_t i = 0; i < rows; i++) {
         for (size_t j = 0; j < columns; j++) {
             tile* t = tiles[i][j];
-            if (!tile_isEmpty(t)) 
-                for(int k = 0; k < 4; k++) 
-                    if(tile_getSideCompletion(t,k)==-1) 
-                        tile_setSideCompletion(t,k,0);
+            if (!tile_isEmpty(t)) {
+                for(int k = 0; k < 4; k++) {
+                    if(tile_getSideCompletion(t,k)==-1) { // side is not comlpeted
+                        tile_setSideCompletion(t,k,0);   // set compleiton status to default
+                    }
+                }
+            }
         }
     }
-    printf("Cities: %i\nRoads: %i\nTemples: %i\n", CS, RS, TS);
+   
     return score;
 }
 
@@ -280,6 +284,45 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     return isCompl;
 }
 
+bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir, List* stack) {
+    tile* t = board[i][j];
+
+    if (tile_isEmpty(t)) return false;
+
+    // if the status of the side is already stated -> no use of further investigation
+    switch (tile_getSideCompletion(t, Direction_getOpposite(dir))) {
+    case -1:
+        return false;
+    case 1:
+        return true;
+    }
+
+    // adding a tile to a list of visited tiles (later every side of every tile from list will have the indicator of true/false completion
+    List_addLast(stack, Point_new(i, j, Direction_getOpposite(dir)));
+
+    if (tile_hasCrossroads(t) || tile_hasTemple(t) || tile_numOfSegments(t,ROAD)==1) return true;
+
+    int in = i, jn = j;
+
+    if (tile_getSideElement(t,NORTH) == ROAD && i != 0 && dir != SOUTH) {
+        in = i - 1; dir = NORTH;
+    }
+    else if (tile_getSideElement(t,EAST) == ROAD && j != columns - 1 && dir != WEST) {
+        jn = j + 1; dir = EAST;
+    }
+    else if (tile_getSideElement(t,SOUTH) == ROAD && i != rows - 1 && dir != NORTH) {
+        in = i + 1; dir = SOUTH;
+    }
+    else if (tile_getSideElement(t,WEST) == ROAD && j != 0 && dir != EAST) {
+        jn = j - 1; dir = WEST;
+    } else {
+        return false;
+    }
+
+    List_addLast(stack, Point_new(i,j,dir));
+    return tile_roadCompleted(board,rows,columns, in, jn, dir, stack);
+}
+/*
 bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir) {
     tile* t = board[i][j];
 
@@ -300,27 +343,148 @@ bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Dire
         return tile_roadCompleted(board, rows, columns, i, j - 1, WEST);
     }
     return false;
+}*/
+
+int roadScoreForTwo(board_t board, int rows, int columns,int i, int j, Direction* sides) {
+    tile* t = board[i][j];
+    
+    switch(Side_isCompleted(tile_getSide(t,sides[0]))*Side_isCompleted(tile_getSide(t,sides[1]))) {
+        case 1:
+            return 2;
+        case -1:
+            return 1;
+    }
+        
+    List* path = List_new();
+    bool isCompl = true;
+    int in, jn;
+
+    for(size_t k = 0; k < 2; k++) {
+        List_addLast(path,Point_new(i,j,sides[k]));
+        in = i, jn = j;
+    
+        if (sides[k] == NORTH) {
+            if (i <= 0) {
+                isCompl = false;
+                continue;
+            }
+            in = i - 1;
+        }
+        else if (sides[k] == EAST) {
+            if (j >= columns - 1) {
+                isCompl = false;
+                continue;
+            }
+            jn = j + 1;
+        }
+        else if (sides[k] == SOUTH) {
+            if (i >= rows - 1) {
+                isCompl = false;
+                continue;
+            }
+            in = i + 1;
+        }
+        else if (sides[k] == WEST) {
+            if (j <= 0) {
+                isCompl = false;
+                continue;
+            }
+            jn = j - 1;
+        }
+
+        isCompl &= tile_roadCompleted(board,rows,columns,in,jn,sides[k],path);
+    }
+    
+    int res = __completionToStatus(isCompl);
+
+    board_setStatuses(board,path,res);
+
+    switch(res) {
+        case 1: return 2;
+        case -1: return 1;
+        default: return 0;
+    }
+}
+
+void board_setStatuses(board_t board, List* list, int res) {
+    if(!list) return;
+    
+    ListNode* node = List_getNodeAt(list,0);
+    ListNode* next = NULL;
+    while(node != NULL) {
+        Point* p = ListNode_getPoint(node);
+        tile* self = board[Point_getRow(p)][Point_getColumn(p)];
+        tile_setSideCompletion(self, Point_getSide(p), res);
+        
+        next = ListNode_getNext(node);
+        ListNode_free(&node);
+        node = next;
+    }
+
+    free(list);
 }
 
 bool roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir) {
+    tile* t = board[i][j];
+
+    int status = Side_isCompleted(tile_getSide(t,dir));
+
+    switch (status) {
+    case -1: // side was visited and assigned as an uncompleted
+        return false;
+    case 1:  // side was visited and assigned as completed
+        return true;
+    case 0: // side is not visited yet
+        break;
+    }
+
+    // check new coordinates for movements into others pards of the city
+    int in = i, jn = j;
+    
     if (dir == NORTH) {
-        if (i != 0) return tile_roadCompleted(board, rows, columns, i - 1, j, dir);
-        else return false;
+        if (i <= 0) {
+            tile_setSideCompletion(t, dir, -1);
+            return false;
+        }
+        in = i - 1;
     }
     else if (dir == EAST) {
-        if (j != columns - 1) return tile_roadCompleted(board, rows, columns, i, j + 1, dir);
-        else return false;
+        if (j >= columns - 1) {
+            tile_setSideCompletion(t, dir, -1);
+            return false;
+        }
+        jn = j + 1;
     }
     else if (dir == SOUTH) {
-        if (i != rows - 1) return tile_roadCompleted(board, rows, columns, i + 1, j, dir);
-        else return false;
+        if (i >= rows - 1) {
+            tile_setSideCompletion(t, dir, -1);
+            return false;
+        }
+        in = i + 1;
     }
     else if (dir == WEST) {
-        if (j != 0) return tile_roadCompleted(board, rows, columns, i, j - 1, dir);
-        else return false;
+        if (j <= 0) {
+            tile_setSideCompletion(t, dir, -1);
+            return false;
+        }
+        jn = j - 1;
     }
-    return false;
+
+    // list will contain the mentions of all visited city sides in this turn
+    List* list = List_new();
+    // add current tile to a list of visited files
+    Point* pre = Point_new(i,j,dir);
+    List_addLast(list, pre/*Point_new(i, j, dir)*/);
+    // checking if a tile is a part of completed castle
+    bool isCompl = tile_roadCompleted(board,rows,columns, in, jn, dir, list);
+    // obtaining the index of completion depending on the status of completion
+    int res = __completionToStatus(isCompl);
+
+    board_setStatuses(board,list,res);
+
+    return isCompl;
 }
+
 
 // to calculator
 int tile_numOfNeighbours(board_t board, int rows, int columns, int i, int j) {
