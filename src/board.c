@@ -312,9 +312,8 @@ bool board_write(const sized_board* board, const char* filename) {
 }
 
 void board_copy_offsetted(const sized_board* src, size_t h, size_t w, sized_board* dest) {
-    size_t size = MIN(src->size, dest->size);
-    for (size_t i = 0; i + h <= size; ++i) {
-        for (size_t j = 0; j + w <= size; ++j) {
+    for (size_t i = 0; i < src->size && i + h < dest->size; ++i) {
+        for (size_t j = 0; j < src->size && j + w < dest->size; ++j) {
             dest->tiles[i + h][j + w] = tile_alloc_from_tile(src->tiles[i][j]);
         }
     }
@@ -344,9 +343,9 @@ void board_resize(size_t size, sized_board* board) {
     board->size = temp.size;
 }
 
-bool board_tileHasNeighbour(const sized_board* board,int i,int j) {
-    if( (i>0 && !tile_isEmpty(board->tiles[i-1][j])) || (j>0 && !tile_isEmpty(board->tiles[i][j-1])) || (i<board->size - 1 && !tile_isEmpty(board->tiles[i+1][j])) || (j<board->size - 1 && !tile_isEmpty(board->tiles[i][j+1]))) {
-        return true;
-    }
-    return false;
+bool board_tileHasNeighbour(const sized_board* board, size_t i, size_t j) {
+    return (i > 0 && !tile_isEmpty(board->tiles[i - 1][j]))
+        || (j > 0 && !tile_isEmpty(board->tiles[i][j - 1]))
+        || (i < board->size - 1 && !tile_isEmpty(board->tiles[i + 1][j]))
+        || (j < board->size - 1 && !tile_isEmpty(board->tiles[i][j + 1]));
 }
