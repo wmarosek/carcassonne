@@ -291,9 +291,11 @@ bool tile_hasShield(const tile* t) {
 }
 
 bool tile_isSymmetric(const tile* t) {
-    return t->up==t->down && t->left==t->right;
+    return t->up->type == t->down->type && t->left->type ==t->right->type;
 }
 
 bool tile_isUniform(const tile* t) {
-    return t->up==t->down&&t->down==t->left&&t->left==t->right;
+    return t->up->type == t->down->type
+        && t->down->type == t->left->type
+        && t->left->type == t->right->type;
 }
