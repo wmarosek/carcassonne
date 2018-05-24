@@ -312,9 +312,8 @@ bool board_write(const sized_board* board, const char* filename) {
 }
 
 void board_copy_offsetted(const sized_board* src, size_t h, size_t w, sized_board* dest) {
-    size_t size = MIN(src->size, dest->size);
-    for (size_t i = 0; i + h <= size; ++i) {
-        for (size_t j = 0; j + w <= size; ++j) {
+    for (size_t i = 0; i < src->size && i + h < dest->size; ++i) {
+        for (size_t j = 0; j < src->size && j + w < dest->size; ++j) {
             dest->tiles[i + h][j + w] = tile_alloc_from_tile(src->tiles[i][j]);
         }
     }
