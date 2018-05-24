@@ -87,7 +87,7 @@ bool tlist_write(const sized_tlist* list, const char* filename) {
     char str[5];
     for (size_t i = 0; i < list->size; ++i) {
         fprintf(file,
-                "%s\n",
+                "%.*s\n", 5 ,
                 tile_to_str(list->tiles[i], str));
     }
     fclose(file);
@@ -98,7 +98,7 @@ tile* tlist_eraseAt(sized_tlist* list,int index) {
     if(index < 0 || index >= list->size) {
         return NULL;
     }
-    
+
     tile* t = list->tiles[index];
     (list->size)--;
 
