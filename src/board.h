@@ -165,6 +165,6 @@ void board_resize(size_t, sized_board*);
 * @param [in] column of a tile
 * @return  true is a tile has at elat 1 neighbour 
 */
-bool board_tileHasNeighbour(const sized_board* board, int i,int j);
+bool board_tileHasNeighbour(const sized_board* board, size_t i, size_t j);
 
 #endif
