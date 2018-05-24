@@ -42,7 +42,7 @@ element elem_from_char(char);
  * @param [in] ch character to convert to modifier
  * @return modifier converted from char
  */
-modifier mod_form_char(char);
+modifier mod_from_char(char);
 
 /**
 * set tile values based on supplied string.
