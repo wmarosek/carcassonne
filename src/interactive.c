@@ -287,6 +287,20 @@ const struct { const char* cmd; const char* desc; state_cmd (*func)(state*); } a
     { "e",            "abbrev",                         quit_state                      },
 };
 
+void _all_unique_cmds() {
+    for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
+        for (size_t j = i + 1; j < ARR_LEN(act_list); ++j) {
+            assert(!STR_EQ(act_list[i].cmd, act_list[j].cmd));
+        }
+    }
+}
+
+#ifndef NDEBUG
+# define ALL_UNIQUE_CMDS() _all_unique_cmds()
+#else
+# define ALL_UNIQUE_CMDS()
+#endif
+
 void help() {
     for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
         // do not print commands marked as abbreviations
@@ -299,6 +313,7 @@ void help() {
 }
 
 state_cmd run_prompt(state* s) {
+    ALL_UNIQUE_CMDS();
     fputs(prompt, stdout);
 
     char input[32] = { 0 };
