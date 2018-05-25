@@ -71,15 +71,15 @@ gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
     return mode;
 }
 
-// TODO: todo dx
+
 void run_auto(const char* list_filename, const char* board_filename) {
     sized_tlist list = tlist_init_exit_on_err(list_filename);
     sized_board board = board_init_exit_on_err(AUTO, board_filename);
     
-    // make a move fuond by brute force algorithm
+    // make a move found by an algorithm
     ai_makeMove(&board,&list,ai_bruteForce(&board,&list));
-    printf("\nScore: %i",score(&board));
-
+    printf("\nScore: %i\n",score(&board));
+    
     // write updated objects to files
     tlist_write(&list,list_filename);
     board_write(&board,board_filename);
@@ -90,8 +90,6 @@ void run_auto(const char* list_filename, const char* board_filename) {
 
 void run(gamemode mode, char* list_filename, char* board_filename) {
     if (mode == INTERACTIVE_NO_TILES) {
-        // hardcoded, not very nice, and might not be present
-        // maybe have some kind of generating mechanism
         list_filename = "default_tiles";
     }
     if (mode == INTERACTIVE || mode == INTERACTIVE_NO_TILES) {
