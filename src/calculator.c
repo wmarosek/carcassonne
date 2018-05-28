@@ -114,14 +114,12 @@ int score(sized_board* board) {
             tile* t = tiles[i][j];
             if (!tile_isEmpty(t)) {
                 for(int k = 0; k < 4; k++) {
-                    if(tile_getSideCompletion(t,k)==-1) { // side is not comlpeted
-                        tile_setSideCompletion(t,k,0);   // set compleiton status to default
-                    }
+                        tile_setSideCompletion(t,k,0);   
                 }
             }
         }
     }
-   
+    
     return score;
 }
 
