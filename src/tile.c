@@ -28,10 +28,10 @@ modifier mod_from_char(char ch) {
 
 tile* tile_from_str(const char str[static 5], tile* t) {
     if (t) {
-        t->up = Side_new(elem_from_char(str[0]));
-        t->right = Side_new(elem_from_char(str[1]));
-        t->down = Side_new(elem_from_char(str[2]));
-        t->left = Side_new(elem_from_char(str[3]));
+        t->up = side_new(elem_from_char(str[0]));
+        t->right = side_new(elem_from_char(str[1]));
+        t->down = side_new(elem_from_char(str[2]));
+        t->left = side_new(elem_from_char(str[3]));
         t->mod = mod_from_char(str[4]);
 
         if(tile_numOfSegments(t,ROAD)>2) {
@@ -49,10 +49,10 @@ tile* tile_alloc_from_tile(const tile* orig) {
     if (orig) {
         tile* new;
         tile_alloc(&new);
-        new->up = Side_copy(orig->up);
-        new->right = Side_copy(orig->right);
-        new->down = Side_copy(orig->down);
-        new->left = Side_copy(orig->left);
+        new->up = side_copy(orig->up);
+        new->right = side_copy(orig->right);
+        new->down = side_copy(orig->down);
+        new->left = side_copy(orig->left);
         new->mod = orig->mod;
         return new;
     }
@@ -61,10 +61,10 @@ tile* tile_alloc_from_tile(const tile* orig) {
 
 void tile_free(tile* t) {
     if (t) {
-        Side_free(&(t->up));
-        Side_free(&(t->right));
-        Side_free(&(t->down));
-        Side_free(&(t->left));
+        side_free(&(t->up));
+        side_free(&(t->right));
+        side_free(&(t->down));
+        side_free(&(t->left));
     }
 }
 
@@ -132,10 +132,10 @@ void tile_print(const tile* t) {
 
 tile* tile_rotate(tile* t) {
     if (t) {
-        Side* u = t->up;
-        Side* r = t->right;
-        Side* d = t->down;
-        Side* l = t->left;
+        side* u = t->up;
+        side* r = t->right;
+        side* d = t->down;
+        side* l = t->left;
         t->up = l;
         t->right = u;
         t->down = r;
@@ -170,17 +170,17 @@ bool tile_isEmpty(const tile* t) {
     return t == 0;
 }
 
-element tile_getSideElement(const tile* t, Direction dir) {
+element tile_getSideElement(const tile* t, direction dir) {
     switch (dir) {
-    case NORTH: return Side_getType(t->up);
-    case EAST: return Side_getType(t->right);
-    case SOUTH: return Side_getType(t->down);
-    case WEST: return Side_getType(t->left);
+    case NORTH: return side_getType(t->up);
+    case EAST: return side_getType(t->right);
+    case SOUTH: return side_getType(t->down);
+    case WEST: return side_getType(t->left);
     }
     return 0;
 }
 
-Side* tile_getSide(const tile* t, Direction dir) {
+side* tile_getSide(const tile* t, direction dir) {
     switch (dir) {
     case NORTH: return t->up;
     case EAST: return t->right;
@@ -190,28 +190,28 @@ Side* tile_getSide(const tile* t, Direction dir) {
     return 0;
 }
 
-void tile_setSideCompletion(const tile* t, Direction dir, int status) {
+void tile_setSideCompletion(const tile* t, direction dir, int status) {
     switch (dir) {
     case NORTH:
-        Side_setCompletionStatus(t->up, status);
+        side_setCompletionStatus(t->up, status);
         break;
     case EAST:
-        Side_setCompletionStatus(t->right, status);
+        side_setCompletionStatus(t->right, status);
         break;
     case SOUTH:
-        Side_setCompletionStatus(t->down, status);
+        side_setCompletionStatus(t->down, status);
         break;
     case WEST:
-        Side_setCompletionStatus(t->left, status);
+        side_setCompletionStatus(t->left, status);
     }
 }
 
-int tile_getSideCompletion(const tile* t, Direction dir) {
+int tile_getSideCompletion(const tile* t, direction dir) {
     switch (dir) {
-    case NORTH: return Side_isCompleted(t->up);
-    case EAST: return Side_isCompleted(t->right);
-    case SOUTH: return Side_isCompleted(t->down);
-    case WEST: return Side_isCompleted(t->left);
+    case NORTH: return side_isCompleted(t->up);
+    case EAST: return side_isCompleted(t->right);
+    case SOUTH: return side_isCompleted(t->down);
+    case WEST: return side_isCompleted(t->left);
     }
     return 0;
 }
@@ -223,59 +223,59 @@ modifier tile_getCenter(const tile* t) {
 size_t tile_numOfSegments(const tile* t, element type) {
     size_t count = 0;
 
-    if (Side_getType(t->up) == type) {
+    if (side_getType(t->up) == type) {
         count++;
     }
-    if (Side_getType(t->right) == type) {
+    if (side_getType(t->right) == type) {
         count++;
     }
-    if (Side_getType(t->down) == type) {
+    if (side_getType(t->down) == type) {
         count++;
     }
-    if (Side_getType(t->left) == type) {
+    if (side_getType(t->left) == type) {
         count++;
     }
 
     return count;
 }
 
-Direction* tile_getSegments(const tile* t, element type, size_t count) {
-    Direction* segments = malloc(count * sizeof(Direction));
+direction* tile_getSegments(const tile* t, element type, size_t count) {
+    direction* segments = malloc(count * sizeof(direction));
     int i = 0;
 
-    if (Side_getType(t->up) == type) {
+    if (side_getType(t->up) == type) {
         segments[i++] = NORTH;
     }
-    if (Side_getType(t->right) == type) {
+    if (side_getType(t->right) == type) {
         segments[i++] = EAST;
     }
-    if (Side_getType(t->down) == type) {
+    if (side_getType(t->down) == type) {
         segments[i++] = SOUTH;
     }
-    if (Side_getType(t->left) == type) {
+    if (side_getType(t->left) == type) {
         segments[i++] = WEST;
     }
 
     return segments;
 }
 
-void tile_freeSegments(Direction** selfPtr) {
+void tile_freeSegments(direction** selfPtr) {
     free(*selfPtr);
     *selfPtr = NULL;
 }
 
 bool tile_hasCastle(const tile* t) {
-    return Side_getType(t->up) == CASTLE
-        || Side_getType(t->right) == CASTLE
-        || Side_getType(t->down) == CASTLE
-        || Side_getType(t->left) == CASTLE;
+    return side_getType(t->up) == CASTLE
+        || side_getType(t->right) == CASTLE
+        || side_getType(t->down) == CASTLE
+        || side_getType(t->left) == CASTLE;
 }
 
 bool tile_hasRoad(const tile* t) {
-    return Side_getType(t->up) == ROAD
-        || Side_getType(t->right) == ROAD
-        || Side_getType(t->down) == ROAD
-        || Side_getType(t->left) == ROAD;
+    return side_getType(t->up) == ROAD
+        || side_getType(t->right) == ROAD
+        || side_getType(t->down) == ROAD
+        || side_getType(t->left) == ROAD;
 }
 
 bool tile_hasTemple(const tile* t) {

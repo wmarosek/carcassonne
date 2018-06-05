@@ -2,49 +2,49 @@
 
 #include <stdlib.h>
 
-Side* Side_new(element type) {
-    Side* self = malloc(sizeof(Side));
+side* side_new(element type) {
+    side* self = malloc(sizeof(side));
     self->type = type;
     self->completion = 0;
     return self;
 }
 
-Side* Side_newDefault(void) {
-    Side* self = malloc(sizeof(Side));
+side* side_newDefault(void) {
+    side* self = malloc(sizeof(side));
     self->type = -1;
     self->completion = 0;
     return self;
 }
 
-Side* Side_copy(Side* self) {
-    Side* copy = Side_newDefault();
+side* side_copy(side* self) {
+    side* copy = side_newDefault();
     copy->type = self->type;
     copy->completion = self->completion;
     return copy;
 }
 
-void Side_free(Side** selfPtr) {
+void side_free(side** selfPtr) {
     free(*selfPtr);
     *selfPtr = NULL;
 }
 
-element Side_getType(Side* self) {
+element side_getType(side* self) {
     return self->type;
 }
 
-void Side_setType(Side* self, element type) {
+void side_setType(side* self, element type) {
     self->type = type;
 }
 
-int Side_isCompleted(Side* self) {
+int side_isCompleted(side* self) {
     return self->completion;
 }
 
-void Side_setCompletionStatus(Side* self, int compl) {
+void side_setCompletionStatus(side* self, int compl) {
     self->completion = compl;
 }
 
-Direction Direction_getOpposite(Direction dir) {
+direction direction_getOpposite(direction dir) {
     switch (dir) {
     case NORTH: return SOUTH;
     case EAST: return WEST;
@@ -54,6 +54,6 @@ Direction Direction_getOpposite(Direction dir) {
     return -1;
 }
 
-bool Direction_areOpposite(Direction dir1, Direction dir2) {
-    return dir1 == Direction_getOpposite(dir2);
+bool direction_areOpposite(direction dir1, direction dir2) {
+    return dir1 == direction_getOpposite(dir2);
 }
