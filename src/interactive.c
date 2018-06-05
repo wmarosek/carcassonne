@@ -134,7 +134,6 @@ void place_tile_interactive(sized_board* board, sized_tlist* list, tile** t) {
                 fputs("out of bounds\n", stderr);
                 continue;
             }
-            // czy to x y jest dobrze?
             if (tile_can_place(board, *t, h, w)) {
                 tile_place(&board->tiles[h][w], *t);
                 *t = 0;
@@ -246,43 +245,55 @@ state_cmd quit_state(state* s) {
     return CMD_QUIT;
 }
 
-// command enumerator, user command, command description
-// if you want to abbrevietions and not have them printed in help command
-// put them right after main command
-// (only first command with specific enum value is printed)
 const struct { const char* cmd; const char* desc; state_cmd (*func)(state*); } act_list[] = {
     { "greeting",     "greets player",                  greeting_state                  },
     { "g",            "abbrev",                         greeting_state                  },
+
     { "usage",        "prints usage",                   usage_state                     },
     { "u",            "abbrev",                         usage_state                     },
+
     { "help",         "prints this message",            help_state                      },
     { "h",            "abbrev",                         help_state                      },
     { "?",            "abbrev",                         help_state                      },
+
     { "print list",   "prints tile list",               tlist_print_state               },
     { "p l",          "abbrev",                         tlist_print_state               },
-    { "load list",    "load tile list file",            init_tlist_interactive_state    },
-    { "l l",          "abbrev",                         init_tlist_interactive_state    },
-    { "write list",   "write list to file",             write_tlist_interactive_state   },
     { "print board",  "prints the board",               board_print_state               },
     { "p b",          "abbrev",                         board_print_state               },
-    { "load board",   "load board file",                load_board_interactive_state    },
-    { "l b",          "abbrev",                         load_board_interactive_state    },
-    { "write board",  "write board to file",            write_board_interactive_state   },
-    { "choose tile",  "choose tile to place",           choose_tile_interactive_state   },
-    { "c t",          "abbrev",                         choose_tile_interactive_state   },
     { "print tile",   "print current tile",             tile_print_state                },
-    { "rotate tile",  "rotate current tile",            rotate_tile_interactive_state   },
+    { "p t",          "abbrev",                         tile_print_state                },
     { "print moves",  "print moves aviable",            board_print_legal_moves_state   },
     { "p m",          "abbrev",                         board_print_legal_moves_state   },
+
+    { "load list",    "load tile list file",            init_tlist_interactive_state    },
+    { "l l",          "abbrev",                         init_tlist_interactive_state    },
+    { "load board",   "load board file",                load_board_interactive_state    },
+    { "l b",          "abbrev",                         load_board_interactive_state    },
+
+    { "write list",   "write list to file",             write_tlist_interactive_state   },
+    { "w l",          "abbrev",                         write_tlist_interactive_state   },
+    { "write board",  "write board to file",            write_board_interactive_state   },
+    { "w b",          "abbrev",                         write_board_interactive_state   },
+
+    { "choose tile",  "choose tile to place",           choose_tile_interactive_state   },
+    { "c t",          "abbrev",                         choose_tile_interactive_state   },
+
+    { "rotate tile",  "rotate current tile",            rotate_tile_interactive_state   },
+
     { "place tile",   "place choosen tile",             place_tile_interactive_state    },
+
     { "prompt",       "change prompt text",             change_prompt_state             },
+
     { "score",        "give score for current board",   score_interactive_state         },
+    { "s",            "abbrev",                         score_interactive_state         },
+
     { "quit",         "quits the game",                 quit_state                      },
     { "q",            "abbrev",                         quit_state                      },
     { "exit",         "abbrev",                         quit_state                      },
     { "e",            "abbrev",                         quit_state                      },
 };
 
+// check for user command collisions
 void _all_unique_cmds() {
     for (size_t i = 0; i < ARR_LEN(act_list); ++i) {
         for (size_t j = i + 1; j < ARR_LEN(act_list); ++j) {
