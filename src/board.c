@@ -311,9 +311,10 @@ bool board_write(const sized_board* board, const char* filename) {
     return true;
 }
 
-void board_copy_offsetted(const sized_board* src, size_t h, size_t w, sized_board* dest) {
-    for (size_t i = 0; i < src->size && i + h < dest->size; ++i) {
-        for (size_t j = 0; j < src->size && j + w < dest->size; ++j) {
+void board_copy_offsetted(const sized_board* src,
+                          ptrdiff_t h, ptrdiff_t w, sized_board* dest) {
+    for (size_t i = MAX(-h, 0); i < src->size && i + h < dest->size; ++i) {
+        for (size_t j = MAX(-w, 0); j < src->size && j + w < dest->size; ++j) {
             dest->tiles[i + h][j + w] = tile_alloc_from_tile(src->tiles[i][j]);
         }
     }
@@ -323,7 +324,7 @@ void board_copy(const sized_board* src, sized_board* dest) {
     board_copy_offsetted(src, 0, 0, dest);
 }
 
-void board_move(size_t dh, size_t dw, sized_board* board) {
+void board_move(ptrdiff_t dh, ptrdiff_t dw, sized_board* board) {
     sized_board temp = { board_alloc(board->size), board->size };
     board_copy_offsetted(board, dh, dw, &temp);
     board_free(board);
@@ -348,4 +349,29 @@ bool board_tileHasNeighbour(const sized_board* board, size_t i, size_t j) {
         || (j > 0 && !tile_isEmpty(board->tiles[i][j - 1]))
         || (i < board->size - 1 && !tile_isEmpty(board->tiles[i + 1][j]))
         || (j < board->size - 1 && !tile_isEmpty(board->tiles[i][j + 1]));
+}
+
+void board_trim(sized_board* board) {
+    ptrdiff_t dh = 0, dw = 0;
+    bool pre = true, pce = true;
+    for (size_t i = 0; i < board->size; ++i) {
+        for (size_t j = 0; j < board->size; ++j) {
+            if (board->tiles[i][j]) { pre = false; }
+            if (board->tiles[j][i]) { pce = false; }
+        }
+        if (pre) { ++dh; }
+        if (pce) { ++dw; }
+    }
+    board_move(-dh, -dw, board);
+    size_t sizeh = 0, sizew = 0;
+    bool fre = true, fce = true;
+    for (size_t i = board->size; i > 0; --i) {
+        for (size_t j = board->size; j > 0; --j) {
+            if (board->tiles[i - 1][j - 1]) { fre = false; }
+            if (board->tiles[j - 1][i - 1]) { fce = false; }
+        }
+        if (fre) { ++sizew; }
+        if (fce) { ++sizeh; }
+    }
+    board_resize(board->size - MIN(sizeh, sizew), board);
 }
