@@ -5,7 +5,7 @@
 #include <string.h>
 
 bool tlist_parse(const char* filename, sized_tlist* list) {
-    if (!list && !list->tiles) {
+    if (!list || !list->tiles) {
         return false;
     }
     FILE* file;
