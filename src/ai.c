@@ -20,15 +20,15 @@ void ai_makeMove(sized_board* board,sized_tlist* list,move* m) {
 move* ai_bruteForce(sized_board* board, sized_tlist* list) {
     bool placed = false;
     int best = INT_MIN, row,column,value,rotations;
-    Point* maxPoint = NULL;
+    point* maxPoint = NULL;
     move* bestMove = move_default();
 
     // get the List of Points for available moves
     List* moves = getAllPossibleMoves(board);
 
     for(int i = 0; i < List_getSize(moves); i++) {
-        Point* p = List_getPoint(moves,i);
-        row = Point_getRow(p); column = Point_getColumn(p);
+        point* p = List_getPoint(moves,i);
+        row = point_getRow(p); column = point_getColumn(p);
         for(int j = 0; j < list->size; j++) {
             // identify to no. of rotations required
             if(tile_isSymmetric(list->tiles[j])) {
@@ -79,13 +79,13 @@ List* getAllPossibleMoves(sized_board* board) {
 
    if(board_is_empty(board)) {
        // if board is empty - the optimal solution will be to place tile in the middle of the board
-       List_addFirst(list,Point_new((board->size)/2,(board->size)/2,0));
+       List_addFirst(list,point_new((board->size)/2,(board->size)/2,0));
    }
    else
         for(size_t i = 0; i < board->size; i++) {
             for(size_t j = 0; j < board->size; j++) {
                 if(tile_isEmpty(board->tiles[i][j]) && board_tileHasNeighbour(board,i,j)) {
-                    List_addLast(list,Point_new(i,j,0)); 
+                    List_addLast(list,point_new(i,j,0)); 
                 }
             }
         }
@@ -97,7 +97,7 @@ List* getMovesForTile(sized_board* board, tile* t) {
     for(size_t i = 0; i < board->size; i++) {
         for(size_t j = 0; j < board->size; j++) {
             if(tile_can_place(board,t,j,i)) {
-                List_addLast(list,Point_new(i,j,0)); 
+                List_addLast(list,point_new(i,j,0)); 
             }
         }
     }
