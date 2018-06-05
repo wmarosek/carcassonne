@@ -87,7 +87,7 @@ bool tlist_write(const sized_tlist* list, const char* filename) {
     char str[5];
     for (size_t i = 0; i < list->size; ++i) {
         fprintf(file,
-                "%.*s\n", 5 ,
+                "%.*s\n", 5,
                 tile_to_str(list->tiles[i], str));
     }
     fclose(file);
