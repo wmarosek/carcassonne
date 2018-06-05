@@ -14,10 +14,10 @@
 */
 typedef enum { NONE, SHIELD, TEMPLE, CROSSROASDS, CITY } modifier;
 typedef struct {
-    Side* up;
-    Side* right;
-    Side* down;
-    Side* left;
+    side* up;
+    side* right;
+    side* down;
+    side* left;
     modifier mod;
 } tile;
 /** @} */
@@ -185,7 +185,7 @@ bool tile_isEmpty(const tile*);
  * @param [in] dir direction of element we want to get
  * @return element of tile in specified direction
  */
-element tile_getSideElement(const tile*, Direction);
+element tile_getSideElement(const tile*, direction);
 
 /**
  * get side in specified directon.
@@ -193,7 +193,7 @@ element tile_getSideElement(const tile*, Direction);
  * @param dir directon
  * @return Side
  */
-Side* tile_getSide(const tile*, Direction); 
+side* tile_getSide(const tile*, direction); 
 
 /**
  * set completition status for tile direction.
@@ -201,7 +201,7 @@ Side* tile_getSide(const tile*, Direction);
  * @param [in] dir direction
  * @param [in] status status of completition
  */
-void tile_setSideCompletion(const tile*, Direction, int status);
+void tile_setSideCompletion(const tile*, direction, int status);
 
 /**
  * get side completition status.
@@ -209,7 +209,7 @@ void tile_setSideCompletion(const tile*, Direction, int status);
  * @param [in] dir direction
  * @return completition status
  */
-int tile_getSideCompletion(const tile*, Direction);
+int tile_getSideCompletion(const tile*, direction);
 
 /**
  * get tile modifier.
@@ -226,13 +226,13 @@ modifier tile_getCenter(const tile*);
  */
 size_t tile_numOfSegments(const tile* self, element);
 
-Direction* tile_getSegments(const tile*, element, size_t);
+direction* tile_getSegments(const tile*, element, size_t);
 
 /**
  * free segments set pointer to null.
  * @param [in,out] selfPtr segments pointer to pointer to free
  */
-void tile_freeSegments(Direction**);
+void tile_freeSegments(direction**);
 
 /**
  * check if tile has castle.

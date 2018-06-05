@@ -11,15 +11,15 @@
 
 int score(sized_board* board);
 
-int roadScoreForTwo(board_t board, int rows, int columns,int i, int j, Direction* sides);
+int roadScoreForTwo(board_t board, int rows, int columns,int i, int j, direction* sides);
 
-bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir, List* stack);
+bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, direction dir, List* stack);
 
-bool roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir);
+bool roadCompleted(board_t board, int rows, int columns, int i, int j, direction dir);
 
-bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Direction dir, List* stack);
+bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, direction dir, List* stack);
 
-bool castleCompleted(board_t board, int rows, int columns, int i, int j, Direction dir);
+bool castleCompleted(board_t board, int rows, int columns, int i, int j, direction dir);
 
 int tile_numOfNeighbours(board_t board, int rows, int columns, int i, int j);
 
