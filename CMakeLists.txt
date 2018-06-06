@@ -1,9 +1,14 @@
 cmake_minimum_required(VERSION 3.11)
+
 project(carcassonne C)
+
 set(CMAKE_C_STANDARD 11)
+
 set(CMAKE_C_FLAGS "-Wall -Wextra -Wlogical-op -Wdouble-promotion -Wconversion \
     -Wsign-conversion -Wshadow -Wformat=2 -g3 -Wjump-misses-init -pedantic")
+
 include_directories(src)
+
 set(carc_srcs
         src/ai.c
         src/ai.h
@@ -27,3 +32,15 @@ set(carc_srcs
         src/tlist.c
         src/tlist.h)
 add_executable(carcassonne ${carc_srcs})
+
+set(gen_srcs
+        src/board.c
+        src/board.h
+        src/generator.c
+        src/side.c
+        src/side.h
+        src/tile.c
+        src/tile.h
+        src/tlist.c
+        src/tlist.h)
+add_executable(generator ${gen_srcs})
