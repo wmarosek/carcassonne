@@ -83,10 +83,9 @@ void run(int argc, char* argv[]) {
         // check if can open list file in rw mode
         FILE* temp;
         if ((temp = fopen(board_file, "r+")) == NULL) {
-            printf("file: %s doesn't exits, creating one\n", board_file);
+            printf("file `%s` doesn't exits, creating one\n", board_file);
             check_valid_file(board_file, "w+", "board file");
-        }
-        fclose(temp);
+        } else { fclose(temp); }
     }
     if (mode == INTERACTIVE_NO_TILES) {
         list_file = "default_tiles";
