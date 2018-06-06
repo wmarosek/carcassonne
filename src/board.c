@@ -8,7 +8,7 @@ size_t board_get_size_interactive() {
     size_t ret;
     while (true) {
         fputs("input board size: ", stdout);
-        ulong temp;
+        unsigned long temp;
         if (scanf("%lu", &temp) == 1) {
             // exhaust stdin
             for (int ch; (ch = getchar()) != EOF && ch != '\n' && ch != '\r';) { ; }
