@@ -3,12 +3,7 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]) {
-    char* list = 0;
-    char* board = 0;
-
-    gamemode mode = init(argc, argv, &list, &board);
-
-    run(mode, list, board);
-
+    handle_args(argc, argv);
+    run(argc, argv);
     exit(EXIT_SUCCESS);
 }

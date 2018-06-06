@@ -131,7 +131,7 @@ bool board_write(const sized_board*, const char*);
  * @param [in] w width offset
  * @param [out] dest pointer to destination board
  */
-void board_copy_offsetted(const sized_board*, size_t, size_t, sized_board*);
+void board_copy_offsetted(const sized_board*, ptrdiff_t, ptrdiff_t, sized_board*);
 
 /**
  * copy tiles from board src to board dest,
@@ -148,7 +148,7 @@ void board_copy(const sized_board*, sized_board*);
  * @param [in] w width offset
  * @param [out] board with moved tiles
  */
-void board_move(size_t, size_t, sized_board*);
+void board_move(ptrdiff_t, ptrdiff_t, sized_board*);
 
 /**
  * resize board,
@@ -166,5 +166,7 @@ void board_resize(size_t, sized_board*);
 * @return  true is a tile has at elat 1 neighbour 
 */
 bool board_tileHasNeighbour(const sized_board* board, size_t i, size_t j);
+
+void board_trim(sized_board* board);
 
 #endif

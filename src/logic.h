@@ -23,20 +23,17 @@ typedef enum {
 FILE* exit_on_bad_file_open(const char* filename, const char* mode, const char* name);
 
 /**
- * initializes file streams for tile list and gameboard returns gamemode.
- * @param [in] argc count of args to main
- * @param [in] argv array of args to main
- * @param [out] list_file pointer list file name
- * @param [out] board_file pointer to board file name
+ * print usage, help etc.
+ * @param [in] amount of arguments to program
+ * @param [in] arguments to the program
  */
-gamemode init(int, char**, char**, char**);
+void handle_args(int argc, char* argv[]);
 
 /**
  * main game loop.
- * @param [in] mode gamemode in which game should be played
- * @param [in] list file name for tile list if applicable
- * @param [in] board file name for gameboard if applicable
+ * @param [in] amount of arguments to program
+ * @param [in] arguments to the program
  */
-void run(gamemode, char*, char*);
+void run(int argc, char* argv[]);
 
 #endif
