@@ -75,7 +75,7 @@ void write_board_interactive(sized_board* board) {
 tile* choose_tile_interactive(sized_tlist* list, tile** t) {
     tile* temp = *t;
     fputs("choose tile (number): ", stdout);
-    ulong choice;
+    unsigned long choice;
     while (true) {
         scanf("%lu", &choice);
         // exhaust stdin
@@ -125,7 +125,7 @@ void place_tile_interactive(sized_board* board, sized_tlist* list, tile** t) {
     if (*t == 0) {
         choose_tile_interactive(list, t);
     }
-    ulong h, w;
+    unsigned long h, w;
     while (true) {
         fputs("where to place tile (h w): ", stdout);
         if (scanf("%lu %lu", &h, &w) == 2) {
