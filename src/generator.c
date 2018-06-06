@@ -32,5 +32,6 @@ void tileGenerator(const char* default_tiles,const char* new_tiles, int num) {
 
     tlist_write(&new_list,new_tiles);
     tlist_free(&default_list);
-    tlist_free(&new_list);
+    // no need to free rest because already freed by previous line
+    free(new_list.tiles);
 }
