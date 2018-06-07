@@ -47,31 +47,6 @@ void check_valid_file(const char* filename, const char* mode, const char* name) 
     fclose(temp);
 }
 
-gamemode init(int argc, char* argv[], char** list_file, char** board_file) {
-    handle_args(argc, argv);
-
-    // argc is always at least 1 since program name is always first argument,
-    // if zero additional arguments set mode to INTERACTIVE_NO_TILES,
-    // if one set mode to INTERACTIVE,
-    // else set to AUTO
-    gamemode mode = argc - 1;
-
-    if (mode == INTERACTIVE || mode == AUTO) {
-        *list_file = argv[1];
-        // check if can open list file in rw mode
-        check_valid_file(*list_file, "rw", "tile-list file");
-    }
-
-    if (mode == AUTO) {
-        *board_file = argv[2];
-        // check if can open list file in rw mode
-        check_valid_file(*board_file, "rw", "board file");
-    }
-
-    return mode;
-}
-
-
 void run_auto(const char* list_filename, const char* board_filename) {
     sized_tlist list = tlist_init_exit_on_err(list_filename);
     sized_board board = board_init_exit_on_err(AUTO, board_filename);
@@ -82,19 +57,42 @@ void run_auto(const char* list_filename, const char* board_filename) {
     
     // write updated objects to files
     tlist_write(&list,list_filename);
+    board_trim(&board);
     board_write(&board,board_filename);
 
     tlist_free(&list);
     board_free(&board);
 }
 
-void run(gamemode mode, char* list_filename, char* board_filename) {
+void run(int argc, char* argv[]) {
+    // argc is always at least 1 since program name is always first argument,
+    // if zero additional arguments set mode to INTERACTIVE_NO_TILES,
+    // if one set mode to INTERACTIVE,
+    // else set to AUTO
+    gamemode mode = argc - 1;
+    char* list_file = 0, *board_file = 0;
+
+    if (mode == INTERACTIVE || mode == AUTO) {
+        list_file = argv[1];
+        // check if can open list file in rw mode
+        check_valid_file(list_file, "r+", "tile-list file");
+    }
+
+    if (mode == AUTO) {
+        board_file = argv[2];
+        // check if can open list file in rw mode
+        FILE* temp;
+        if ((temp = fopen(board_file, "r+")) == NULL) {
+            printf("file `%s` doesn't exits, creating one\n", board_file);
+            check_valid_file(board_file, "w+", "board file");
+        } else { fclose(temp); }
+    }
     if (mode == INTERACTIVE_NO_TILES) {
-        list_filename = "default_tiles";
+        list_file = "default_tiles";
     }
     if (mode == INTERACTIVE || mode == INTERACTIVE_NO_TILES) {
-        run_interactive(mode, list_filename);
+        run_interactive(mode, list_file);
     } else {
-        run_auto(list_filename, board_filename);
+        run_auto(list_file, board_file);
     }
 }

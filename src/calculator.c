@@ -31,7 +31,7 @@ int score(sized_board* board) {
                     }
 
                     size_t castleSegments = tile_numOfSegments(t, CASTLE);
-                    Direction* sides = tile_getSegments(t, CASTLE, castleSegments);
+                    direction* sides = tile_getSegments(t, CASTLE, castleSegments);
                     if (castleSegments == 1) {
                         if (castleCompleted(tiles, rows, columns, i, j, sides[0])) {
                             castleScore += 2;
@@ -75,7 +75,7 @@ int score(sized_board* board) {
                 // 2nd Criteria: Road
                 if (tile_hasRoad(t)) {
                     size_t roadSegments = tile_numOfSegments(t, ROAD);
-                    Direction* sides = tile_getSegments(t, ROAD, roadSegments);
+                    direction* sides = tile_getSegments(t, ROAD, roadSegments);
                     int roadScore = 0;
 
                     if(roadSegments == 2) {
@@ -124,10 +124,10 @@ int score(sized_board* board) {
 }
 
 
-bool castleCompleted(board_t board, int rows, int columns, int i, int j, Direction dir) {
+bool castleCompleted(board_t board, int rows, int columns, int i, int j, direction dir) {
     tile* t = board[i][j];
 
-    int status = Side_isCompleted(tile_getSide(t, dir));
+    int status = side_isCompleted(tile_getSide(t, dir));
     switch (status) {
     case -1: // side was visited and assigned as an uncompleted
         return false;
@@ -171,8 +171,7 @@ bool castleCompleted(board_t board, int rows, int columns, int i, int j, Directi
     // list will contain the mentions of all visited city sides in this turn
     List* list = List_new();
     // add current tile to a list of visited files
-    Point* pre = Point_new(i,j,dir);
-    List_addLast(list, pre/*Point_new(i, j, dir)*/);
+    List_addLast(list,point_new(i,j,dir));
     // checking if a tile is a part of completed castle
     bool isCompl = tile_castleCompleted(board, rows, columns, in, jn, dir, list);
     // obtaining the index of completion depending on the status of completion
@@ -182,18 +181,17 @@ bool castleCompleted(board_t board, int rows, int columns, int i, int j, Directi
 
 
     for (int k = 0; k < size; k++) {
-        Point* p = List_getPoint(list, k);
-        tile* self = board[Point_getRow(p)][Point_getColumn(p)];
-        //printf("[%i][%i]: %i \n", Point_getRow(p), Point_getColumn(p), Point_getSide(p));
+        point* p = List_getPoint(list, k);
+        tile* self = board[point_getRow(p)][point_getColumn(p)];
         // assigning the index of completion to the visited side
-        tile_setSideCompletion(self, Point_getSide(p), res);
+        tile_setSideCompletion(self, point_getSide(p), res);
     }
 
     List_free(&list);
     return isCompl;
 }
 
-bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Direction dir, List* stack) {
+bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, direction dir, List* stack) {
     tile* t = board[i][j];
 
     if (tile_isEmpty(t)) { // if tile is free(empty) - means the side of a calling tile is open & city is not completed
@@ -201,7 +199,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     }
 
     // if the status of the side is already stated -> no use of further investigation
-    switch (tile_getSideCompletion(t, Direction_getOpposite(dir))) {
+    switch (tile_getSideCompletion(t, direction_getOpposite(dir))) {
     case -1:
         return false;
     case 1:
@@ -209,7 +207,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     }
 
     // adding a tile to a list of visited tiles (later every side of every tile from list will have the indicator of true/false completion
-    List_addLast(stack, Point_new(i, j, Direction_getOpposite(dir)));
+    List_addLast(stack, point_new(i, j, direction_getOpposite(dir)));
 
     // get number of city segments of a tile
     size_t numOfCastles = tile_numOfSegments(t, CASTLE);
@@ -225,7 +223,7 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     }
 
     // Cases when we have more than 1 side with castles
-    Direction* sides = tile_getSegments(t, CASTLE, numOfCastles);
+    direction* sides = tile_getSegments(t, CASTLE, numOfCastles);
     bool isCompl = true;
     bool compl = true;
     int in, jn;
@@ -263,8 +261,8 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
         //  1) We've already visited the tile (avoid infinite looping)
         //  2) We've came from this tile (can be recognised when dir(previous direction of movements) is opposite to sides[k] (new direction of movement)
         //  3) We are heading to the initial tile's unvisited side
-        if (compl && !List_hasPoint(stack, in, jn, Direction_getOpposite(sides[k])) && !Direction_areOpposite(dir, sides[k]) && compl /*&& !Point_isEqual(List_getPoint(stack,0),in,jn)*/) {
-            List_addLast(stack, Point_new(i, j, sides[k]));
+        if (compl && !List_hasPoint(stack, in, jn, direction_getOpposite(sides[k])) && !direction_areOpposite(dir, sides[k]) && compl /*&& !Point_isEqual(List_getPoint(stack,0),in,jn)*/) {
+            List_addLast(stack, point_new(i, j, sides[k]));
             //printf("%i,%i - %i\n", i, j, sides[k]);
             compl = tile_castleCompleted(board, rows, columns, in, jn, sides[k], stack);
         }
@@ -282,13 +280,13 @@ bool tile_castleCompleted(board_t board, int rows, int columns, int i, int j, Di
     return isCompl;
 }
 
-bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir, List* stack) {
+bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, direction dir, List* stack) {
     tile* t = board[i][j];
 
     if (tile_isEmpty(t)) return false;
 
     // if the status of the side is already stated -> no use of further investigation
-    switch (tile_getSideCompletion(t, Direction_getOpposite(dir))) {
+    switch (tile_getSideCompletion(t, direction_getOpposite(dir))) {
     case -1:
         return false;
     case 1:
@@ -296,7 +294,7 @@ bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Dire
     }
 
     // adding a tile to a list of visited tiles (later every side of every tile from list will have the indicator of true/false completion
-    List_addLast(stack, Point_new(i, j, Direction_getOpposite(dir)));
+    List_addLast(stack, point_new(i, j, direction_getOpposite(dir)));
 
     if (tile_hasCrossroads(t) || tile_hasTemple(t) || tile_numOfSegments(t,ROAD)==1) return true;
 
@@ -317,36 +315,15 @@ bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Dire
         return false;
     }
 
-    List_addLast(stack, Point_new(i,j,dir));
+    List_addLast(stack, point_new(i,j,dir));
     return tile_roadCompleted(board,rows,columns, in, jn, dir, stack);
 }
-/*
-bool tile_roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir) {
-    tile* t = board[i][j];
 
-    if (tile_isEmpty(t)) return false;
 
-    if (tile_hasCrossroads(t) || tile_hasTemple(t) || tile_numOfSegments(t,ROAD)==1) return true;
-
-    if (tile_getSideElement(t,NORTH) == ROAD && i != 0 && dir != SOUTH) {
-        return tile_roadCompleted(board, rows, columns, i - 1, j, NORTH);
-    }
-    else if (tile_getSideElement(t,EAST) == ROAD && j != columns - 1 && dir != WEST) {
-        return tile_roadCompleted(board, rows, columns, i, j + 1, EAST);
-    }
-    else if (tile_getSideElement(t,SOUTH) == ROAD && i != rows - 1 && dir != NORTH) {
-        return tile_roadCompleted(board, rows, columns, i + 1, j, SOUTH);
-    }
-    else if (tile_getSideElement(t,WEST) == ROAD && j != 0 && dir != EAST) {
-        return tile_roadCompleted(board, rows, columns, i, j - 1, WEST);
-    }
-    return false;
-}*/
-
-int roadScoreForTwo(board_t board, int rows, int columns,int i, int j, Direction* sides) {
+int roadScoreForTwo(board_t board, int rows, int columns,int i, int j, direction* sides) {
     tile* t = board[i][j];
     
-    switch(Side_isCompleted(tile_getSide(t,sides[0]))*Side_isCompleted(tile_getSide(t,sides[1]))) {
+    switch(side_isCompleted(tile_getSide(t,sides[0]))*side_isCompleted(tile_getSide(t,sides[1]))) {
         case 1:
             return 2;
         case -1:
@@ -358,7 +335,7 @@ int roadScoreForTwo(board_t board, int rows, int columns,int i, int j, Direction
     int in, jn;
 
     for(size_t k = 0; k < 2; k++) {
-        List_addLast(path,Point_new(i,j,sides[k]));
+        List_addLast(path,point_new(i,j,sides[k]));
         in = i, jn = j;
     
         if (sides[k] == NORTH) {
@@ -410,9 +387,9 @@ void board_setStatuses(board_t board, List* list, int res) {
     ListNode* node = List_getNodeAt(list,0);
     ListNode* next = NULL;
     while(node != NULL) {
-        Point* p = ListNode_getPoint(node);
-        tile* self = board[Point_getRow(p)][Point_getColumn(p)];
-        tile_setSideCompletion(self, Point_getSide(p), res);
+        point* p = ListNode_getPoint(node);
+        tile* self = board[point_getRow(p)][point_getColumn(p)];
+        tile_setSideCompletion(self, point_getSide(p), res);
         
         next = ListNode_getNext(node);
         ListNode_free(&node);
@@ -422,10 +399,10 @@ void board_setStatuses(board_t board, List* list, int res) {
     free(list);
 }
 
-bool roadCompleted(board_t board, int rows, int columns, int i, int j, Direction dir) {
+bool roadCompleted(board_t board, int rows, int columns, int i, int j, direction dir) {
     tile* t = board[i][j];
 
-    int status = Side_isCompleted(tile_getSide(t,dir));
+    int status = side_isCompleted(tile_getSide(t,dir));
 
     switch (status) {
     case -1: // side was visited and assigned as an uncompleted
@@ -471,8 +448,7 @@ bool roadCompleted(board_t board, int rows, int columns, int i, int j, Direction
     // list will contain the mentions of all visited city sides in this turn
     List* list = List_new();
     // add current tile to a list of visited files
-    Point* pre = Point_new(i,j,dir);
-    List_addLast(list, pre/*Point_new(i, j, dir)*/);
+    List_addLast(list, point_new(i,j,dir));
     // checking if a tile is a part of completed castle
     bool isCompl = tile_roadCompleted(board,rows,columns, in, jn, dir, list);
     // obtaining the index of completion depending on the status of completion
